@@ -16,12 +16,16 @@ import {
    faLightbulb,
    faSpinner,
    faCheckCircle,
+   faTrophy,
+   faMedal,
+   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./UserProfile.module.css";
 // import { setUser, fetchConnections } from "../../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/user/userSlice";
 import { CONFIG } from "../../config";
+// import { updateUserAchievements } from '../../redux/user/userSlice';
 
 function UserProfile() {
    const API_URL = CONFIG.API_URL;
@@ -415,6 +419,22 @@ function UserProfile() {
                         {user.website}
                      </a>
                   </div>
+               </div>
+            </div>
+            <div className={styles.badgesSection}>
+               <h3>Achievements</h3>
+               <div className={styles.badgeGrid}>
+                  {user.achievements && user.achievements.map((achievement, index) => (
+                    <div key={index} className={styles.badge}>
+                       <FontAwesomeIcon 
+                         icon={achievement.type === 'challenge' ? faTrophy : 
+                               achievement.type === 'streak' ? faMedal : faStar} 
+                         className={styles.badgeIcon} 
+                       />
+                       <span className={styles.badgeTitle}>{achievement.title}</span>
+                       <span className={styles.badgeDate}>{new Date(achievement.date).toLocaleDateString()}</span>
+                    </div>
+                  ))}
                </div>
             </div>
          </div>

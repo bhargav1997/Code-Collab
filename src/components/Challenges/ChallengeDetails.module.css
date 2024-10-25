@@ -1,0 +1,274 @@
+.challengeDetails {
+   padding: 2rem;
+   max-width: 800px;
+   margin: 0 auto;
+}
+
+.backButton {
+   background: none;
+   border: none;
+   color: #7c4dff;
+   font-size: 1rem;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   margin-bottom: 1rem;
+   transition: color 0.3s ease;
+}
+
+.backButton:hover {
+   color: #6842d0;
+}
+
+.backButton svg {
+   margin-right: 0.5rem;
+}
+
+.challengeCard {
+   background-color: #ffffff;
+   border-radius: 12px;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+   padding: 2rem;
+}
+
+.challengeCard h1 {
+   color: #2c3e50;
+   margin-bottom: 1rem;
+   display: flex;
+   align-items: center;
+}
+
+.challengeCard h1 svg {
+   margin-right: 0.5rem;
+   color: #7c4dff;
+}
+
+.description {
+   color: #7f8c8d;
+   margin-bottom: 1.5rem;
+   font-size: 1.1rem;
+}
+
+.progressInfo {
+   display: flex;
+   align-items: center;
+   color: #34495e;
+   margin-bottom: 0.5rem;
+   font-size: 1.1rem;
+}
+
+.progressInfo svg {
+   margin-right: 0.5rem;
+   color: #f39c12;
+}
+
+.progressBar {
+   height: 10px;
+   background-color: #ecf0f1;
+   border-radius: 5px;
+   overflow: hidden;
+   margin-bottom: 2rem;
+}
+
+.progressFill {
+   height: 100%;
+   background-color: #7c4dff;
+   transition: width 0.3s ease;
+}
+
+.taskListTitle {
+   font-size: 1.5rem;
+   color: #2c3e50;
+   margin-bottom: 1rem;
+}
+
+.taskList {
+   list-style-type: none;
+   padding: 0;
+   margin-bottom: 2rem;
+}
+
+.taskItem {
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   margin-bottom: 0.75rem;
+   transition: background-color 0.3s ease;
+}
+
+.taskLabel {
+   display: flex;
+   align-items: center;
+   padding: 0.75rem;
+   cursor: pointer;
+}
+
+.taskCheckbox {
+   appearance: none;
+   width: 1.5rem;
+   height: 1.5rem;
+   border: 2px solid #3498db;
+   border-radius: 4px;
+   margin-right: 1rem;
+   cursor: pointer;
+   position: relative;
+   transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.taskCheckbox:checked {
+   background-color: #3498db;
+   border-color: #3498db;
+}
+
+.taskCheckbox:checked::after {
+   content: "\2714";
+   font-size: 1rem;
+   color: white;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
+.taskText {
+   font-size: 1rem;
+   color: #34495e;
+   transition: color 0.3s ease;
+}
+
+.taskLabel:hover .taskText {
+   color: #2c3e50;
+}
+
+.completeButton {
+   background-color: #2ecc71;
+   color: white;
+   border: none;
+   padding: 0.75rem 1.5rem;
+   font-size: 1rem;
+   border-radius: 30px;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.3s ease;
+   display: block;
+   margin: 0 auto;
+}
+
+.completeButton:hover {
+   background-color: #27ae60;
+   transform: translateY(-2px);
+}
+
+.completeButton.disabled {
+   background-color: #95a5a6;
+   cursor: not-allowed;
+}
+
+.completeButton.disabled:hover {
+   transform: none;
+}
+
+.taskCompletionMessage {
+   text-align: center;
+   color: #7f8c8d;
+   font-size: 0.9rem;
+   margin-top: 1rem;
+}
+
+.taskCompletionMessage svg {
+   margin-right: 0.5rem;
+   color: #7c4dff;
+}
+
+.completionMessage {
+   text-align: center;
+   margin-top: 2rem;
+}
+
+.completionMessage svg {
+   font-size: 3rem;
+   color: #f39c12;
+   margin-bottom: 1rem;
+}
+
+.completionMessage h2 {
+   color: #2c3e50;
+   margin-bottom: 0.5rem;
+}
+
+.completionMessage p {
+   color: #7f8c8d;
+   font-size: 1.1rem;
+}
+
+.celebrationMessage {
+   text-align: center;
+   margin-top: 2rem;
+   animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+   from {
+      opacity: 0;
+      transform: translateY(20px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.celebrationMessage .trophyIcon {
+   font-size: 4rem;
+   color: #f1c40f;
+   margin-bottom: 1rem;
+   animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+   from {
+      transform: scale(1);
+   }
+   to {
+      transform: scale(1.1);
+   }
+}
+
+.celebrationMessage h2 {
+   color: #2c3e50;
+   margin-bottom: 0.5rem;
+   font-size: 1.8rem;
+}
+
+.celebrationMessage p {
+   color: #7f8c8d;
+   font-size: 1.1rem;
+   margin-bottom: 1rem;
+}
+
+.streakInfo {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-bottom: 1rem;
+   font-size: 1.2rem;
+   color: #e74c3c;
+}
+
+.streakInfo svg {
+   margin-right: 0.5rem;
+}
+
+.newChallengeButton {
+   background-color: #3498db;
+   color: white;
+   border: none;
+   padding: 0.75rem 1.5rem;
+   font-size: 1rem;
+   border-radius: 30px;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.newChallengeButton:hover {
+   background-color: #2980b9;
+   transform: translateY(-2px);
+}

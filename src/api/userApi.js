@@ -20,3 +20,25 @@ export const fetchUserConnections = async () => {
 
    return await response.json();
 };
+
+export const updateUserAchievement = async (achievement) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No token found");
+  }
+
+  const response = await fetch(`${API_URL}/users/achievements`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(achievement),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update achievement: ${response.status} ${response.statusText}`);
+  }
+
+  return await response.json();
+};

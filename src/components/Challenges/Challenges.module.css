@@ -1,0 +1,232 @@
+.challengesContainer {
+   padding: 2rem;
+   max-width: 1200px;
+   margin: 0 auto;
+}
+
+.header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 2rem;
+}
+
+.title {
+   font-size: 32px;
+   color: #2c3e50;
+   display: flex;
+   align-items: center;
+}
+
+.title svg {
+   margin-right: 0.5rem;
+   color: #f39c12;
+}
+
+.createButton {
+   background-color: #7c4dff;
+   color: white;
+   border: none;
+   padding: 0.75rem 1.5rem;
+   font-size: 16px;
+   border-radius: 30px;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.3s ease;
+   display: flex;
+   align-items: center;
+}
+
+.createButton:hover {
+   background-color: #625094;
+   transform: translateY(-2px);
+}
+
+.createButton svg {
+   margin-right: 0.5rem;
+}
+
+.loadingMessage,
+.errorMessage,
+.noChallengesmessage {
+   text-align: center;
+   padding: 2rem;
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loadingMessage {
+   color: #3498db;
+}
+
+.loadingMessage svg {
+   font-size: 2rem;
+   margin-bottom: 1rem;
+}
+
+.errorMessage {
+   color: #e74c3c;
+}
+
+.errorMessage svg {
+   font-size: 2rem;
+   margin-bottom: 1rem;
+}
+
+.retryButton {
+   background-color: #e74c3c;
+   color: white;
+   border: none;
+   padding: 0.5rem 1rem;
+   font-size: 1rem;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+   margin-top: 1rem;
+}
+
+.retryButton:hover {
+   background-color: #c0392b;
+}
+
+.noChallengesmessage {
+   color: #7f8c8d;
+}
+
+.createFirstButton {
+   background-color: #2ecc71;
+   color: white;
+   border: none;
+   padding: 0.75rem 1.5rem;
+   font-size: 1rem;
+   border-radius: 30px;
+   cursor: pointer;
+   transition: background-color 0.3s ease, transform 0.3s ease;
+   display: inline-flex;
+   align-items: center;
+   margin-top: 1rem;
+}
+
+.createFirstButton:hover {
+   background-color: #27ae60;
+   transform: translateY(-2px);
+}
+
+.createFirstButton svg {
+   margin-right: 0.5rem;
+}
+
+.challengeGrid {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+   gap: 2rem;
+}
+
+@media (max-width: 768px) {
+   .header {
+      flex-direction: column;
+      align-items: flex-start;
+   }
+
+   .createButton {
+      margin-top: 1rem;
+   }
+
+   .challengeGrid {
+      grid-template-columns: 1fr;
+   }
+}
+
+.infoWrapper {
+  margin-bottom: 2rem;
+}
+
+.infoTeaser {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.1rem;
+  color: #34495e;
+}
+
+.infoButton {
+  background: none;
+  border: none;
+  color: #3498db;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.infoButton:hover {
+  color: #2980b9;
+}
+
+.infoSection {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.infoSection h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.infoSection h2 svg {
+  margin-right: 0.5rem;
+  color: #f39c12;
+}
+
+.infoSection p {
+  font-size: 1.1rem;
+  color: #34495e;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.infoSection h3 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.infoSection h3 svg {
+  margin-right: 0.5rem;
+  color: #e74c3c;
+}
+
+.infoSection ul {
+  list-style-type: none;
+  padding-left: 1.5rem;
+}
+
+.infoSection li {
+  font-size: 1.1rem;
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.infoSection li::before {
+  content: "•";
+  color: #3498db;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}

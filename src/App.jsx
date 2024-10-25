@@ -29,6 +29,8 @@ const Register = React.lazy(() => import("./components/Register"));
 const Login = React.lazy(() => import("./components/Login"));
 const UserProfile = React.lazy(() => import("./components/UserProfile"));
 const LearningJourney = React.lazy(() => import("./components/LearningJourney"));
+const Challenges = React.lazy(() => import("./components/Challenges"));
+const ChallengeDetails = React.lazy(() => import("./components/Challenges/ChallengeDetails"));
 import { CONFIG } from "./config";
 import withMobileRestriction from "./components/MobileRestriction/withMobileRestriction";
 import { ToastContainer } from "react-toastify";
@@ -129,6 +131,8 @@ function AppDesktop() {
                                  <Route path='/user-profile' element={<UserProfile />} />
                                  <Route path='/setting' element={<Setting />} />
                                  <Route path='/two-factor-auth' element={<TwoFactorAuth />} />
+                                 <Route path='/challenges' element={<Challenges />} />
+                                 <Route path='/challenges/:id' element={<ChallengeDetails />} />
                               </Route>
                            )}
 

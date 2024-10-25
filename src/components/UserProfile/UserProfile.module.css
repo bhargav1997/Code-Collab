@@ -763,3 +763,58 @@
   align-items: center;
   gap: 10px;
 }
+
+.badgesSection {
+  margin-top: 2rem;
+}
+
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.badge:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badgeIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.badgeTitle {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.badgeDate {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.badgeIcon[data-icon="trophy"] {
+  color: #ffc107;
+}
+
+.badgeIcon[data-icon="medal"] {
+  color: #17a2b8;
+}
+
+.badgeIcon[data-icon="star"] {
+  color: #28a745;
+}

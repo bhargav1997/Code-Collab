@@ -1,0 +1,49 @@
+.cardLink {
+   text-decoration: none;
+   color: inherit;
+}
+
+.card {
+   background-color: white;
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   padding: 1.5rem;
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+   transform: translateY(-5px);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card h3 {
+   margin-top: 0;
+   margin-bottom: 0.5rem;
+   color: #333;
+}
+
+.card p {
+   margin-bottom: 1rem;
+   color: #666;
+}
+
+.progressBar {
+   height: 8px;
+   background-color: #e0e0e0;
+   border-radius: 4px;
+   overflow: hidden;
+   margin-bottom: 1rem;
+}
+
+.progressFill {
+   height: 100%;
+   background-color: #625094;
+   transition: width 0.3s ease;
+}
+
+.cardFooter {
+   display: flex;
+   justify-content: space-between;
+   font-size: 0.9rem;
+   color: #888;
+}

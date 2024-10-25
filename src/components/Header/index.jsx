@@ -152,7 +152,7 @@ function Header() {
             </div>
             <Link className={styles.iconButton} to='/message'>
                <FontAwesomeIcon icon={faEnvelope} />
-               <span className={styles.badge}>3</span>
+               {/* <span className={styles.badge}>3</span> */}
             </Link>
             <div className={styles.notificationContainer} ref={notificationRef}>
                <button className={styles.iconButton} onClick={() => setShowNotifications(!showNotifications)}>
@@ -235,9 +235,12 @@ function Header() {
                      <Link to='/setting'>
                         <FontAwesomeIcon icon={faCog} /> Settings
                      </Link>
-                     <a onClick={handleLogout}>
+                     <Link to='/challenges'>
+                        <FontAwesomeIcon icon={faTrophy} /> Challenges
+                     </Link>
+                     <Link onClick={handleLogout}>
                         <FontAwesomeIcon icon={faSignOutAlt} /> Logout
-                     </a>
+                     </Link>
                   </div>
                )}
             </div>

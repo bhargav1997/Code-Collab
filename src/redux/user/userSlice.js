@@ -32,8 +32,14 @@ const userSlice = createSlice({
          state.error = action.payload;
          state.isLoading = false;
       },
+      updateUserAchievements: (state, action) => {
+         if (state.user) {
+            state.user.achievements = state.user.achievements || [];
+            state.user.achievements.push(action.payload);
+         }
+      },
    },
 });
 
-export const { setUser, setLoading, clearUser, setError } = userSlice.actions;
+export const { setUser, setLoading, clearUser, setError, updateUserAchievements } = userSlice.actions;
 export default userSlice.reducer;
