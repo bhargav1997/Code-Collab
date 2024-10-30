@@ -37,14 +37,23 @@ export const updateChallenge = createAsyncThunk(
   'challenges/updateChallenge',
   async (challengeData, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${CONFIG.API_URL}/challenges/${challengeData.id}`, challengeData, {
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
+      const response = await axios.put(
+        `${CONFIG.API_URL}/challenges/${challengeData._id}`,
+        challengeData,
+        {
+          headers: {
+            'Authorization': `Bearer ${getToken()}`
+          }
         }
-      });
+      );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Failed to update challenge');
+      // Return more detailed error information
+      return rejectWithValue(
+        error.response?.data?.message || 
+        error.message || 
+        'Failed to update challenge'
+      );
     }
   }
 );
@@ -72,7 +81,11 @@ const challengesSlice = createSlice({
       status: "idle",
       error: null,
    },
-   reducers: {},
+   reducers: {
+      clearError: (state) => {
+         state.error = null;
+      }
+   },
    extraReducers: (builder) => {
       builder
          .addCase(fetchChallenges.pending, (state) => {
@@ -95,14 +108,20 @@ const challengesSlice = createSlice({
          .addCase(createChallenge.rejected, (state, action) => {
             state.error = action.payload;
          })
+         .addCase(updateChallenge.pending, (state) => {
+            state.status = "loading";
+            state.error = null;
+         })
          .addCase(updateChallenge.fulfilled, (state, action) => {
-            const index = state.challenges.findIndex(c => c.id === action.payload.id);
+            state.status = "succeeded";
+            const index = state.challenges.findIndex(c => c._id === action.payload._id);
             if (index !== -1) {
                state.challenges[index] = action.payload;
             }
             state.error = null;
          })
          .addCase(updateChallenge.rejected, (state, action) => {
+            state.status = "failed";
             state.error = action.payload;
          })
          .addCase(deleteChallenge.fulfilled, (state, action) => {
@@ -114,5 +133,7 @@ const challengesSlice = createSlice({
          });
    },
 });
+
+export const { clearError } = challengesSlice.actions;
 
 export default challengesSlice.reducer;

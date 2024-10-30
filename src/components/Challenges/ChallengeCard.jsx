@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faFlag, faClock } from "@fortawesome/free-solid-svg-icons";
 import styles from "./ChallengeCard.module.css";
+
 import PropTypes from "prop-types";
 
 const ChallengeCard = ({ challenge, onDelete }) => {
@@ -9,24 +10,40 @@ const ChallengeCard = ({ challenge, onDelete }) => {
 
    return (
       <div className={styles.challengeCard}>
-         <Link to={`/challenges/${challenge.id}`} className={styles.challengeLink}>
+         <div className={styles.cardHeader}>
             <h2>{challenge.name}</h2>
-            <p>{challenge.description}</p>
-            <div className={styles.progressBar}>
-               <div className={styles.progressFill} style={{ width: `${progress}%` }}></div>
+            <button
+               onClick={onDelete}
+               className={styles.deleteButton}
+               aria-label="Delete challenge"
+            >
+               <FontAwesomeIcon icon={faTrash} />
+            </button>
+         </div>
+         
+         <Link to={`/challenges/${challenge._id}`} className={styles.challengeLink}>
+            <p className={styles.description}>{challenge.description}</p>
+            <div className={styles.progressSection}>
+               <div className={styles.progressBar}>
+                  <div 
+                     className={styles.progressFill} 
+                     style={{ width: `${progress}%` }}
+                  >
+                     <span className={styles.progressLabel}>{Math.round(progress)}%</span>
+                  </div>
+               </div>
+               <div className={styles.progressInfo}>
+                  <span className={styles.daysInfo}>
+                     <FontAwesomeIcon icon={faClock} />
+                     Day {challenge.currentDay} of {challenge.duration}
+                  </span>
+                  <span className={styles.status}>
+                     <FontAwesomeIcon icon={faFlag} />
+                     {progress === 100 ? 'Completed' : 'In Progress'}
+                  </span>
+               </div>
             </div>
-            <p className={styles.progressText}>
-               Day {challenge.currentDay} of {challenge.duration}
-            </p>
          </Link>
-         <button
-            onClick={(e) => {
-               e.preventDefault();
-               onDelete();
-            }}
-            className={styles.deleteButton}>
-            <FontAwesomeIcon icon={faTrash} />
-         </button>
       </div>
    );
 };

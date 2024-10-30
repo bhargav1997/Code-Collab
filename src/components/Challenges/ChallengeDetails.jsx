@@ -2,22 +2,34 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faTrash, faCheck, faRocket, faInfoCircle, faTrophy, faFireAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+   faArrowLeft,
+   faCheck,
+   faRocket,
+   faInfoCircle,
+   faTrophy,
+   faFireAlt,
+   faExclamationTriangle,
+   faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./ChallengeDetails.module.css";
-import { updateChallenge, deleteChallenge } from "../../redux/challenges/challengesSlice";
+import { updateChallenge } from "../../redux/challenges/challengesSlice";
 import { updateUserAchievements } from "../../redux/user/userSlice";
 import Confetti from "react-confetti";
 
 const ChallengeDetails = () => {
    const { id } = useParams();
+   console.log(id);
    const navigate = useNavigate();
    const dispatch = useDispatch();
-   const challenge = useSelector((state) => state.challenges.challenges.find((c) => c.id === parseInt(id)));
+   const challenge = useSelector((state) => state.challenges.challenges.find((c) => c._id === id));
    const [currentDay, setCurrentDay] = useState(1);
    const [isDayComplete, setIsDayComplete] = useState(false);
    const [taskStatus, setTaskStatus] = useState([]);
    const [showCelebration, setShowCelebration] = useState(false);
    const [isChallengeDone, setIsChallengeDone] = useState(false);
+   const [updateError, setUpdateError] = useState(null);
+   const [canUpdateToday, setCanUpdateToday] = useState(true);
 
    useEffect(() => {
       if (challenge) {
@@ -26,6 +38,11 @@ const ChallengeDetails = () => {
          setTaskStatus(new Array(challenge.tasks.length).fill(false));
          setIsChallengeDone(challenge.currentDay > challenge.duration);
          setShowCelebration(challenge.currentDay > challenge.duration);
+         
+         // Check if user can update today
+         const lastUpdateDate = new Date(challenge.updatedAt).toLocaleDateString();
+         const todayDate = new Date().toLocaleDateString();
+         setCanUpdateToday(lastUpdateDate !== todayDate);
       }
    }, [challenge]);
 
@@ -41,7 +58,8 @@ const ChallengeDetails = () => {
 
    const allTasksCompleted = taskStatus.every((status) => status);
 
-   const handleCompleteDay = () => {
+   console.log("challenge", challenge);
+   const handleCompleteDay = async () => {
       if (allTasksCompleted) {
          const newCurrentDay = currentDay + 1;
          const updatedChallenge = {
@@ -49,35 +67,33 @@ const ChallengeDetails = () => {
             currentDay: newCurrentDay,
             lastCompletedDay: currentDay,
          };
-         dispatch(updateChallenge(updatedChallenge));
-         setCurrentDay(newCurrentDay);
-         setIsDayComplete(true);
-         setTaskStatus(new Array(challenge.tasks.length).fill(false));
 
-         if (newCurrentDay > challenge.duration) {
-            setShowCelebration(true);
-            setIsChallengeDone(true);
-            dispatch(
-               updateUserAchievements({
-                  type: "challenge",
-                  title: `Completed ${challenge.name}`,
-                  date: new Date().toISOString(),
-               }),
-            );
+         try {
+            const resultAction = await dispatch(updateChallenge(updatedChallenge));
+            if (updateChallenge.fulfilled.match(resultAction)) {
+               setCurrentDay(newCurrentDay);
+               setIsDayComplete(true);
+               setTaskStatus(new Array(challenge.tasks.length).fill(false));
+               setUpdateError(null);
+
+               if (newCurrentDay > challenge.duration) {
+                  setShowCelebration(true);
+                  setIsChallengeDone(true);
+                  dispatch(
+                     updateUserAchievements({
+                        type: "challenge",
+                        title: `Completed ${challenge.name}`,
+                        date: new Date().toISOString(),
+                     }),
+                  );
+               }
+            } else if (updateChallenge.rejected.match(resultAction)) {
+               setUpdateError(resultAction.payload || "Failed to update challenge");
+            }
+         } catch (err) {
+            console.log("err", err);
+            setUpdateError("An unexpected error occurred");
          }
-      }
-   };
-
-   const handleDelete = () => {
-      if (window.confirm("Are you sure you want to delete this challenge?")) {
-         dispatch(deleteChallenge(challenge.id))
-            .unwrap()
-            .then(() => {
-               navigate("/challenges");
-            })
-            .catch((error) => {
-               console.error("Failed to delete challenge:", error);
-            });
       }
    };
 
@@ -88,13 +104,8 @@ const ChallengeDetails = () => {
             <FontAwesomeIcon icon={faArrowLeft} /> Back to Challenges
          </button>
          <div className={styles.challengeCard}>
-            <h1>{challenge.name}</h1>
+            <h2>{challenge.name}</h2>
             <p className={styles.description}>{challenge.description}</p>
-            <div className={styles.challengeActions}>
-               <button onClick={handleDelete} className={styles.deleteButton}>
-                  <FontAwesomeIcon icon={faTrash} /> Delete Challenge
-               </button>
-            </div>
 
             {isChallengeDone && (
                <div className={styles.celebrationMessage}>
@@ -110,16 +121,20 @@ const ChallengeDetails = () => {
                   </button>
                </div>
             )}
-            {!isChallengeDone && isDayComplete && (
+            {!isChallengeDone && !canUpdateToday && (
                <div className={styles.completionMessage}>
                   <FontAwesomeIcon icon={faRocket} />
                   <h2>Great job! You&apos;ve completed today&apos;s learning.</h2>
                   <p>Come back tomorrow to continue your journey.</p>
+                  <div className={styles.nextDayInfo}>
+                     <FontAwesomeIcon icon={faClock} />
+                     <span>Next challenge will be available tomorrow</span>
+                  </div>
                </div>
             )}
-            {!isChallengeDone && !isDayComplete && (
+            {!isChallengeDone && canUpdateToday && (
                <>
-                  <h2 className={styles.taskListTitle}>Today&apos;s Learning Tasks</h2>
+                  <h3 className={styles.taskListTitle}>Today&apos;s Learning Tasks</h3>
                   <ul className={styles.taskList}>
                      {challenge.tasks.map((task, index) => (
                         <li key={index} className={styles.taskItem}>
@@ -149,6 +164,11 @@ const ChallengeDetails = () => {
                </>
             )}
          </div>
+         {updateError && (
+            <div className={styles.errorMessage}>
+               <FontAwesomeIcon icon={faExclamationTriangle} /> {updateError}
+            </div>
+         )}
       </div>
    );
 };

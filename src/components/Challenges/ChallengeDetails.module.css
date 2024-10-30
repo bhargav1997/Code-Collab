@@ -31,17 +31,26 @@
    padding: 2rem;
 }
 
-.challengeCard h1 {
+.challengeCard h2 {
    color: #2c3e50;
    margin-bottom: 1rem;
    display: flex;
    align-items: center;
+   font-size: 28px;
 }
 
-.challengeCard h1 svg {
+.challengeCard h2 svg {
    margin-right: 0.5rem;
    color: #7c4dff;
 }
+
+.challengeCard h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+ }
 
 .description {
    color: #7f8c8d;
@@ -104,19 +113,20 @@
 
 .taskCheckbox {
    appearance: none;
-   width: 1.5rem;
-   height: 1.5rem;
-   border: 2px solid #3498db;
+   width: 18px;
+   height: 18px;
+   border: 2px solid #7c4dff;
    border-radius: 4px;
    margin-right: 1rem;
+   padding: 10px;
    cursor: pointer;
    position: relative;
    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .taskCheckbox:checked {
-   background-color: #3498db;
-   border-color: #3498db;
+   background-color: #7c4dff;
+   border-color: #7c4dff;
 }
 
 .taskCheckbox:checked::after {
@@ -181,6 +191,9 @@
 .completionMessage {
    text-align: center;
    margin-top: 2rem;
+   padding: 2rem;
+   background-color: #f8f9fa;
+   border-radius: 12px;
 }
 
 .completionMessage svg {
@@ -271,4 +284,73 @@
 .newChallengeButton:hover {
    background-color: #2980b9;
    transform: translateY(-2px);
+}
+
+.challengeActions {
+   display: flex;
+   justify-content: flex-end;
+   margin-bottom: 2rem;
+}
+
+.deleteButton {
+   background: none;
+   border: none;
+   color: #cbd5e1;
+   padding: 0.75rem 1.25rem;
+   cursor: pointer;
+   transition: all 0.2s ease;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border-radius: 6px;
+   font-size: 1rem;
+}
+
+.deleteButton svg {
+   margin-right: 0.5rem;
+   font-size: 1rem;
+}
+
+.deleteButton:hover {
+   color: #ef4444;
+   background-color: #fee2e2;
+}
+
+.deleteButton:focus {
+   outline: none;
+   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.errorMessage {
+   background-color: #fee2e2;
+   color: #ef4444;
+   padding: 1rem;
+   border-radius: 8px;
+   margin: 1rem 0;
+   display: flex;
+   align-items: center;
+   font-size: 0.95rem;
+}
+
+.errorMessage svg {
+   margin-right: 0.5rem;
+   font-size: 1.1rem;
+}
+
+.nextDayInfo {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-top: 1.5rem;
+   padding: 1rem;
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   color: #7c4dff;
+   font-size: 1rem;
+}
+
+.nextDayInfo svg {
+   margin-right: 0.5rem;
+   font-size: 1.1rem;
+   margin-top: 12px;
 }

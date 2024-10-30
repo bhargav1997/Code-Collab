@@ -104,7 +104,6 @@
    transition: background-color 0.3s ease, transform 0.3s ease;
    display: inline-flex;
    align-items: center;
-   margin-top: 1rem;
 }
 
 .createFirstButton:hover {
@@ -164,17 +163,13 @@
 }
 
 .infoSection {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
+  padding: 1.5rem;
   border-radius: 8px;
-  padding: 2rem;
-  margin-top: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  margin-bottom: 2rem;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .infoSection h2 {
@@ -198,7 +193,7 @@
 }
 
 .infoSection h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: #2c3e50;
   margin-bottom: 1rem;
   display: flex;
@@ -207,26 +202,93 @@
 
 .infoSection h3 svg {
   margin-right: 0.5rem;
-  color: #e74c3c;
+  color: #f39c12;
 }
 
 .infoSection ul {
   list-style-type: none;
-  padding-left: 1.5rem;
+  padding: 0;
+  margin: 0;
 }
 
 .infoSection li {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #34495e;
-  margin-bottom: 0.5rem;
-  position: relative;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: flex-start;
 }
 
-.infoSection li::before {
-  content: "•";
+.infoSection li svg {
+  margin-right: 0.75rem;
   color: #3498db;
-  font-weight: bold;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
+  font-size: 1rem;
+  min-width: 1rem;
+  margin-top: 0.2rem;
+}
+
+.infoSection li span {
+  flex: 1;
+}
+
+.emptyChallenges {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emptyContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.emptyContent svg {
+  width: 150px;
+  height: 150px;
+  margin-right: 2rem;
+}
+
+.emptyText {
+  text-align: left;
+  flex: 1;
+}
+
+.emptyText h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.emptyText p {
+  font-size: 1rem;
+  color: #34495e;
+}
+
+.emptyStateImage {
+  max-width: 300px;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .emptyContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .emptyContent svg {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .emptyText {
+    text-align: center;
+  }
 }

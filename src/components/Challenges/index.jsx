@@ -1,15 +1,39 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrophy, faExclamationTriangle, faSpinner, faInfoCircle, faLightbulb, faRocket, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+   faPlus,
+   faTrophy,
+   faExclamationTriangle,
+   faSpinner,
+   faLightbulb,
+   faRocket,
+   faFlag,
+   faChartLine,
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./Challenges.module.css";
 import CreateChallengeModal from "./CreateChallengeModal";
-import ChallengeCard from "./ChallengeCard";
+
 import { fetchChallenges, deleteChallenge } from "../../redux/challenges/challengesSlice";
+import ChallengeCard from "./ChallengeCard";
+
+// Custom SVG component for empty state
+const EmptyChallengesSVG = () => (
+   <svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <circle cx='100' cy='100' r='90' fill='#f0f0f0' />
+      <path d='M100 20V180' stroke='#d0d0d0' strokeWidth='4' strokeDasharray='8 8' />
+      <path d='M20 100H180' stroke='#d0d0d0' strokeWidth='4' strokeDasharray='8 8' />
+      <circle cx='100' cy='100' r='60' fill='#3498db' />
+      <path d='M80 100L95 115L120 90' stroke='white' strokeWidth='8' strokeLinecap='round' strokeLinejoin='round' />
+      <circle cx='50' cy='50' r='15' fill='#f39c12' />
+      <circle cx='150' cy='150' r='10' fill='#2ecc71' />
+      <circle cx='150' cy='50' r='12' fill='#e74c3c' />
+      <circle cx='50' cy='150' r='8' fill='#9b59b6' />
+   </svg>
+);
 
 const Challenges = () => {
    const [showCreateModal, setShowCreateModal] = useState(false);
-   const [showInfo, setShowInfo] = useState(false);
    const dispatch = useDispatch();
    const { challenges, status, error } = useSelector((state) => state.challenges);
 
@@ -20,21 +44,51 @@ const Challenges = () => {
    }, [status, dispatch]);
 
    const handleDeleteChallenge = (challengeId) => {
-      if (window.confirm('Are you sure you want to delete this challenge?')) {
+      if (window.confirm("Are you sure you want to delete this challenge?")) {
          dispatch(deleteChallenge(challengeId))
             .unwrap()
             .then(() => {
-               console.log('Challenge deleted successfully');
+               console.log("Challenge deleted successfully");
             })
             .catch((error) => {
-               console.error('Failed to delete challenge:', error);
+               console.error("Failed to delete challenge:", error);
             });
       }
    };
 
-   const handleRetry = () => {
-      dispatch(fetchChallenges());
-   };
+   const renderEmptyChallenges = () => (
+      <div className={styles.emptyChallenges}>
+         <div className={styles.emptyContent}>
+            <EmptyChallengesSVG />
+            <div className={styles.emptyText}>
+               <h2>Ready to Challenge Yourself?</h2>
+               <p>Start your journey of growth and learning by creating your first challenge!</p>
+            </div>
+         </div>
+         <div className={styles.infoSection}>
+            <h3>
+               <FontAwesomeIcon icon={faLightbulb} /> Why Start a Challenge?
+            </h3>
+            <ul>
+               <li>
+                  <FontAwesomeIcon icon={faFlag} />
+                  <span>Set clear, achievable goals</span>
+               </li>
+               <li>
+                  <FontAwesomeIcon icon={faChartLine} />
+                  <span>Track your progress daily</span>
+               </li>
+               <li>
+                  <FontAwesomeIcon icon={faRocket} />
+                  <span>Boost your motivation and productivity</span>
+               </li>
+            </ul>
+         </div>
+         {/* <button className={styles.createFirstButton} onClick={() => setShowCreateModal(true)}>
+            <FontAwesomeIcon icon={faPlus} /> Create Your First Challenge
+         </button> */}
+      </div>
+   );
 
    return (
       <div className={styles.challengesContainer}>
@@ -45,32 +99,6 @@ const Challenges = () => {
             <button className={styles.createButton} onClick={() => setShowCreateModal(true)}>
                <FontAwesomeIcon icon={faPlus} /> Create New Challenge
             </button>
-         </div>
-
-         <div className={styles.infoWrapper}>
-            <p className={styles.infoTeaser}>
-               Learn about challenges and their benefits
-               <button className={styles.infoButton} onClick={() => setShowInfo(!showInfo)}>
-                  <FontAwesomeIcon icon={faInfoCircle} />
-               </button>
-            </p>
-            {showInfo && (
-               <div className={styles.infoSection}>
-                  <h2><FontAwesomeIcon icon={faLightbulb} /> What are Challenges?</h2>
-                  <p>
-                     Challenges are structured learning paths designed to help you achieve specific goals. 
-                     By breaking down your learning objectives into daily tasks, challenges make it easier 
-                     to stay motivated and track your progress.
-                  </p>
-                  <h3><FontAwesomeIcon icon={faRocket} /> Why Start a Challenge?</h3>
-                  <ul>
-                     <li>Build consistent learning habits</li>
-                     <li>Stay motivated with daily goals</li>
-                     <li>Track your progress visually</li>
-                     <li>Achieve your learning objectives faster</li>
-                  </ul>
-               </div>
-            )}
          </div>
 
          {status === "loading" && (
@@ -87,23 +115,12 @@ const Challenges = () => {
             </div>
          )}
 
-         {status === "succeeded" && challenges.length === 0 && (
-            <div className={styles.noChallengesmessage}>
-               <p>You haven&apos;t created any challenges yet.</p>
-               <button className={styles.createFirstButton} onClick={() => setShowCreateModal(true)}>
-                  <FontAwesomeIcon icon={faPlus} /> Create Your First Challenge
-               </button>
-            </div>
-         )}
+         {status === "succeeded" && challenges.length === 0 && renderEmptyChallenges()}
 
          {status === "succeeded" && challenges.length > 0 && (
             <div className={styles.challengeGrid}>
                {challenges.map((challenge) => (
-                  <ChallengeCard 
-                     key={challenge.id} 
-                     challenge={challenge} 
-                     onDelete={() => handleDeleteChallenge(challenge.id)}
-                  />
+                  <ChallengeCard key={challenge.id} challenge={challenge} onDelete={() => handleDeleteChallenge(challenge.id)} />
                ))}
             </div>
          )}
