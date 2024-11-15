@@ -1,35 +1,26 @@
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./EmptyState.module.css";
+import PropTypes from "prop-types";
 
 const EmptyState = ({ icon, title, description, actionLabel, onAction }) => {
    return (
-      <motion.div 
+      <motion.div
          className={styles.emptyState}
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
-         transition={{ duration: 0.5 }}
-      >
-         <motion.div 
+         transition={{ duration: 0.5 }}>
+         <motion.div
             className={styles.iconWrapper}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-         >
+            transition={{ delay: 0.2, type: "spring" }}>
             <FontAwesomeIcon icon={icon} />
          </motion.div>
-         <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-         >
+         <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             {title}
          </motion.h2>
-         <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-         >
+         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
             {description}
          </motion.p>
          {actionLabel && (
@@ -40,13 +31,20 @@ const EmptyState = ({ icon, title, description, actionLabel, onAction }) => {
                whileTap={{ scale: 0.95 }}
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
-               transition={{ delay: 0.5 }}
-            >
+               transition={{ delay: 0.5 }}>
                {actionLabel}
             </motion.button>
          )}
       </motion.div>
    );
+};
+
+EmptyState.propTypes = {
+   icon: PropTypes.object.isRequired,
+   title: PropTypes.string.isRequired,
+   description: PropTypes.string.isRequired,
+   actionLabel: PropTypes.string,
+   onAction: PropTypes.func,
 };
 
 export default EmptyState;

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import AchievementBadge from "./AchievementBadge";
 import styles from "./AchievementsList.module.css";
+import PropTypes from "prop-types";
 
 const AchievementsList = ({ achievements }) => {
    return (
@@ -40,6 +41,10 @@ const AchievementsList = ({ achievements }) => {
          )}
       </div>
    );
+};
+
+AchievementsList.propTypes = {
+   achievements: PropTypes.array.isRequired,
 };
 
 export default AchievementsList;

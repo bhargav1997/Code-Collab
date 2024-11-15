@@ -1,33 +1,31 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faArrowLeft,
    faCheck,
    faRocket,
-   faInfoCircle,
    faTrophy,
    faFireAlt,
    faExclamationTriangle,
    faClock,
    faCalendarAlt,
-   faCheckCircle
+   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Confetti from "react-confetti";
 import styles from "./ChallengeDetails.module.css";
 import { updateChallenge } from "../../redux/challenges/challengesSlice";
 import { updateUserAchievements } from "../../redux/user/userSlice";
+import PropTypes from "prop-types";
 
 const ChallengeDetails = () => {
    const { id } = useParams();
    const navigate = useNavigate();
    const dispatch = useDispatch();
 
-   const challenge = useSelector((state) => 
-      state.challenges.challenges.find((c) => c._id === id)
-   );
+   const challenge = useSelector((state) => state.challenges.challenges.find((c) => c._id === id));
 
    const [taskStatus, setTaskStatus] = useState([]);
    const [currentDay, setCurrentDay] = useState(1);
@@ -39,7 +37,7 @@ const ChallengeDetails = () => {
    useEffect(() => {
       if (challenge) {
          setTaskStatus(new Array(challenge.tasks.length).fill(false));
-         
+
          const isFullyCompleted = challenge.currentDay > challenge.duration;
 
          const today = new Date();
@@ -78,21 +76,23 @@ const ChallengeDetails = () => {
          _id: challenge._id,
          currentDay: newCurrentDay,
          lastCompletedDay: currentDay,
-         lastCompletedAt: now
+         lastCompletedAt: now,
       };
 
       try {
          const resultAction = await dispatch(updateChallenge(updatedChallenge));
-         
+
          if (updateChallenge.fulfilled.match(resultAction)) {
             if (newCurrentDay > challenge.duration) {
                setIsChallengeDone(true);
                setShowCelebration(true);
-               dispatch(updateUserAchievements({
-                  type: "challenge",
-                  title: `Completed ${challenge.name}`,
-                  date: now
-               }));
+               dispatch(
+                  updateUserAchievements({
+                     type: "challenge",
+                     title: `Completed ${challenge.name}`,
+                     date: now,
+                  }),
+               );
             }
             setCurrentDay(newCurrentDay);
             setIsDayComplete(true);
@@ -115,19 +115,18 @@ const ChallengeDetails = () => {
             </button>
             <div className={styles.challengeCard}>
                <h2>Challenge not found</h2>
-               <p>The challenge you're looking for doesn't exist or has been deleted.</p>
+               <p>{"The challenge you're looking for doesn't exist or has been deleted."}</p>
             </div>
          </div>
       );
    }
 
    const renderTaskList = () => (
-      <motion.div 
+      <motion.div
          className={styles.tasksContainer}
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
-         transition={{ delay: 0.2 }}
-      >
+         transition={{ delay: 0.2 }}>
          <h3 className={styles.taskListTitle}>
             <FontAwesomeIcon icon={faRocket} />
             Today&apos;s Learning Tasks
@@ -139,11 +138,10 @@ const ChallengeDetails = () => {
                   className={styles.taskItem}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-               >
+                  transition={{ delay: index * 0.1 }}>
                   <label className={styles.taskLabel}>
                      <input
-                        type="checkbox"
+                        type='checkbox'
                         checked={taskStatus[index] || false}
                         onChange={() => handleTaskCheck(index)}
                         className={styles.taskCheckbox}
@@ -161,8 +159,7 @@ const ChallengeDetails = () => {
             className={`${styles.completeButton} ${!allTasksCompleted ? styles.disabled : ""}`}
             disabled={!allTasksCompleted}
             whileHover={allTasksCompleted ? { scale: 1.02 } : {}}
-            whileTap={allTasksCompleted ? { scale: 0.98 } : {}}
-         >
+            whileTap={allTasksCompleted ? { scale: 0.98 } : {}}>
             <FontAwesomeIcon icon={faCheckCircle} />
             Complete Today&apos;s Learning
          </motion.button>
@@ -170,12 +167,11 @@ const ChallengeDetails = () => {
    );
 
    const renderCompletionMessage = () => (
-      <motion.div 
+      <motion.div
          className={styles.completionMessage}
          initial={{ opacity: 0, scale: 0.8 }}
          animate={{ opacity: 1, scale: 1 }}
-         transition={{ type: "spring", stiffness: 200 }}
-      >
+         transition={{ type: "spring", stiffness: 200 }}>
          <div className={styles.completionIcon}>
             <FontAwesomeIcon icon={faRocket} />
          </div>
@@ -188,18 +184,16 @@ const ChallengeDetails = () => {
             </div>
             <div className={styles.statItem}>
                <FontAwesomeIcon icon={faFireAlt} />
-               <span>Day {currentDay - 1} of {challenge.duration} completed!</span>
+               <span>
+                  Day {currentDay - 1} of {challenge.duration} completed!
+               </span>
             </div>
          </div>
       </motion.div>
    );
 
    const renderCelebration = () => (
-      <motion.div 
-         className={styles.celebrationMessage}
-         initial={{ opacity: 0, y: 20 }}
-         animate={{ opacity: 1, y: 0 }}
-      >
+      <motion.div className={styles.celebrationMessage} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
          <div className={styles.trophyIcon}>
             <FontAwesomeIcon icon={faTrophy} />
          </div>
@@ -219,8 +213,7 @@ const ChallengeDetails = () => {
             className={styles.newChallengeButton}
             onClick={() => navigate("/challenges")}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-         >
+            whileTap={{ scale: 0.95 }}>
             <FontAwesomeIcon icon={faRocket} />
             Start a New Challenge
          </motion.button>
@@ -230,20 +223,12 @@ const ChallengeDetails = () => {
    return (
       <div className={styles.challengeDetails}>
          {showCelebration && <Confetti />}
-         <motion.button 
-            className={styles.backButton}
-            onClick={() => navigate("/challenges")}
-            whileHover={{ x: -5 }}
-         >
+         <motion.button className={styles.backButton} onClick={() => navigate("/challenges")} whileHover={{ x: -5 }}>
             <FontAwesomeIcon icon={faArrowLeft} />
             Back to Challenges
          </motion.button>
 
-         <motion.div 
-            className={styles.challengeCard}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-         >
+         <motion.div className={styles.challengeCard} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className={styles.challengeHeader}>
                <h2>{challenge.name}</h2>
                <p className={styles.description}>{challenge.description}</p>
@@ -256,7 +241,7 @@ const ChallengeDetails = () => {
                      <span>{Math.round(((currentDay - 1) / challenge.duration) * 100)}%</span>
                   </div>
                   <div className={styles.progressBar}>
-                     <motion.div 
+                     <motion.div
                         className={styles.progressFill}
                         initial={{ width: 0 }}
                         animate={{ width: `${((currentDay - 1) / challenge.duration) * 100}%` }}
@@ -266,27 +251,21 @@ const ChallengeDetails = () => {
                </div>
             )}
 
-            {isChallengeDone ? (
-               renderCelebration()
-            ) : isDayComplete ? (
-               renderCompletionMessage()
-            ) : (
-               renderTaskList()
-            )}
+            {isChallengeDone ? renderCelebration() : isDayComplete ? renderCompletionMessage() : renderTaskList()}
          </motion.div>
 
          {updateError && (
-            <motion.div 
-               className={styles.errorMessage}
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-            >
+            <motion.div className={styles.errorMessage} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                <FontAwesomeIcon icon={faExclamationTriangle} />
                {updateError}
             </motion.div>
          )}
       </div>
    );
+};
+
+ChallengeDetails.propTypes = {
+   challenge: PropTypes.object.isRequired,
 };
 
 export default ChallengeDetails;

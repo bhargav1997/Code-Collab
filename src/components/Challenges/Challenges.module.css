@@ -144,6 +144,32 @@
   gap: 1rem;
 }
 
+.emptyAchievements {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(124, 77, 255, 0.05);
+  border-radius: 16px;
+  color: #6b7280;
+}
+
+.emptyAchievements svg {
+  font-size: 2rem;
+  color: #7c4dff;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.emptyAchievements h3 {
+  font-size: 1.1rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.emptyAchievements p {
+  font-size: 0.9rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .pageContainer {

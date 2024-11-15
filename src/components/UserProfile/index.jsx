@@ -424,17 +424,17 @@ function UserProfile() {
             <div className={styles.badgesSection}>
                <h3>Achievements</h3>
                <div className={styles.badgeGrid}>
-                  {user.achievements && user.achievements.map((achievement, index) => (
-                    <div key={index} className={styles.badge}>
-                       <FontAwesomeIcon 
-                         icon={achievement.type === 'challenge' ? faTrophy : 
-                               achievement.type === 'streak' ? faMedal : faStar} 
-                         className={styles.badgeIcon} 
-                       />
-                       <span className={styles.badgeTitle}>{achievement.title}</span>
-                       <span className={styles.badgeDate}>{new Date(achievement.date).toLocaleDateString()}</span>
-                    </div>
-                  ))}
+                  {user.achievements &&
+                     user.achievements.map((achievement, index) => (
+                        <div key={index} className={styles.badge}>
+                           <FontAwesomeIcon
+                              icon={achievement.type === "challenge" ? faTrophy : achievement.type === "streak" ? faMedal : faStar}
+                              className={styles.badgeIcon}
+                           />
+                           <span className={styles.badgeTitle}>{achievement.title}</span>
+                           <span className={styles.badgeDate}>{new Date(achievement.date).toLocaleDateString()}</span>
+                        </div>
+                     ))}
                </div>
             </div>
          </div>
@@ -511,6 +511,7 @@ function UserProfile() {
                         <FontAwesomeIcon icon={faTimes} />
                      </button>
                   </div>
+                  <h4>Personal Information</h4>
                   <input type='text' name='username' value={editedUser.username} onChange={handleInputChange} placeholder='Username' />
                   <input type='email' name='email' value={editedUser.email} onChange={handleInputChange} placeholder='Email' disabled />
                   <input

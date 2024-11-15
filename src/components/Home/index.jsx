@@ -7,7 +7,7 @@ import PostList from "./PostList";
 import "../../styles/Home.css";
 import Progress from "./Progress";
 import CourseRecommendations from "./CourseRecommendations";
-import LearningGoals from "./LearningGoals";
+// import LearningGoals from "./LearningGoals";
 
 function Home() {
    return (
@@ -20,7 +20,7 @@ function Home() {
          </div>
          <aside className={styles.sidebar}>
             <Profile />
-            <LearningGoals />
+            {/* <LearningGoals /> */}
             <PopularTags />
          </aside>
       </div>

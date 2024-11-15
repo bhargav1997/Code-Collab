@@ -1,6 +1,6 @@
 .userProfile {
    display: flex;
-   gap: 30px;
+   gap: 20px;
    padding: 20px;
    background-color: #f5f5f5;
 }
@@ -476,7 +476,7 @@
 .editModalContent h4 {
    margin: 20px 0 10px;
    color: #333;
-   font-size: 18px;
+   font-size: 16px;
    font-weight: 600;
 }
 

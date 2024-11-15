@@ -5,6 +5,7 @@ import learningJourneyReducer from "./learningJourney/learningJourneySlice";
 import calendarReducer from "./calendar/calendarSlice";
 import postsReducer from "./posts/postsSlice";
 import challengesReducer from './challenges/challengesSlice';
+import achievementsReducer from './achievements/achievementsSlice';
 
 const store = configureStore({
    reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
       calendar: calendarReducer,
       posts: postsReducer,
       challenges: challengesReducer,
+      achievements: achievementsReducer,
    },
 });
 

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { CONFIG } from "../../config";
+import { addAchievement } from "../achievements/achievementsSlice";
 
 // Helper function to get the token
 const getToken = () => {
@@ -40,25 +41,99 @@ export const createChallenge = createAsyncThunk("challenges/createChallenge", as
    }
 });
 
-export const updateChallenge = createAsyncThunk("challenges/updateChallenge", async (challengeData, { rejectWithValue }) => {
-   try {
+export const updateChallenge = createAsyncThunk(
+  "challenges/updateChallenge",
+  async (challengeData, { dispatch, getState, rejectWithValue }) => {
+    try {
       const dataToSend = {
-         _id: challengeData._id,
-         currentDay: challengeData.currentDay,
-         lastCompletedDay: challengeData.lastCompletedDay,
-         lastCompletedAt: challengeData.lastCompletedAt
+        _id: challengeData._id,
+        currentDay: challengeData.currentDay,
+        lastCompletedDay: challengeData.lastCompletedDay,
+        lastCompletedAt: challengeData.lastCompletedAt
       };
 
-      const response = await axios.put(`${CONFIG.API_URL}/challenges/${challengeData._id}`, dataToSend, {
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
+      const response = await axios.put(
+        `${CONFIG.API_URL}/challenges/${challengeData._id}`,
+        dataToSend,
+        {
+          headers: {
+            'Authorization': `Bearer ${getToken()}`
+          }
         }
-      });
+      );
+
+      // Check for achievements after successful update
+      const state = getState();
+      const challenge = state.challenges.challenges.find(
+        c => c._id === challengeData._id
+      );
+
+      // First challenge completion
+      if (challenge && challenge.currentDay === 1) {
+        dispatch(addAchievement({
+          type: 'challenge',
+          title: 'First Steps',
+          description: 'Completed your first challenge day!'
+        }));
+      }
+
+      // Challenge completion
+      if (challenge && challenge.currentDay === challenge.duration) {
+        dispatch(addAchievement({
+          type: 'challenge',
+          title: `Challenge Champion: ${challenge.name}`,
+          description: `Successfully completed the ${challenge.name} challenge!`
+        }));
+
+        // Check total completed challenges
+        const completedChallenges = state.challenges.challenges.filter(
+          c => c.currentDay === c.duration
+        ).length;
+
+        if (completedChallenges === 5) {
+          dispatch(addAchievement({
+            type: 'milestone',
+            title: 'Challenge Master',
+            description: 'Completed 5 learning challenges'
+          }));
+        }
+      }
+
+      // Check for streaks
+      const today = new Date();
+      const lastCompleted = new Date(challenge?.lastCompletedAt);
+      const streak = calculateStreak(lastCompleted, today);
+
+      if (streak === 7) {
+        dispatch(addAchievement({
+          type: 'streak',
+          title: 'Week Warrior',
+          description: 'Maintained a 7-day learning streak!'
+        }));
+      } else if (streak === 30) {
+        dispatch(addAchievement({
+          type: 'streak',
+          title: 'Monthly Master',
+          description: 'Maintained a 30-day learning streak!'
+        }));
+      }
+
       return response.data;
-   } catch (error) {
+    } catch (error) {
       return rejectWithValue(error.message || "Failed to update challenge");
-   }
-});
+    }
+  }
+);
+
+// Helper function to calculate streak
+const calculateStreak = (lastDate, currentDate) => {
+  if (!lastDate) return 0;
+  
+  const diffTime = Math.abs(currentDate - lastDate);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  return diffDays === 1 ? diffDays : 0; // Only count consecutive days
+};
 
 export const deleteChallenge = createAsyncThunk(
   'challenges/deleteChallenge',

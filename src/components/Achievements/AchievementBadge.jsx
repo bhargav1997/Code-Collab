@@ -1,33 +1,26 @@
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-   faTrophy,
-   faAward,
-   faMedal,
-   faStar,
-   faGem,
-   faCrown,
-   faFire
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrophy, faMedal, faStar, faCrown, faFire } from "@fortawesome/free-solid-svg-icons";
 import styles from "./AchievementBadge.module.css";
+import PropTypes from "prop-types";
 
 const BADGE_TYPES = {
    challenge: {
       icon: faTrophy,
-      color: "purple"
+      color: "purple",
    },
    streak: {
       icon: faFire,
-      color: "orange"
+      color: "orange",
    },
    milestone: {
       icon: faMedal,
-      color: "blue"
+      color: "blue",
    },
    special: {
       icon: faCrown,
-      color: "gold"
-   }
+      color: "gold",
+   },
 };
 
 const AchievementBadge = ({ type, title, description, date, isNew = false }) => {
@@ -39,15 +32,13 @@ const AchievementBadge = ({ type, title, description, date, isNew = false }) => 
          initial={{ opacity: 0, y: 20 }}
          animate={{ opacity: 1, y: 0 }}
          whileHover={{ scale: 1.02 }}
-         transition={{ duration: 0.3 }}
-      >
+         transition={{ duration: 0.3 }}>
          {isNew && (
-            <motion.div 
+            <motion.div
                className={styles.newBadge}
                initial={{ scale: 0 }}
                animate={{ scale: 1 }}
-               transition={{ delay: 0.3, type: "spring" }}
-            >
+               transition={{ delay: 0.3, type: "spring" }}>
                NEW!
             </motion.div>
          )}
@@ -56,14 +47,13 @@ const AchievementBadge = ({ type, title, description, date, isNew = false }) => 
             <motion.div
                animate={{
                   rotate: isNew ? [0, -10, 10, -10, 0] : 0,
-                  scale: isNew ? [1, 1.1, 1] : 1
+                  scale: isNew ? [1, 1.1, 1] : 1,
                }}
                transition={{
                   duration: 0.5,
                   repeat: isNew ? 3 : 0,
-                  repeatType: "reverse"
-               }}
-            >
+                  repeatType: "reverse",
+               }}>
                <FontAwesomeIcon icon={badgeInfo.icon} />
             </motion.div>
          </div>
@@ -72,17 +62,14 @@ const AchievementBadge = ({ type, title, description, date, isNew = false }) => 
             <h3>{title}</h3>
             <p>{description}</p>
             <div className={styles.badgeFooter}>
-               <span className={styles.date}>
-                  {new Date(date).toLocaleDateString()}
-               </span>
+               <span className={styles.date}>{new Date(date).toLocaleDateString()}</span>
                <div className={styles.stars}>
                   {[...Array(3)].map((_, index) => (
                      <motion.div
                         key={index}
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 + index * 0.1 }}
-                     >
+                        transition={{ delay: 0.2 + index * 0.1 }}>
                         <FontAwesomeIcon icon={faStar} />
                      </motion.div>
                   ))}
@@ -90,20 +77,28 @@ const AchievementBadge = ({ type, title, description, date, isNew = false }) => 
             </div>
          </div>
 
-         <motion.div 
+         <motion.div
             className={styles.shine}
             animate={{
                x: ["0%", "100%"],
-               opacity: [0, 0.5, 0]
+               opacity: [0, 0.5, 0],
             }}
             transition={{
                duration: 1.5,
                repeat: Infinity,
-               repeatDelay: 3
+               repeatDelay: 3,
             }}
          />
       </motion.div>
    );
+};
+
+AchievementBadge.propTypes = {
+   type: PropTypes.string.isRequired,
+   title: PropTypes.string.isRequired,
+   description: PropTypes.string.isRequired,
+   date: PropTypes.string.isRequired,
+   isNew: PropTypes.bool,
 };
 
 export default AchievementBadge;
