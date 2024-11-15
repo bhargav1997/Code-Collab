@@ -30,10 +30,19 @@ const CreateChallengeModal = ({ onClose }) => {
 
    const handleDurationChange = (e) => {
       const value = e.target.value;
-      setChallengeData((prev) => ({
-         ...prev,
-         duration: value === "other" ? "" : Number(value),
-      }));
+      if (value === "other") {
+         setChallengeData(prev => ({
+            ...prev,
+            duration: "",
+            customDuration: ""
+         }));
+      } else {
+         setChallengeData(prev => ({
+            ...prev,
+            duration: Number(value),
+            customDuration: ""
+         }));
+      }
    };
 
    const handleTaskChange = (index, value) => {
@@ -53,8 +62,24 @@ const CreateChallengeModal = ({ onClose }) => {
 
    const handleSubmit = (e) => {
       e.preventDefault();
-      dispatch(createChallenge(challengeData));
-      onClose();
+      
+      // Format challenge data according to backend requirements
+      const finalData = {
+         name: challengeData.name.trim(),
+         description: challengeData.description.trim(),
+         duration: challengeData.duration || Number(challengeData.customDuration),
+         tasks: challengeData.tasks.filter(task => task.trim() !== "")
+      };
+
+      dispatch(createChallenge(finalData))
+         .unwrap()
+         .then(() => {
+            onClose();
+         })
+         .catch((error) => {
+            console.error("Failed to create challenge:", error);
+            // Handle error (you might want to show an error message to the user)
+         });
    };
 
    return (
@@ -90,7 +115,13 @@ const CreateChallengeModal = ({ onClose }) => {
                </div>
                <div className={styles.formGroup}>
                   <label htmlFor='duration'>Duration</label>
-                  <select id='duration' name='duration' value={challengeData.duration} onChange={handleDurationChange} required>
+                  <select 
+                     id='duration' 
+                     name='duration' 
+                     value={challengeData.duration || "other"} 
+                     onChange={handleDurationChange} 
+                     required={!challengeData.customDuration}
+                  >
                      <option value=''>Select duration</option>
                      {durationOptions.map((option) => (
                         <option key={option.value} value={option.value}>
@@ -98,16 +129,19 @@ const CreateChallengeModal = ({ onClose }) => {
                         </option>
                      ))}
                   </select>
-                  {challengeData.duration === "" && (
+                  {(!challengeData.duration || challengeData.duration === "") && (
                      <input
                         type='number'
                         name='customDuration'
                         value={challengeData.customDuration}
-                        onChange={handleInputChange}
+                        onChange={(e) => setChallengeData(prev => ({
+                           ...prev,
+                           customDuration: e.target.value
+                        }))}
                         className={styles.customDuration}
                         placeholder='Enter custom duration (days)'
                         min='1'
-                        required
+                        required={!challengeData.duration}
                      />
                   )}
                </div>

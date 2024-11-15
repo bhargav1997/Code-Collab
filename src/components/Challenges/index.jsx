@@ -120,7 +120,7 @@ const Challenges = () => {
          {status === "succeeded" && challenges.length > 0 && (
             <div className={styles.challengeGrid}>
                {challenges.map((challenge) => (
-                  <ChallengeCard key={challenge.id} challenge={challenge} onDelete={() => handleDeleteChallenge(challenge.id)} />
+                  <ChallengeCard key={challenge._id} challenge={challenge} onDelete={() => handleDeleteChallenge(challenge._id)} />
                ))}
             </div>
          )}

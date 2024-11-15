@@ -19,36 +19,43 @@ import Confetti from "react-confetti";
 
 const ChallengeDetails = () => {
    const { id } = useParams();
-   console.log(id);
    const navigate = useNavigate();
    const dispatch = useDispatch();
-   const challenge = useSelector((state) => state.challenges.challenges.find((c) => c._id === id));
+
+   const challenge = useSelector((state) => 
+      state.challenges.challenges.find((c) => c._id === id)
+   );
+
+   const [taskStatus, setTaskStatus] = useState([]);
    const [currentDay, setCurrentDay] = useState(1);
    const [isDayComplete, setIsDayComplete] = useState(false);
-   const [taskStatus, setTaskStatus] = useState([]);
    const [showCelebration, setShowCelebration] = useState(false);
    const [isChallengeDone, setIsChallengeDone] = useState(false);
    const [updateError, setUpdateError] = useState(null);
-   const [canUpdateToday, setCanUpdateToday] = useState(true);
 
    useEffect(() => {
       if (challenge) {
-         setCurrentDay(challenge.currentDay);
-         setIsDayComplete(challenge.currentDay > challenge.lastCompletedDay);
          setTaskStatus(new Array(challenge.tasks.length).fill(false));
-         setIsChallengeDone(challenge.currentDay > challenge.duration);
-         setShowCelebration(challenge.currentDay > challenge.duration);
          
-         // Check if user can update today
-         const lastUpdateDate = new Date(challenge.updatedAt).toLocaleDateString();
-         const todayDate = new Date().toLocaleDateString();
-         setCanUpdateToday(lastUpdateDate !== todayDate);
+         const isFullyCompleted = challenge.currentDay > challenge.duration;
+
+         const today = new Date();
+         today.setHours(0, 0, 0, 0);
+
+         let lastCompletedDate = null;
+         if (challenge.lastCompletedAt) {
+            lastCompletedDate = new Date(challenge.lastCompletedAt);
+            lastCompletedDate.setHours(0, 0, 0, 0);
+         }
+
+         const isCompletedToday = lastCompletedDate && lastCompletedDate.getTime() === today.getTime();
+
+         setCurrentDay(challenge.currentDay);
+         setIsDayComplete(isCompletedToday);
+         setIsChallengeDone(isFullyCompleted);
+         setShowCelebration(isFullyCompleted);
       }
    }, [challenge]);
-
-   if (!challenge) {
-      return <div>Challenge not found</div>;
-   }
 
    const handleTaskCheck = (index) => {
       const newTaskStatus = [...taskStatus];
@@ -58,43 +65,136 @@ const ChallengeDetails = () => {
 
    const allTasksCompleted = taskStatus.every((status) => status);
 
-   console.log("challenge", challenge);
    const handleCompleteDay = async () => {
-      if (allTasksCompleted) {
-         const newCurrentDay = currentDay + 1;
-         const updatedChallenge = {
-            ...challenge,
-            currentDay: newCurrentDay,
-            lastCompletedDay: currentDay,
-         };
+      if (!allTasksCompleted) return;
 
-         try {
-            const resultAction = await dispatch(updateChallenge(updatedChallenge));
-            if (updateChallenge.fulfilled.match(resultAction)) {
-               setCurrentDay(newCurrentDay);
-               setIsDayComplete(true);
-               setTaskStatus(new Array(challenge.tasks.length).fill(false));
-               setUpdateError(null);
+      const newCurrentDay = currentDay + 1;
+      const now = new Date().toISOString();
 
-               if (newCurrentDay > challenge.duration) {
-                  setShowCelebration(true);
-                  setIsChallengeDone(true);
-                  dispatch(
-                     updateUserAchievements({
-                        type: "challenge",
-                        title: `Completed ${challenge.name}`,
-                        date: new Date().toISOString(),
-                     }),
-                  );
-               }
-            } else if (updateChallenge.rejected.match(resultAction)) {
-               setUpdateError(resultAction.payload || "Failed to update challenge");
+      const updatedChallenge = {
+         _id: challenge._id,
+         currentDay: newCurrentDay,
+         lastCompletedDay: currentDay,
+         lastCompletedAt: now
+      };
+
+      try {
+         const resultAction = await dispatch(updateChallenge(updatedChallenge));
+         
+         if (updateChallenge.fulfilled.match(resultAction)) {
+            if (newCurrentDay > challenge.duration) {
+               setIsChallengeDone(true);
+               setShowCelebration(true);
+               dispatch(updateUserAchievements({
+                  type: "challenge",
+                  title: `Completed ${challenge.name}`,
+                  date: now
+               }));
             }
-         } catch (err) {
-            console.log("err", err);
-            setUpdateError("An unexpected error occurred");
+            setCurrentDay(newCurrentDay);
+            setIsDayComplete(true);
+            setTaskStatus(new Array(challenge.tasks.length).fill(false));
+            setUpdateError(null);
+         } else {
+            setUpdateError("Failed to update challenge progress");
          }
+      } catch (err) {
+         console.error("Error updating challenge:", err);
+         setUpdateError("An unexpected error occurred");
       }
+   };
+
+   if (!challenge) {
+      return (
+         <div className={styles.challengeDetails}>
+            <button className={styles.backButton} onClick={() => navigate("/challenges")}>
+               <FontAwesomeIcon icon={faArrowLeft} /> Back to Challenges
+            </button>
+            <div className={styles.challengeCard}>
+               <h2>Challenge not found</h2>
+               <p>The challenge you're looking for doesn't exist or has been deleted.</p>
+            </div>
+         </div>
+      );
+   }
+
+   const renderContent = () => {
+      if (isChallengeDone) {
+         return (
+            <div className={styles.celebrationMessage}>
+               <FontAwesomeIcon icon={faTrophy} className={styles.trophyIcon} />
+               <h2>Congratulations! You&apos;ve Conquered the Challenge!</h2>
+               <p>You&apos;ve successfully completed the {challenge.duration}-day challenge.</p>
+               <div className={styles.streakInfo}>
+                  <FontAwesomeIcon icon={faFireAlt} />
+                  <span>{challenge.duration} Day Streak!</span>
+               </div>
+               <button onClick={() => navigate("/challenges")} className={styles.newChallengeButton}>
+                  Start a New Challenge
+               </button>
+            </div>
+         );
+      }
+
+      if (isDayComplete) {
+         return (
+            <div className={styles.completionMessage}>
+               <FontAwesomeIcon icon={faRocket} />
+               <h2>Great job! You&apos;ve completed today&apos;s learning.</h2>
+               <p>Come back tomorrow to continue your journey.</p>
+               <div className={styles.nextDayInfo}>
+                  <FontAwesomeIcon icon={faClock} />
+                  <span>Next challenge will be available tomorrow</span>
+               </div>
+               <div className={styles.progressInfo}>
+                  <FontAwesomeIcon icon={faFireAlt} />
+                  <span>Day {currentDay - 1} of {challenge.duration} completed!</span>
+               </div>
+            </div>
+         );
+      }
+
+      return (
+         <>
+            <div className={styles.progressHeader}>
+               <h3>Day {currentDay} of {challenge.duration}</h3>
+               <div className={styles.progressBar}>
+                  <div 
+                     className={styles.progressFill} 
+                     style={{ width: `${((currentDay - 1) / challenge.duration) * 100}%` }}
+                  />
+               </div>
+            </div>
+            <h3 className={styles.taskListTitle}>Today&apos;s Learning Tasks</h3>
+            <ul className={styles.taskList}>
+               {challenge.tasks.map((task, index) => (
+                  <li key={index} className={styles.taskItem}>
+                     <label className={styles.taskLabel}>
+                        <input
+                           type="checkbox"
+                           checked={taskStatus[index] || false}
+                           onChange={() => handleTaskCheck(index)}
+                           className={styles.taskCheckbox}
+                        />
+                        <span className={styles.taskText}>{task}</span>
+                     </label>
+                  </li>
+               ))}
+            </ul>
+            <button
+               onClick={handleCompleteDay}
+               className={`${styles.completeButton} ${!allTasksCompleted ? styles.disabled : ""}`}
+               disabled={!allTasksCompleted}
+            >
+               <FontAwesomeIcon icon={faCheck} /> Complete Today&apos;s Learning
+            </button>
+            {!allTasksCompleted && (
+               <p className={styles.taskCompletionMessage}>
+                  <FontAwesomeIcon icon={faInfoCircle} /> Complete all tasks to achieve today&apos;s goal
+               </p>
+            )}
+         </>
+      );
    };
 
    return (
@@ -106,63 +206,7 @@ const ChallengeDetails = () => {
          <div className={styles.challengeCard}>
             <h2>{challenge.name}</h2>
             <p className={styles.description}>{challenge.description}</p>
-
-            {isChallengeDone && (
-               <div className={styles.celebrationMessage}>
-                  <FontAwesomeIcon icon={faTrophy} className={styles.trophyIcon} />
-                  <h2>Congratulations! You&apos;ve Conquered the Challenge!</h2>
-                  <p>You&apos;ve successfully completed the {challenge.duration}-day challenge. What an achievement!</p>
-                  <div className={styles.streakInfo}>
-                     <FontAwesomeIcon icon={faFireAlt} />
-                     <span>{challenge.duration} Day Streak!</span>
-                  </div>
-                  <button onClick={() => navigate("/challenges")} className={styles.newChallengeButton}>
-                     Start a New Challenge
-                  </button>
-               </div>
-            )}
-            {!isChallengeDone && !canUpdateToday && (
-               <div className={styles.completionMessage}>
-                  <FontAwesomeIcon icon={faRocket} />
-                  <h2>Great job! You&apos;ve completed today&apos;s learning.</h2>
-                  <p>Come back tomorrow to continue your journey.</p>
-                  <div className={styles.nextDayInfo}>
-                     <FontAwesomeIcon icon={faClock} />
-                     <span>Next challenge will be available tomorrow</span>
-                  </div>
-               </div>
-            )}
-            {!isChallengeDone && canUpdateToday && (
-               <>
-                  <h3 className={styles.taskListTitle}>Today&apos;s Learning Tasks</h3>
-                  <ul className={styles.taskList}>
-                     {challenge.tasks.map((task, index) => (
-                        <li key={index} className={styles.taskItem}>
-                           <label className={styles.taskLabel}>
-                              <input
-                                 type='checkbox'
-                                 checked={taskStatus[index]}
-                                 onChange={() => handleTaskCheck(index)}
-                                 className={styles.taskCheckbox}
-                              />
-                              <span className={styles.taskText}>{task}</span>
-                           </label>
-                        </li>
-                     ))}
-                  </ul>
-                  <button
-                     onClick={handleCompleteDay}
-                     className={`${styles.completeButton} ${!allTasksCompleted ? styles.disabled : ""}`}
-                     disabled={!allTasksCompleted}>
-                     <FontAwesomeIcon icon={faCheck} /> Complete Today&apos;s Learning
-                  </button>
-                  {!allTasksCompleted && (
-                     <p className={styles.taskCompletionMessage}>
-                        <FontAwesomeIcon icon={faInfoCircle} /> Complete all tasks to achieve today&apos;s goal
-                     </p>
-                  )}
-               </>
-            )}
+            {renderContent()}
          </div>
          {updateError && (
             <div className={styles.errorMessage}>

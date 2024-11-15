@@ -22,7 +22,14 @@ export const fetchChallenges = createAsyncThunk("challenges/fetchChallenges", as
 
 export const createChallenge = createAsyncThunk("challenges/createChallenge", async (challengeData, { rejectWithValue }) => {
    try {
-      const response = await axios.post(`${CONFIG.API_URL}/challenges`, challengeData, {
+      const dataToSend = {
+         name: challengeData.name,
+         description: challengeData.description,
+         duration: Number(challengeData.duration || challengeData.customDuration),
+         tasks: challengeData.tasks.filter(task => task.trim() !== "")
+      };
+
+      const response = await axios.post(`${CONFIG.API_URL}/challenges`, dataToSend, {
         headers: {
           'Authorization': `Bearer ${getToken()}`
         }
@@ -33,30 +40,25 @@ export const createChallenge = createAsyncThunk("challenges/createChallenge", as
    }
 });
 
-export const updateChallenge = createAsyncThunk(
-  'challenges/updateChallenge',
-  async (challengeData, { rejectWithValue }) => {
-    try {
-      const response = await axios.put(
-        `${CONFIG.API_URL}/challenges/${challengeData._id}`,
-        challengeData,
-        {
-          headers: {
-            'Authorization': `Bearer ${getToken()}`
-          }
+export const updateChallenge = createAsyncThunk("challenges/updateChallenge", async (challengeData, { rejectWithValue }) => {
+   try {
+      const dataToSend = {
+         _id: challengeData._id,
+         currentDay: challengeData.currentDay,
+         lastCompletedDay: challengeData.lastCompletedDay,
+         lastCompletedAt: challengeData.lastCompletedAt
+      };
+
+      const response = await axios.put(`${CONFIG.API_URL}/challenges/${challengeData._id}`, dataToSend, {
+        headers: {
+          'Authorization': `Bearer ${getToken()}`
         }
-      );
+      });
       return response.data;
-    } catch (error) {
-      // Return more detailed error information
-      return rejectWithValue(
-        error.response?.data?.message || 
-        error.message || 
-        'Failed to update challenge'
-      );
-    }
-  }
-);
+   } catch (error) {
+      return rejectWithValue(error.message || "Failed to update challenge");
+   }
+});
 
 export const deleteChallenge = createAsyncThunk(
   'challenges/deleteChallenge',
@@ -113,11 +115,15 @@ const challengesSlice = createSlice({
             state.error = null;
          })
          .addCase(updateChallenge.fulfilled, (state, action) => {
-            state.status = "succeeded";
             const index = state.challenges.findIndex(c => c._id === action.payload._id);
             if (index !== -1) {
-               state.challenges[index] = action.payload;
+               state.challenges[index] = {
+                  ...state.challenges[index],
+                  ...action.payload,
+                  lastCompletedAt: action.payload.lastCompletedAt || null
+               };
             }
+            state.status = "succeeded";
             state.error = null;
          })
          .addCase(updateChallenge.rejected, (state, action) => {
@@ -125,7 +131,7 @@ const challengesSlice = createSlice({
             state.error = action.payload;
          })
          .addCase(deleteChallenge.fulfilled, (state, action) => {
-            state.challenges = state.challenges.filter(c => c.id !== action.payload);
+            state.challenges = state.challenges.filter(c => c._id !== action.payload);
             state.error = null;
          })
          .addCase(deleteChallenge.rejected, (state, action) => {
