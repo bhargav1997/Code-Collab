@@ -1,294 +1,197 @@
-.challengesContainer {
-   padding: 2rem;
-   max-width: 1200px;
-   margin: 0 auto;
-}
-
-.header {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-bottom: 2rem;
-}
-
-.title {
-   font-size: 32px;
-   color: #2c3e50;
-   display: flex;
-   align-items: center;
-}
-
-.title svg {
-   margin-right: 0.5rem;
-   color: #f39c12;
-}
-
-.createButton {
-   background-color: #7c4dff;
-   color: white;
-   border: none;
-   padding: 0.75rem 1.5rem;
-   font-size: 16px;
-   border-radius: 30px;
-   cursor: pointer;
-   transition: background-color 0.3s ease, transform 0.3s ease;
-   display: flex;
-   align-items: center;
-}
-
-.createButton:hover {
-   background-color: #625094;
-   transform: translateY(-2px);
-}
-
-.createButton svg {
-   margin-right: 0.5rem;
-}
-
-.loadingMessage,
-.errorMessage,
-.noChallengesmessage {
-   text-align: center;
-   padding: 2rem;
-   background-color: #f8f9fa;
-   border-radius: 8px;
-   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.loadingMessage {
-   color: #3498db;
-}
-
-.loadingMessage svg {
-   font-size: 2rem;
-   margin-bottom: 1rem;
-}
-
-.errorMessage {
-   color: #e74c3c;
-}
-
-.errorMessage svg {
-   font-size: 2rem;
-   margin-bottom: 1rem;
-}
-
-.retryButton {
-   background-color: #e74c3c;
-   color: white;
-   border: none;
-   padding: 0.5rem 1rem;
-   font-size: 1rem;
-   border-radius: 4px;
-   cursor: pointer;
-   transition: background-color 0.3s ease;
-   margin-top: 1rem;
-}
-
-.retryButton:hover {
-   background-color: #c0392b;
-}
-
-.noChallengesmessage {
-   color: #7f8c8d;
-}
-
-.createFirstButton {
-   background-color: #2ecc71;
-   color: white;
-   border: none;
-   padding: 0.75rem 1.5rem;
-   font-size: 1rem;
-   border-radius: 30px;
-   cursor: pointer;
-   transition: background-color 0.3s ease, transform 0.3s ease;
-   display: inline-flex;
-   align-items: center;
-}
-
-.createFirstButton:hover {
-   background-color: #27ae60;
-   transform: translateY(-2px);
-}
-
-.createFirstButton svg {
-   margin-right: 0.5rem;
-}
-
-.challengeGrid {
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-   gap: 2rem;
-}
-
-@media (max-width: 768px) {
-   .header {
-      flex-direction: column;
-      align-items: flex-start;
-   }
-
-   .createButton {
-      margin-top: 1rem;
-   }
-
-   .challengeGrid {
-      grid-template-columns: 1fr;
-   }
-}
-
-.infoWrapper {
-  margin-bottom: 2rem;
-}
-
-.infoTeaser {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 1.1rem;
-  color: #34495e;
-}
-
-.infoButton {
-  background: none;
-  border: none;
-  color: #3498db;
-  font-size: 1.2rem;
-  cursor: pointer;
-  margin-left: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-.infoButton:hover {
-  color: #2980b9;
-}
-
-.infoSection {
-  background-color: #ffffff;
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 1.5rem;
-  border-radius: 8px;
+}
+
+.progressSection {
   margin-bottom: 2rem;
-  text-align: left;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  width: 100%;
 }
 
-.infoSection h2 {
-  font-size: 1.8rem;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
+.progressCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
-.infoSection h2 svg {
-  margin-right: 0.5rem;
-  color: #f39c12;
+.progressCard {
+  background: white;
+  border-radius: 16px;
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
 }
 
-.infoSection p {
-  font-size: 1.1rem;
-  color: #34495e;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+.progressCard:hover {
+  transform: translateY(-3px);
 }
 
-.infoSection h3 {
-  font-size: 1.3rem;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
+.progressCircle {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
 }
 
-.infoSection h3 svg {
-  margin-right: 0.5rem;
-  color: #f39c12;
-}
-
-.infoSection ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.infoSection li {
-  font-size: 1rem;
-  color: #34495e;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: flex-start;
-}
-
-.infoSection li svg {
-  margin-right: 0.75rem;
-  color: #3498db;
-  font-size: 1rem;
-  min-width: 1rem;
-  margin-top: 0.2rem;
-}
-
-.infoSection li span {
-  flex: 1;
-}
-
-.emptyChallenges {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.emptyContent {
+.streakIcon, .totalChallenges {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, #7c4dff 0%, #6366f1 100%);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.streakIcon svg, .totalChallenges svg {
+  font-size: 1.75rem;
+  margin-right: 0.5rem;
+}
+
+.progressCard h3 {
+  color: #4b5563;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.mainContent {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sectionHeader h2 {
+  color: #1f2937;
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sectionHeader h2 svg {
+  color: #7c4dff;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #7c4dff 0%, #6366f1 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.createButton:hover {
+  box-shadow: 0 4px 12px rgba(124, 77, 255, 0.2);
+}
+
+.challengesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
-  width: 100%;
 }
 
-.emptyContent svg {
-  width: 150px;
-  height: 150px;
-  margin-right: 2rem;
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
 }
 
-.emptyText {
-  text-align: left;
-  flex: 1;
+.emptyState svg {
+  font-size: 2.5rem;
+  color: #7c4dff;
+  margin-bottom: 1rem;
+  opacity: 0.5;
 }
 
-.emptyText h2 {
-  font-size: 1.8rem;
-  color: #2c3e50;
+.emptyState h3 {
+  font-size: 1.125rem;
+  color: #374151;
   margin-bottom: 0.5rem;
 }
 
-.emptyText p {
-  font-size: 1rem;
-  color: #34495e;
+.emptyState p {
+  font-size: 0.875rem;
 }
 
-.emptyStateImage {
-  max-width: 300px;
-  margin-bottom: 2rem;
+.achievementsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
-  .emptyContent {
+  .pageContainer {
+    padding: 1rem;
+  }
+
+  .progressCards {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .progressCircle, .streakIcon, .totalChallenges {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mainContent {
+    padding: 1rem;
+  }
+
+  .sectionHeader {
     flex-direction: column;
-    text-align: center;
+    gap: 1rem;
+    align-items: flex-start;
   }
 
-  .emptyContent svg {
-    margin-right: 0;
-    margin-bottom: 1rem;
+  .createButton {
+    width: 100%;
+    justify-content: center;
   }
 
-  .emptyText {
-    text-align: center;
+  .challengesGrid, .achievementsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animation Classes */
+.fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

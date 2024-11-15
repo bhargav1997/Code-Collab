@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faArrowLeft,
@@ -11,11 +12,13 @@ import {
    faFireAlt,
    faExclamationTriangle,
    faClock,
+   faCalendarAlt,
+   faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
+import Confetti from "react-confetti";
 import styles from "./ChallengeDetails.module.css";
 import { updateChallenge } from "../../redux/challenges/challengesSlice";
 import { updateUserAchievements } from "../../redux/user/userSlice";
-import Confetti from "react-confetti";
 
 const ChallengeDetails = () => {
    const { id } = useParams();
@@ -118,100 +121,169 @@ const ChallengeDetails = () => {
       );
    }
 
-   const renderContent = () => {
-      if (isChallengeDone) {
-         return (
-            <div className={styles.celebrationMessage}>
-               <FontAwesomeIcon icon={faTrophy} className={styles.trophyIcon} />
-               <h2>Congratulations! You&apos;ve Conquered the Challenge!</h2>
-               <p>You&apos;ve successfully completed the {challenge.duration}-day challenge.</p>
-               <div className={styles.streakInfo}>
-                  <FontAwesomeIcon icon={faFireAlt} />
-                  <span>{challenge.duration} Day Streak!</span>
-               </div>
-               <button onClick={() => navigate("/challenges")} className={styles.newChallengeButton}>
-                  Start a New Challenge
-               </button>
-            </div>
-         );
-      }
+   const renderTaskList = () => (
+      <motion.div 
+         className={styles.tasksContainer}
+         initial={{ opacity: 0, y: 20 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ delay: 0.2 }}
+      >
+         <h3 className={styles.taskListTitle}>
+            <FontAwesomeIcon icon={faRocket} />
+            Today&apos;s Learning Tasks
+         </h3>
+         <div className={styles.taskList}>
+            {challenge.tasks.map((task, index) => (
+               <motion.div
+                  key={index}
+                  className={styles.taskItem}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+               >
+                  <label className={styles.taskLabel}>
+                     <input
+                        type="checkbox"
+                        checked={taskStatus[index] || false}
+                        onChange={() => handleTaskCheck(index)}
+                        className={styles.taskCheckbox}
+                     />
+                     <span className={styles.checkmark}>
+                        <FontAwesomeIcon icon={faCheck} />
+                     </span>
+                     <span className={styles.taskText}>{task}</span>
+                  </label>
+               </motion.div>
+            ))}
+         </div>
+         <motion.button
+            onClick={handleCompleteDay}
+            className={`${styles.completeButton} ${!allTasksCompleted ? styles.disabled : ""}`}
+            disabled={!allTasksCompleted}
+            whileHover={allTasksCompleted ? { scale: 1.02 } : {}}
+            whileTap={allTasksCompleted ? { scale: 0.98 } : {}}
+         >
+            <FontAwesomeIcon icon={faCheckCircle} />
+            Complete Today&apos;s Learning
+         </motion.button>
+      </motion.div>
+   );
 
-      if (isDayComplete) {
-         return (
-            <div className={styles.completionMessage}>
-               <FontAwesomeIcon icon={faRocket} />
-               <h2>Great job! You&apos;ve completed today&apos;s learning.</h2>
-               <p>Come back tomorrow to continue your journey.</p>
-               <div className={styles.nextDayInfo}>
-                  <FontAwesomeIcon icon={faClock} />
-                  <span>Next challenge will be available tomorrow</span>
-               </div>
-               <div className={styles.progressInfo}>
-                  <FontAwesomeIcon icon={faFireAlt} />
-                  <span>Day {currentDay - 1} of {challenge.duration} completed!</span>
-               </div>
+   const renderCompletionMessage = () => (
+      <motion.div 
+         className={styles.completionMessage}
+         initial={{ opacity: 0, scale: 0.8 }}
+         animate={{ opacity: 1, scale: 1 }}
+         transition={{ type: "spring", stiffness: 200 }}
+      >
+         <div className={styles.completionIcon}>
+            <FontAwesomeIcon icon={faRocket} />
+         </div>
+         <h2>Great job! You&apos;ve completed today&apos;s learning.</h2>
+         <p>Come back tomorrow to continue your journey.</p>
+         <div className={styles.completionStats}>
+            <div className={styles.statItem}>
+               <FontAwesomeIcon icon={faClock} />
+               <span>Next challenge available tomorrow</span>
             </div>
-         );
-      }
+            <div className={styles.statItem}>
+               <FontAwesomeIcon icon={faFireAlt} />
+               <span>Day {currentDay - 1} of {challenge.duration} completed!</span>
+            </div>
+         </div>
+      </motion.div>
+   );
 
-      return (
-         <>
-            <div className={styles.progressHeader}>
-               <h3>Day {currentDay} of {challenge.duration}</h3>
-               <div className={styles.progressBar}>
-                  <div 
-                     className={styles.progressFill} 
-                     style={{ width: `${((currentDay - 1) / challenge.duration) * 100}%` }}
-                  />
-               </div>
+   const renderCelebration = () => (
+      <motion.div 
+         className={styles.celebrationMessage}
+         initial={{ opacity: 0, y: 20 }}
+         animate={{ opacity: 1, y: 0 }}
+      >
+         <div className={styles.trophyIcon}>
+            <FontAwesomeIcon icon={faTrophy} />
+         </div>
+         <h2>Congratulations! Challenge Completed! 🎉</h2>
+         <p>You&apos;ve successfully completed all {challenge.duration} days!</p>
+         <div className={styles.achievementStats}>
+            <div className={styles.achievementItem}>
+               <FontAwesomeIcon icon={faCalendarAlt} />
+               <span>{challenge.duration} Days Completed</span>
             </div>
-            <h3 className={styles.taskListTitle}>Today&apos;s Learning Tasks</h3>
-            <ul className={styles.taskList}>
-               {challenge.tasks.map((task, index) => (
-                  <li key={index} className={styles.taskItem}>
-                     <label className={styles.taskLabel}>
-                        <input
-                           type="checkbox"
-                           checked={taskStatus[index] || false}
-                           onChange={() => handleTaskCheck(index)}
-                           className={styles.taskCheckbox}
-                        />
-                        <span className={styles.taskText}>{task}</span>
-                     </label>
-                  </li>
-               ))}
-            </ul>
-            <button
-               onClick={handleCompleteDay}
-               className={`${styles.completeButton} ${!allTasksCompleted ? styles.disabled : ""}`}
-               disabled={!allTasksCompleted}
-            >
-               <FontAwesomeIcon icon={faCheck} /> Complete Today&apos;s Learning
-            </button>
-            {!allTasksCompleted && (
-               <p className={styles.taskCompletionMessage}>
-                  <FontAwesomeIcon icon={faInfoCircle} /> Complete all tasks to achieve today&apos;s goal
-               </p>
-            )}
-         </>
-      );
-   };
+            <div className={styles.achievementItem}>
+               <FontAwesomeIcon icon={faCheckCircle} />
+               <span>{challenge.tasks.length * challenge.duration} Tasks Accomplished</span>
+            </div>
+         </div>
+         <motion.button
+            className={styles.newChallengeButton}
+            onClick={() => navigate("/challenges")}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+         >
+            <FontAwesomeIcon icon={faRocket} />
+            Start a New Challenge
+         </motion.button>
+      </motion.div>
+   );
 
    return (
       <div className={styles.challengeDetails}>
          {showCelebration && <Confetti />}
-         <button className={styles.backButton} onClick={() => navigate("/challenges")}>
-            <FontAwesomeIcon icon={faArrowLeft} /> Back to Challenges
-         </button>
-         <div className={styles.challengeCard}>
-            <h2>{challenge.name}</h2>
-            <p className={styles.description}>{challenge.description}</p>
-            {renderContent()}
-         </div>
-         {updateError && (
-            <div className={styles.errorMessage}>
-               <FontAwesomeIcon icon={faExclamationTriangle} /> {updateError}
+         <motion.button 
+            className={styles.backButton}
+            onClick={() => navigate("/challenges")}
+            whileHover={{ x: -5 }}
+         >
+            <FontAwesomeIcon icon={faArrowLeft} />
+            Back to Challenges
+         </motion.button>
+
+         <motion.div 
+            className={styles.challengeCard}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+         >
+            <div className={styles.challengeHeader}>
+               <h2>{challenge.name}</h2>
+               <p className={styles.description}>{challenge.description}</p>
             </div>
+
+            {!isChallengeDone && (
+               <div className={styles.progressSection}>
+                  <div className={styles.progressInfo}>
+                     <span>Progress</span>
+                     <span>{Math.round(((currentDay - 1) / challenge.duration) * 100)}%</span>
+                  </div>
+                  <div className={styles.progressBar}>
+                     <motion.div 
+                        className={styles.progressFill}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${((currentDay - 1) / challenge.duration) * 100}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                     />
+                  </div>
+               </div>
+            )}
+
+            {isChallengeDone ? (
+               renderCelebration()
+            ) : isDayComplete ? (
+               renderCompletionMessage()
+            ) : (
+               renderTaskList()
+            )}
+         </motion.div>
+
+         {updateError && (
+            <motion.div 
+               className={styles.errorMessage}
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+            >
+               <FontAwesomeIcon icon={faExclamationTriangle} />
+               {updateError}
+            </motion.div>
          )}
       </div>
    );

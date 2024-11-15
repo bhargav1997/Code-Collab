@@ -1,0 +1,158 @@
+.badge {
+   position: relative;
+   background: white;
+   border-radius: 16px;
+   padding: 1.25rem;
+   display: flex;
+   gap: 1rem;
+   align-items: center;
+   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+   overflow: visible;
+}
+
+.badge.purple {
+   background: linear-gradient(135deg, rgba(124, 77, 255, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+}
+
+.badge.orange {
+   background: linear-gradient(135deg, rgba(251, 146, 60, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+}
+
+.badge.blue {
+   background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+}
+
+.badge.gold {
+   background: linear-gradient(135deg, rgba(251, 191, 36, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+}
+
+.badgeIcon {
+   width: 48px;
+   height: 48px;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+   font-size: 1.25rem;
+}
+
+.purple .badgeIcon {
+   background: linear-gradient(135deg, #7c4dff 0%, #6366f1 100%);
+   color: white;
+   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.2);
+}
+
+.orange .badgeIcon {
+   background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+   color: white;
+   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.blue .badgeIcon {
+   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+   color: white;
+   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.gold .badgeIcon {
+   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+   color: white;
+   box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+}
+
+.badgeContent {
+   flex: 1;
+   min-width: 0;
+}
+
+.badgeContent h3 {
+   color: #1f2937;
+   font-size: 1rem;
+   font-weight: 600;
+   margin: 0 0 0.25rem;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.badgeContent p {
+   color: #6b7280;
+   font-size: 0.875rem;
+   margin: 0;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+}
+
+.badgeDate {
+   font-size: 0.75rem;
+   color: #9ca3af;
+   margin-top: 0.5rem;
+}
+
+.badgeFooter {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.date {
+   font-size: 0.85rem;
+   color: #94a3b8;
+}
+
+.stars {
+   display: flex;
+   gap: 0.25rem;
+}
+
+.stars svg {
+   color: #fbbf24;
+   font-size: 0.9rem;
+}
+
+.newBadge {
+   position: absolute;
+   top: -8px;
+   right: -8px;
+   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+   color: white;
+   padding: 0.25rem 0.75rem;
+   border-radius: 20px;
+   font-size: 0.75rem;
+   font-weight: 600;
+   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+   z-index: 1;
+}
+
+.shine {
+   position: absolute;
+   top: 0;
+   left: -100%;
+   width: 50%;
+   height: 100%;
+   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+   transform: skewX(-20deg);
+}
+
+@media (max-width: 640px) {
+   .badge {
+      padding: 1rem;
+   }
+
+   .badgeIcon {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+   }
+
+   .badgeContent h3 {
+      font-size: 0.9rem;
+   }
+
+   .badgeContent p {
+      font-size: 0.8rem;
+   }
+}

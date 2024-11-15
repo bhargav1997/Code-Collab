@@ -1,133 +1,186 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-   faPlus,
-   faTrophy,
-   faExclamationTriangle,
-   faSpinner,
-   faLightbulb,
-   faRocket,
-   faFlag,
-   faChartLine,
+  faRocket,
+  faPlus,
+  faTrophy,
+  faChartLine,
+  faFire
 } from "@fortawesome/free-solid-svg-icons";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import styles from "./Challenges.module.css";
-import CreateChallengeModal from "./CreateChallengeModal";
-
-import { fetchChallenges, deleteChallenge } from "../../redux/challenges/challengesSlice";
 import ChallengeCard from "./ChallengeCard";
-
-// Custom SVG component for empty state
-const EmptyChallengesSVG = () => (
-   <svg width='200' height='200' viewBox='0 0 200 200' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <circle cx='100' cy='100' r='90' fill='#f0f0f0' />
-      <path d='M100 20V180' stroke='#d0d0d0' strokeWidth='4' strokeDasharray='8 8' />
-      <path d='M20 100H180' stroke='#d0d0d0' strokeWidth='4' strokeDasharray='8 8' />
-      <circle cx='100' cy='100' r='60' fill='#3498db' />
-      <path d='M80 100L95 115L120 90' stroke='white' strokeWidth='8' strokeLinecap='round' strokeLinejoin='round' />
-      <circle cx='50' cy='50' r='15' fill='#f39c12' />
-      <circle cx='150' cy='150' r='10' fill='#2ecc71' />
-      <circle cx='150' cy='50' r='12' fill='#e74c3c' />
-      <circle cx='50' cy='150' r='8' fill='#9b59b6' />
-   </svg>
-);
+import CreateChallengeModal from "./CreateChallengeModal";
+import AchievementBadge from "../Achievements/AchievementBadge";
 
 const Challenges = () => {
-   const [showCreateModal, setShowCreateModal] = useState(false);
-   const dispatch = useDispatch();
-   const { challenges, status, error } = useSelector((state) => state.challenges);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { challenges = [], status } = useSelector((state) => state.challenges || {});
+  const achievements = useSelector((state) => state.achievements || []);
+  const stats = useSelector((state) => state.stats || {});
+  const dispatch = useDispatch();
 
-   useEffect(() => {
-      if (status === "idle") {
-         dispatch(fetchChallenges());
-      }
-   }, [status, dispatch]);
+  const completionRate = stats?.completionRate || 0;
+  const currentStreak = stats?.currentStreak || 0;
 
-   const handleDeleteChallenge = (challengeId) => {
-      if (window.confirm("Are you sure you want to delete this challenge?")) {
-         dispatch(deleteChallenge(challengeId))
-            .unwrap()
-            .then(() => {
-               console.log("Challenge deleted successfully");
-            })
-            .catch((error) => {
-               console.error("Failed to delete challenge:", error);
-            });
-      }
-   };
+  // Sample achievements data (remove this when you have real data)
+  const sampleAchievements = [
+    {
+      id: 1,
+      type: 'challenge',
+      title: 'First Challenge Complete',
+      description: 'Completed your first challenge!',
+      date: new Date(),
+      isNew: true
+    },
+    {
+      id: 2,
+      type: 'streak',
+      title: '7 Day Streak',
+      description: 'Maintained a 7-day learning streak',
+      date: new Date(),
+      isNew: false
+    },
+    {
+      id: 3,
+      type: 'milestone',
+      title: 'Quick Learner',
+      description: 'Completed 5 tasks in one day',
+      date: new Date(),
+      isNew: false
+    }
+  ];
 
-   const renderEmptyChallenges = () => (
-      <div className={styles.emptyChallenges}>
-         <div className={styles.emptyContent}>
-            <EmptyChallengesSVG />
-            <div className={styles.emptyText}>
-               <h2>Ready to Challenge Yourself?</h2>
-               <p>Start your journey of growth and learning by creating your first challenge!</p>
+  // Use sample achievements if no real achievements exist
+  const displayAchievements = achievements.length > 0 ? achievements : sampleAchievements;
+
+  return (
+    <div className={styles.pageContainer}>
+      {/* Progress Overview Section */}
+      <motion.div 
+        className={styles.progressSection}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className={styles.progressCards}>
+          <div className={styles.progressCard}>
+            <div className={styles.progressCircle}>
+              <CircularProgressbar
+                value={completionRate}
+                text={`${completionRate}%`}
+                styles={buildStyles({
+                  pathColor: `rgba(124, 77, 255, ${completionRate / 100})`,
+                  textColor: '#2c3e50',
+                  trailColor: '#e2e8f0',
+                })}
+              />
             </div>
-         </div>
-         <div className={styles.infoSection}>
-            <h3>
-               <FontAwesomeIcon icon={faLightbulb} /> Why Start a Challenge?
-            </h3>
-            <ul>
-               <li>
-                  <FontAwesomeIcon icon={faFlag} />
-                  <span>Set clear, achievable goals</span>
-               </li>
-               <li>
-                  <FontAwesomeIcon icon={faChartLine} />
-                  <span>Track your progress daily</span>
-               </li>
-               <li>
-                  <FontAwesomeIcon icon={faRocket} />
-                  <span>Boost your motivation and productivity</span>
-               </li>
-            </ul>
-         </div>
-         {/* <button className={styles.createFirstButton} onClick={() => setShowCreateModal(true)}>
-            <FontAwesomeIcon icon={faPlus} /> Create Your First Challenge
-         </button> */}
+            <h3>Completion Rate</h3>
+          </div>
+
+          <div className={styles.progressCard}>
+            <div className={styles.streakIcon}>
+              <FontAwesomeIcon icon={faFire} />
+              <span>{currentStreak}</span>
+            </div>
+            <h3>Day Streak</h3>
+          </div>
+
+          <div className={styles.progressCard}>
+            <div className={styles.totalChallenges}>
+              <FontAwesomeIcon icon={faRocket} />
+              <span>{challenges.length}</span>
+            </div>
+            <h3>Active Challenges</h3>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Challenges Section */}
+      <div className={styles.mainContent}>
+        <div className={styles.sectionHeader}>
+          <h2>
+            <FontAwesomeIcon icon={faRocket} />
+            Your Challenges
+          </h2>
+          <motion.button
+            className={styles.createButton}
+            onClick={() => setShowCreateModal(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Create Challenge
+          </motion.button>
+        </div>
+
+        <motion.div 
+          className={styles.challengesGrid}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {challenges.length === 0 ? (
+            <div className={styles.emptyState}>
+              <FontAwesomeIcon icon={faRocket} />
+              <h3>No Challenges Yet</h3>
+              <p>Create your first challenge to start your learning journey!</p>
+            </div>
+          ) : (
+            <AnimatePresence>
+              {challenges.map((challenge, index) => (
+                <motion.div
+                  key={challenge._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <ChallengeCard challenge={challenge} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          )}
+        </motion.div>
+
+        {/* Recent Achievements Section */}
+        <div className={styles.sectionHeader}>
+          <h2>
+            <FontAwesomeIcon icon={faTrophy} />
+            Recent Achievements
+          </h2>
+        </div>
+
+        <motion.div 
+          className={styles.achievementsGrid}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          {displayAchievements.slice(0, 3).map((achievement, index) => (
+            <motion.div
+              key={achievement.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 + index * 0.1 }}
+            >
+              <AchievementBadge {...achievement} />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-   );
 
-   return (
-      <div className={styles.challengesContainer}>
-         <div className={styles.header}>
-            <h1 className={styles.title}>
-               <FontAwesomeIcon icon={faTrophy} /> My Challenges
-            </h1>
-            <button className={styles.createButton} onClick={() => setShowCreateModal(true)}>
-               <FontAwesomeIcon icon={faPlus} /> Create New Challenge
-            </button>
-         </div>
-
-         {status === "loading" && (
-            <div className={styles.loadingMessage}>
-               <FontAwesomeIcon icon={faSpinner} spin />
-               <p>Loading challenges...</p>
-            </div>
-         )}
-
-         {status === "failed" && (
-            <div className={styles.errorMessage}>
-               <FontAwesomeIcon icon={faExclamationTriangle} />
-               <p>{error}</p>
-            </div>
-         )}
-
-         {status === "succeeded" && challenges.length === 0 && renderEmptyChallenges()}
-
-         {status === "succeeded" && challenges.length > 0 && (
-            <div className={styles.challengeGrid}>
-               {challenges.map((challenge) => (
-                  <ChallengeCard key={challenge._id} challenge={challenge} onDelete={() => handleDeleteChallenge(challenge._id)} />
-               ))}
-            </div>
-         )}
-
-         {showCreateModal && <CreateChallengeModal onClose={() => setShowCreateModal(false)} />}
-      </div>
-   );
+      {/* Create Challenge Modal */}
+      <AnimatePresence>
+        {showCreateModal && (
+          <CreateChallengeModal onClose={() => setShowCreateModal(false)} />
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };
 
 export default Challenges;

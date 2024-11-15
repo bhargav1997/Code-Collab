@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
-import styles from "./CreateChallengeModal.module.css";
+import {
+   faTimes,
+   faPlus,
+   faTrash,
+   faMagic,
+   faCalendarAlt,
+   faListUl
+} from "@fortawesome/free-solid-svg-icons";
 import { createChallenge } from "../../redux/challenges/challengesSlice";
-import PropTypes from "prop-types";
-
-const durationOptions = [
-   { value: 5, label: "5 days" },
-   { value: 10, label: "10 days" },
-   { value: 15, label: "15 days" },
-   { value: 30, label: "30 days" },
-   { value: "other", label: "Custom" },
-];
+import styles from "./CreateChallengeModal.module.css";
 
 const CreateChallengeModal = ({ onClose }) => {
    const dispatch = useDispatch();
@@ -20,164 +19,292 @@ const CreateChallengeModal = ({ onClose }) => {
       name: "",
       description: "",
       duration: "",
-      tasks: [""],
+      customDuration: "",
+      tasks: [""]
    });
+   const [currentStep, setCurrentStep] = useState(1);
+   const totalSteps = 3;
 
-   const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setChallengeData((prev) => ({ ...prev, [name]: value }));
+   const handleAddTask = () => {
+      setChallengeData(prev => ({
+         ...prev,
+         tasks: [...prev.tasks, ""]
+      }));
    };
 
-   const handleDurationChange = (e) => {
-      const value = e.target.value;
-      if (value === "other") {
-         setChallengeData(prev => ({
-            ...prev,
-            duration: "",
-            customDuration: ""
-         }));
-      } else {
-         setChallengeData(prev => ({
-            ...prev,
-            duration: Number(value),
-            customDuration: ""
-         }));
-      }
+   const handleRemoveTask = (index) => {
+      setChallengeData(prev => ({
+         ...prev,
+         tasks: prev.tasks.filter((_, i) => i !== index)
+      }));
    };
 
    const handleTaskChange = (index, value) => {
       const newTasks = [...challengeData.tasks];
       newTasks[index] = value;
-      setChallengeData((prev) => ({ ...prev, tasks: newTasks }));
+      setChallengeData(prev => ({
+         ...prev,
+         tasks: newTasks
+      }));
    };
 
-   const addTask = () => {
-      setChallengeData((prev) => ({ ...prev, tasks: [...prev.tasks, ""] }));
-   };
-
-   const removeTask = (index) => {
-      const newTasks = challengeData.tasks.filter((_, i) => i !== index);
-      setChallengeData((prev) => ({ ...prev, tasks: newTasks }));
-   };
-
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
-      
-      // Format challenge data according to backend requirements
       const finalData = {
-         name: challengeData.name.trim(),
-         description: challengeData.description.trim(),
-         duration: challengeData.duration || Number(challengeData.customDuration),
+         ...challengeData,
+         duration: challengeData.duration === "custom" 
+            ? Number(challengeData.customDuration) 
+            : Number(challengeData.duration),
          tasks: challengeData.tasks.filter(task => task.trim() !== "")
       };
 
-      dispatch(createChallenge(finalData))
-         .unwrap()
-         .then(() => {
-            onClose();
-         })
-         .catch((error) => {
-            console.error("Failed to create challenge:", error);
-            // Handle error (you might want to show an error message to the user)
-         });
+      try {
+         await dispatch(createChallenge(finalData)).unwrap();
+         onClose();
+      } catch (error) {
+         console.error("Failed to create challenge:", error);
+      }
+   };
+
+   const modalVariants = {
+      hidden: { opacity: 0, scale: 0.8 },
+      visible: { opacity: 1, scale: 1 }
+   };
+
+   const overlayVariants = {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 }
+   };
+
+   const renderStep = () => {
+      switch (currentStep) {
+         case 1:
+            return (
+               <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+               >
+                  <h3>Basic Information</h3>
+                  <div className={styles.inputGroup}>
+                     <label>Challenge Name</label>
+                     <input
+                        type="text"
+                        value={challengeData.name}
+                        onChange={(e) => setChallengeData(prev => ({
+                           ...prev,
+                           name: e.target.value
+                        }))}
+                        placeholder="Enter challenge name"
+                        required
+                     />
+                  </div>
+                  <div className={styles.inputGroup}>
+                     <label>Description</label>
+                     <textarea
+                        value={challengeData.description}
+                        onChange={(e) => setChallengeData(prev => ({
+                           ...prev,
+                           description: e.target.value
+                        }))}
+                        placeholder="Describe your challenge"
+                        required
+                     />
+                  </div>
+               </motion.div>
+            );
+         case 2:
+            return (
+               <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+               >
+                  <h3>Duration</h3>
+                  <div className={styles.durationOptions}>
+                     {[7, 14, 21, 30, "custom"].map((option) => (
+                        <motion.button
+                           key={option}
+                           type="button"
+                           className={`${styles.durationOption} ${
+                              challengeData.duration === String(option) ? styles.active : ""
+                           }`}
+                           onClick={() => setChallengeData(prev => ({
+                              ...prev,
+                              duration: String(option)
+                           }))}
+                           whileHover={{ scale: 1.05 }}
+                           whileTap={{ scale: 0.95 }}
+                        >
+                           {option === "custom" ? (
+                              <>
+                                 <FontAwesomeIcon icon={faMagic} />
+                                 Custom
+                              </>
+                           ) : (
+                              <>
+                                 <FontAwesomeIcon icon={faCalendarAlt} />
+                                 {option} Days
+                              </>
+                           )}
+                        </motion.button>
+                     ))}
+                  </div>
+                  {challengeData.duration === "custom" && (
+                     <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={styles.inputGroup}
+                     >
+                        <label>Custom Duration (days)</label>
+                        <input
+                           type="number"
+                           value={challengeData.customDuration}
+                           onChange={(e) => setChallengeData(prev => ({
+                              ...prev,
+                              customDuration: e.target.value
+                           }))}
+                           min="1"
+                           required
+                        />
+                     </motion.div>
+                  )}
+               </motion.div>
+            );
+         case 3:
+            return (
+               <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+               >
+                  <h3>Daily Tasks</h3>
+                  <div className={styles.tasksList}>
+                     {challengeData.tasks.map((task, index) => (
+                        <motion.div
+                           key={index}
+                           className={styles.taskInput}
+                           initial={{ opacity: 0, y: 10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           transition={{ delay: index * 0.1 }}
+                        >
+                           <input
+                              type="text"
+                              value={task}
+                              onChange={(e) => handleTaskChange(index, e.target.value)}
+                              placeholder={`Task ${index + 1}`}
+                              required
+                           />
+                           {challengeData.tasks.length > 1 && (
+                              <motion.button
+                                 type="button"
+                                 onClick={() => handleRemoveTask(index)}
+                                 className={styles.removeTask}
+                                 whileHover={{ scale: 1.1 }}
+                                 whileTap={{ scale: 0.9 }}
+                              >
+                                 <FontAwesomeIcon icon={faTrash} />
+                              </motion.button>
+                           )}
+                        </motion.div>
+                     ))}
+                     <motion.button
+                        type="button"
+                        onClick={handleAddTask}
+                        className={styles.addTask}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                     >
+                        <FontAwesomeIcon icon={faPlus} />
+                        Add Task
+                     </motion.button>
+                  </div>
+               </motion.div>
+            );
+         default:
+            return null;
+      }
    };
 
    return (
-      <div className={styles.modalOverlay}>
-         <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={onClose}>
-               <FontAwesomeIcon icon={faTimes} />
-            </button>
-            <h2 className={styles.modalTitle}>Create New Challenge</h2>
-            <form onSubmit={handleSubmit}>
-               <div className={styles.formGroup}>
-                  <label htmlFor='name'>Challenge Name</label>
-                  <input
-                     type='text'
-                     id='name'
-                     name='name'
-                     value={challengeData.name}
-                     onChange={handleInputChange}
-                     placeholder='Enter challenge name'
-                     required
-                  />
-               </div>
-               <div className={styles.formGroup}>
-                  <label htmlFor='description'>Description</label>
-                  <textarea
-                     id='description'
-                     name='description'
-                     value={challengeData.description}
-                     onChange={handleInputChange}
-                     placeholder='Describe your challenge'
-                     required
-                  />
-               </div>
-               <div className={styles.formGroup}>
-                  <label htmlFor='duration'>Duration</label>
-                  <select 
-                     id='duration' 
-                     name='duration' 
-                     value={challengeData.duration || "other"} 
-                     onChange={handleDurationChange} 
-                     required={!challengeData.customDuration}
-                  >
-                     <option value=''>Select duration</option>
-                     {durationOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                           {option.label}
-                        </option>
-                     ))}
-                  </select>
-                  {(!challengeData.duration || challengeData.duration === "") && (
-                     <input
-                        type='number'
-                        name='customDuration'
-                        value={challengeData.customDuration}
-                        onChange={(e) => setChallengeData(prev => ({
-                           ...prev,
-                           customDuration: e.target.value
-                        }))}
-                        className={styles.customDuration}
-                        placeholder='Enter custom duration (days)'
-                        min='1'
-                        required={!challengeData.duration}
-                     />
-                  )}
-               </div>
-               <div className={styles.formGroup}>
-                  <label>Tasks</label>
-                  {challengeData.tasks.map((task, index) => (
-                     <div key={index} className={styles.taskInput}>
-                        <input
-                           type='text'
-                           value={task}
-                           onChange={(e) => handleTaskChange(index, e.target.value)}
-                           placeholder={`Task ${index + 1}`}
-                           required
-                        />
-                        {index > 0 && (
-                           <button type='button' onClick={() => removeTask(index)} className={styles.removeTaskButton}>
-                              <FontAwesomeIcon icon={faMinus} />
-                           </button>
-                        )}
-                     </div>
-                  ))}
-                  <button type='button' onClick={addTask} className={styles.addTaskButton}>
-                     <FontAwesomeIcon icon={faPlus} /> Add Task
-                  </button>
-               </div>
-               <button type='submit' className={styles.submitButton}>
-                  Create Challenge
+      <AnimatePresence>
+         <motion.div
+            className={styles.modalOverlay}
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+         >
+            <motion.div
+               className={styles.modal}
+               variants={modalVariants}
+               initial="hidden"
+               animate="visible"
+               exit="hidden"
+            >
+               <button className={styles.closeButton} onClick={onClose}>
+                  <FontAwesomeIcon icon={faTimes} />
                </button>
-            </form>
-         </div>
-      </div>
-   );
-};
 
-CreateChallengeModal.propTypes = {
-   onClose: PropTypes.func.isRequired,
+               <div className={styles.modalHeader}>
+                  <h2>Create New Challenge</h2>
+                  <div className={styles.stepIndicator}>
+                     {Array.from({ length: totalSteps }).map((_, index) => (
+                        <motion.div
+                           key={index}
+                           className={`${styles.step} ${
+                              currentStep > index ? styles.completed : ""
+                           } ${currentStep === index + 1 ? styles.active : ""}`}
+                           whileHover={{ scale: 1.1 }}
+                           onClick={() => setCurrentStep(index + 1)}
+                        />
+                     ))}
+                  </div>
+               </div>
+
+               <form onSubmit={handleSubmit}>
+                  <div className={styles.modalContent}>
+                     {renderStep()}
+                  </div>
+
+                  <div className={styles.modalFooter}>
+                     {currentStep > 1 && (
+                        <motion.button
+                           type="button"
+                           onClick={() => setCurrentStep(prev => prev - 1)}
+                           className={styles.secondaryButton}
+                           whileHover={{ scale: 1.05 }}
+                           whileTap={{ scale: 0.95 }}
+                        >
+                           Back
+                        </motion.button>
+                     )}
+                     {currentStep < totalSteps ? (
+                        <motion.button
+                           type="button"
+                           onClick={() => setCurrentStep(prev => prev + 1)}
+                           className={styles.primaryButton}
+                           whileHover={{ scale: 1.05 }}
+                           whileTap={{ scale: 0.95 }}
+                        >
+                           Next
+                        </motion.button>
+                     ) : (
+                        <motion.button
+                           type="submit"
+                           className={styles.primaryButton}
+                           whileHover={{ scale: 1.05 }}
+                           whileTap={{ scale: 0.95 }}
+                        >
+                           Create Challenge
+                        </motion.button>
+                     )}
+                  </div>
+               </form>
+            </motion.div>
+         </motion.div>
+      </AnimatePresence>
+   );
 };
 
 export default CreateChallengeModal;
