@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPaperPlane, faEllipsisV, faPaperclip, faSmile, faUserFriends, faTrash, faComment } from "@fortawesome/free-solid-svg-icons";
+import {
+   faSearch,
+   faPaperPlane,
+   faEllipsisV,
+   faPaperclip,
+   faSmile,
+   faUserFriends,
+   faTrash,
+   faComment,
+} from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
 import styles from "./Message.module.css";
@@ -10,6 +19,7 @@ import { useSelector } from "react-redux";
 import { fetchUserConnections } from "../../api/userApi";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 const EmptyConversation = ({ selectedUser }) => {
    return (
@@ -47,7 +57,7 @@ function Message() {
    const searchTimeoutRef = useRef(null);
    const location = useLocation();
    const queryParams = new URLSearchParams(location.search);
-   const urlUserId = queryParams.get('userId');
+   const urlUserId = queryParams.get("userId");
    const [initialLoadDone, setInitialLoadDone] = useState(false);
 
    const initializeSocket = useCallback(() => {
@@ -168,19 +178,19 @@ function Message() {
          if (!urlUserId || initialLoadDone) return;
 
          // Clear URL parameter without page reload
-         window.history.replaceState({}, '', window.location.pathname);
-         
+         window.history.replaceState({}, "", window.location.pathname);
+
          // Check if this user is in connections
-         const userExists = connections.some(conn => conn._id === urlUserId);
-         
+         const userExists = connections.some((conn) => conn._id === urlUserId);
+
          if (userExists) {
             handleChatSelect(urlUserId);
          } else {
             try {
                const response = await axios.get(`${API_URL}/users/${urlUserId}`, {
-                  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+                  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                });
-               
+
                if (response.data && response.data.user) {
                   const userData = {
                      _id: response.data.user._id,
@@ -191,8 +201,8 @@ function Message() {
                      isFollowing: response.data.user.isFollowing,
                   };
 
-                  setConnections(prev => {
-                     if (!prev.some(conn => conn._id === userData._id)) {
+                  setConnections((prev) => {
+                     if (!prev.some((conn) => conn._id === userData._id)) {
                         return [...prev, userData];
                      }
                      return prev;
@@ -214,25 +224,28 @@ function Message() {
       }
    }, [urlUserId, connections, initialLoadDone]);
 
-   const handleChatSelect = useCallback(async (chatId) => {
-      if (!chatId) return;
+   const handleChatSelect = useCallback(
+      async (chatId) => {
+         if (!chatId) return;
 
-      setSelectedChat(chatId);
-      
-      if (socket) {
-         if (selectedChat) {
-            socket.emit("leave_room", selectedChat);
+         setSelectedChat(chatId);
+
+         if (socket) {
+            if (selectedChat) {
+               socket.emit("leave_room", selectedChat);
+            }
+            socket.emit("join_room", chatId);
          }
-         socket.emit("join_room", chatId);
-      }
 
-      try {
-         await fetchChatHistory(chatId);
-      } catch (error) {
-         console.error("Error in chat selection:", error);
-         toast.error("Failed to load chat history");
-      }
-   }, [socket, selectedChat, fetchChatHistory]);
+         try {
+            await fetchChatHistory(chatId);
+         } catch (error) {
+            console.error("Error in chat selection:", error);
+            toast.error("Failed to load chat history");
+         }
+      },
+      [socket, selectedChat, fetchChatHistory],
+   );
 
    const sendPrivateMessage = useCallback(
       async (recipientId, message) => {
@@ -430,8 +443,8 @@ function Message() {
                            </div>
                         ))
                      ) : (
-                        <EmptyConversation 
-                           selectedUser={connections.find(c => c._id === selectedChat)}
+                        <EmptyConversation
+                           selectedUser={connections.find((c) => c._id === selectedChat)}
                            onSuggestionClick={handleSuggestionClick}
                         />
                      )}
@@ -476,5 +489,10 @@ function Message() {
       </div>
    );
 }
+
+EmptyConversation.propTypes = {
+   selectedUser: PropTypes.object,
+   onSuggestionClick: PropTypes.func,
+};
 
 export default Message;

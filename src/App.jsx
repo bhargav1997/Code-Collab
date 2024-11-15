@@ -74,7 +74,7 @@ function AppDesktop() {
                   dispatch(setUser(userData));
                   // Remove the startTransition here as it's not necessary for this operation
                   const hasCompletedOnboarding = localStorage.getItem("hasCompletedOnboarding");
-                  if (!hasCompletedOnboarding) {
+                  if (!hasCompletedOnboarding || hasCompletedOnboarding !== "true") {
                      setShowOnboarding(true);
                   }
                } else {
@@ -109,6 +109,7 @@ function AppDesktop() {
          <ErrorBoundary FallbackComponent={ErrorFallback}>
             <ToastContainer />
             <div className={styles.appContainer}>
+               {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
                <div className={`${styles.appContent} ${showOnboarding ? styles.blurred : ""}`}>
                   {isAuthenticated && (
                      <aside className={styles.sidebar}>{isAuthenticated && isLoading ? <SidebarSkeleton /> : <Sidebar />}</aside>
@@ -143,7 +144,6 @@ function AppDesktop() {
                      </Suspense>
                   </div>
                </div>
-               {showOnboarding && isAuthenticated && <Onboarding onComplete={handleOnboardingComplete} />}
             </div>
          </ErrorBoundary>
       </Router>
