@@ -36,6 +36,8 @@ import withMobileRestriction from "./components/MobileRestriction/withMobileRest
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
 function ErrorFallback({ error }) {
    return (
       <div role='alert'>
@@ -159,6 +161,7 @@ function AuthenticatedLayout() {
          <main className={styles.content}>
             <Outlet />
             <Analytics />
+            <SpeedInsights />
          </main>
       </>
    );
