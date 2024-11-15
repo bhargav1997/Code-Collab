@@ -69,6 +69,7 @@ const ChallengeCard = ({ challenge, onDelete }) => {
                className={styles.deleteButton}
                onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   onDelete(challenge._id);
                }}
                whileHover={{ scale: 1.1 }}

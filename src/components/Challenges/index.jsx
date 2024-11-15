@@ -11,16 +11,22 @@ import CreateChallengeModal from "./CreateChallengeModal";
 import AchievementBadge from "../Achievements/AchievementBadge";
 import { markAchievementSeen } from "../../redux/slices/achievementsSlice";
 import PropTypes from "prop-types";
+import { deleteChallenge, fetchChallenges } from "../../redux/challenges/challengesSlice";
+import { fetchAchievements } from "../../redux/achievements/achievementsSlice";
 
 const Challenges = () => {
    const [showCreateModal, setShowCreateModal] = useState(false);
-   const { challenges = [] } = useSelector((state) => state.challenges || {});
-   const achievements = useSelector((state) => state.achievements.achievements);
+   const { challenges = [], status } = useSelector((state) => state.challenges || {});
+   const { achievements = [] } = useSelector((state) => state.achievements || {});
    const stats = useSelector((state) => state.stats || {});
    const dispatch = useDispatch();
-
    const completionRate = stats?.completionRate || 0;
    const currentStreak = stats?.currentStreak || 0;
+   // Fetch data when component mounts
+   useEffect(() => {
+      dispatch(fetchChallenges());
+      dispatch(fetchAchievements());
+   }, [dispatch]);
 
    // Mark achievements as seen when displayed
    useEffect(() => {
@@ -30,6 +36,24 @@ const Challenges = () => {
          }
       });
    }, [achievements, dispatch]);
+
+   const handleDelete = (challengeId) => {
+      if (window.confirm("Are you sure you want to delete this challenge?")) {
+         dispatch(deleteChallenge(challengeId));
+      }
+   };
+
+   // Show loading state while fetching data
+   if (status === "loading") {
+      return (
+         <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}>
+               <FontAwesomeIcon icon={faRocket} spin />
+            </div>
+            <p>Loading your challenges...</p>
+         </div>
+      );
+   }
 
    return (
       <div className={styles.pageContainer}>
@@ -102,7 +126,7 @@ const Challenges = () => {
                            animate={{ opacity: 1, y: 0 }}
                            exit={{ opacity: 0, y: -20 }}
                            transition={{ delay: index * 0.1 }}>
-                           <ChallengeCard challenge={challenge} />
+                           <ChallengeCard challenge={challenge} onDelete={handleDelete} />
                         </motion.div>
                      ))}
                   </AnimatePresence>
