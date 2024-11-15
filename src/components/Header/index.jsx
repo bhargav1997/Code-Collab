@@ -22,6 +22,51 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CONFIG } from "../../config";
+import logoImage from "../../assets/images/logo.png";
+import PropTypes from "prop-types";
+
+const MessageNotification = ({ notification, onClick, isBeingRead, isRead }) => {
+   return (
+      <div className={`${styles.messagePreview} ${isRead ? styles.read : ""}`} onClick={onClick}>
+         <div className={styles.messageUserInfo}>
+            {notification.relatedUser?.profilePicture ? (
+               <img
+                  src={notification.relatedUser.profilePicture}
+                  alt={notification.relatedUser.username}
+                  className={styles.userThumbnail}
+               />
+            ) : (
+               <div className={styles.userInitial}>{notification.relatedUser?.username?.[0]?.toUpperCase()}</div>
+            )}
+            <div className={styles.messageDetails}>
+               <span className={styles.username}>{notification.relatedUser?.username}</span>
+               <span className={styles.messageText}>{notification.message}</span>
+               <span className={styles.messageTime}>{formatNotificationTime(notification.createdAt)}</span>
+            </div>
+         </div>
+         {!isRead && <div className={styles.unreadDot} />}
+         {isBeingRead && (
+            <div className={styles.loadingIndicator}>
+               <div className={styles.dot}></div>
+            </div>
+         )}
+      </div>
+   );
+};
+
+const EmptyNotificationState = ({ type = "notifications" }) => {
+   return (
+      <div className={styles.emptyNotificationState}>
+         <div className={styles.emptyStateIcon}>
+            {type === "messages" ? <FontAwesomeIcon icon={faEnvelope} /> : <FontAwesomeIcon icon={faBell} />}
+         </div>
+         <h4>No {type} yet</h4>
+         <p>
+            {type === "messages" ? "When you receive messages, they'll show up here" : "When you get notifications, they'll show up here"}
+         </p>
+      </div>
+   );
+};
 
 function Header() {
    const [showUserMenu, setShowUserMenu] = useState(false);
@@ -36,6 +81,12 @@ function Header() {
       message: null,
       error: false,
    });
+   const userMenuRef = useRef(null);
+   const [showMessageNotifications, setShowMessageNotifications] = useState(false);
+   const [messageNotificationsBeingRead, setMessageNotificationsBeingRead] = useState({});
+   const messageNotificationsRef = useRef(null);
+
+   console.log("notifications", notifications);
 
    useEffect(() => {
       fetchNotifications();
@@ -45,6 +96,32 @@ function Header() {
       function handleClickOutside(event) {
          if (notificationRef.current && !notificationRef.current.contains(event.target)) {
             setShowNotifications(false);
+         }
+      }
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, []);
+
+   useEffect(() => {
+      function handleClickOutside(event) {
+         if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+            setShowUserMenu(false);
+         }
+      }
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+         document.removeEventListener("mousedown", handleClickOutside);
+      };
+   }, []);
+
+   useEffect(() => {
+      function handleClickOutside(event) {
+         if (messageNotificationsRef.current && !messageNotificationsRef.current.contains(event.target)) {
+            setShowMessageNotifications(false);
          }
       }
 
@@ -140,9 +217,100 @@ function Header() {
       }
    };
 
+   const handleMarkAllAsRead = async () => {
+      try {
+         const response = await axios.put(
+            `${CONFIG.API_URL}/notifications/mark-all-read`,
+            {},
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } },
+         );
+
+         if (response?.status === 200) {
+            setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
+            toast.success("All notifications marked as read");
+         }
+      } catch (error) {
+         console.error("Failed to mark all notifications as read:", error);
+         toast.error("Failed to mark notifications as read");
+      }
+   };
+
+   const handleMarkAsRead = async (notificationId) => {
+      try {
+         const response = await axios.put(
+            `${CONFIG.API_URL}/notifications/${notificationId}/read`,
+            {},
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } },
+         );
+
+         if (response?.status === 200) {
+            setNotifications((prev) => prev.map((notif) => (notif._id === notificationId ? { ...notif, read: true } : notif)));
+         }
+      } catch (error) {
+         console.error("Failed to mark notification as read:", error);
+      }
+   };
+
+   const handleMarkAllMessagesAsRead = async () => {
+      try {
+         const response = await axios.put(
+            `${CONFIG.API_URL}/notifications/mark-messages-read`,
+            {},
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } },
+         );
+
+         if (response?.status === 200) {
+            setNotifications((prev) => prev.map((notif) => (notif.type === "new_message" ? { ...notif, read: true } : notif)));
+         }
+      } catch (error) {
+         console.error("Failed to mark message notifications as read:", error);
+      }
+   };
+
+   const handleMessageNotificationClick = async (notification) => {
+      // Set loading state for this notification
+      setMessageNotificationsBeingRead((prev) => ({ ...prev, [notification._id]: true }));
+
+      try {
+         // Mark the notification as read
+         await axios.put(
+            `${CONFIG.API_URL}/notifications/${notification._id}/read`,
+            {},
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } },
+         );
+
+         // Update local state
+         setNotifications((prev) => prev.map((notif) => (notif._id === notification._id ? { ...notif, read: true } : notif)));
+
+         // Navigate to message
+         navigate(`/message?userId=${notification.relatedUser?._id}`);
+
+         // Close message notifications overlay
+         setShowMessageNotifications(false);
+      } catch (error) {
+         console.error("Failed to mark message as read:", error);
+      } finally {
+         // Clear loading state
+         setMessageNotificationsBeingRead((prev) => {
+            const newState = { ...prev };
+            delete newState[notification._id];
+            return newState;
+         });
+      }
+   };
+
+   // In the Header component, update the notifications display logic
+
+   // First, let's separate message notifications
+   const messageNotifications = notifications.filter((n) => n.type === "new_message");
+   const otherNotifications = notifications.filter((n) => n.type !== "new_message");
+
    return (
       <header className={styles.header}>
          <div className={styles.leftSection}>
+            <div className={styles.logoContainer}>
+               <img src={logoImage} alt='LearnHub' className={styles.logo} />
+            </div>
             <h2 className={styles.greeting}>Welcome, {user.username ? user.username : "Guest"} 👋 </h2>
          </div>
          <div className={styles.rightSection}>
@@ -150,35 +318,94 @@ function Header() {
                <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
                <input type='text' placeholder='Search courses, books, videos...' className={styles.searchInput} />
             </div>
-            <Link className={styles.iconButton} to='/message'>
-               <FontAwesomeIcon icon={faEnvelope} />
-               {/* <span className={styles.badge}>3</span> */}
-            </Link>
+            <div ref={messageNotificationsRef}>
+               <Link
+                  className={styles.iconButton}
+                  to='#'
+                  onClick={(e) => {
+                     e.preventDefault();
+                     setShowMessageNotifications(!showMessageNotifications);
+                  }}>
+                  <FontAwesomeIcon icon={faEnvelope} />
+                  {messageNotifications.filter((n) => !n.read).length > 0 && (
+                     <span className={styles.badge}>{messageNotifications.filter((n) => !n.read).length}</span>
+                  )}
+                  {showMessageNotifications && messageNotifications.length > 0 && (
+                     <div className={styles.messageNotificationsOverlay}>
+                        <div className={styles.messageHeader}>
+                           <h3 className={styles.messageHeaderTitle}>Messages</h3>
+                           {messageNotifications.some(n => !n.read) && (
+                              <button 
+                                 className={styles.messageMarkAllBtn} 
+                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMarkAllMessagesAsRead();
+                                 }}
+                              >
+                                 Mark all read
+                              </button>
+                           )}
+                        </div>
+                        <div className={styles.messagesList}>
+                           {messageNotifications.length > 0 ? (
+                              messageNotifications.map((notification) => (
+                                 <MessageNotification
+                                    key={notification._id}
+                                    notification={notification}
+                                    onClick={() => handleMessageNotificationClick(notification)}
+                                    isBeingRead={messageNotificationsBeingRead[notification._id]}
+                                    isRead={notification.read}
+                                 />
+                              ))
+                           ) : (
+                              <EmptyNotificationState type='messages' />
+                           )}
+                        </div>
+                     </div>
+                  )}
+               </Link>
+            </div>
             <div className={styles.notificationContainer} ref={notificationRef}>
                <button className={styles.iconButton} onClick={() => setShowNotifications(!showNotifications)}>
                   <FontAwesomeIcon icon={faBell} />
-                  {Array.isArray(notifications) && notifications.filter((n) => !n.read).length > 0 && (
-                     <span className={styles.badge}>{notifications.filter((n) => !n.read).length}</span>
+                  {otherNotifications.filter((n) => !n.read).length > 0 && (
+                     <span className={styles.badge}>{otherNotifications.filter((n) => !n.read).length}</span>
                   )}
                </button>
                {showNotifications && (
                   <div className={styles.notificationsOverlay}>
-                     <h3>Notifications</h3>
+                     <div className={styles.notificationHeader}>
+                        <h3>Notifications</h3>
+                        {notifications?.length > 0 && (
+                           <button className={styles.markAllReadBtn} onClick={handleMarkAllAsRead}>
+                              Mark all as read
+                           </button>
+                        )}
+                     </div>
                      {!Array.isArray(notifications) || notifications.length === 0 ? (
                         <p className={styles.noNotifications}>No new notifications</p>
                      ) : (
                         <ul className={styles.notificationsList}>
-                           {notifications.map((notification) => (
+                           {otherNotifications.map((notification) => (
                               <li
                                  key={notification._id}
-                                 className={`
-                                  ${styles.notificationItem} 
-                                  ${notification.read ? styles.read : ""}
-                                  ${deletingNotifications[notification._id] ? styles.notificationItemDeleting : ""}
-                                `}>
+                                 className={`${styles.notificationItem} ${notification.read ? styles.read : ""}`}
+                                 onClick={() => !notification.read && handleMarkAsRead(notification._id)}>
                                  <FontAwesomeIcon icon={getNotificationIcon(notification.type)} className={styles.notificationIcon} />
                                  <div className={styles.notificationContent}>
-                                    <p>{notification.message}</p>
+                                    {notification.type === "new_follower" && (
+                                       <div className={styles.userNotification}>
+                                          {notification.relatedUser?.profilePicture && (
+                                             <img
+                                                src={notification.relatedUser.profilePicture}
+                                                alt={notification.relatedUser.username}
+                                                className={styles.userThumbnail}
+                                             />
+                                          )}
+                                          <p>{notification.message}</p>
+                                       </div>
+                                    )}
+                                    {notification.type !== "new_follower" && <p>{notification.message}</p>}
                                     <span className={styles.notificationTime}>{formatNotificationTime(notification.createdAt)}</span>
                                  </div>
                                  <div className={styles.notificationActions}>
@@ -223,7 +450,7 @@ function Header() {
                   </div>
                )}
             </div>
-            <div className={styles.userInfo} onClick={() => setShowUserMenu(!showUserMenu)}>
+            <div className={styles.userInfo} ref={userMenuRef} onClick={() => setShowUserMenu(!showUserMenu)}>
                <div className={styles.userAvatar}>
                   <img src={user.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${user.username}`} alt={user.username} />
                </div>
@@ -259,6 +486,10 @@ function getNotificationIcon(type) {
          return faTrophy;
       case "comment":
          return faComment;
+      case "new_follower":
+         return faUser;
+      case "new_message":
+         return faEnvelope;
       default:
          return faBell;
    }
@@ -280,5 +511,16 @@ function formatNotificationTime(createdAt) {
       return notificationDate.toLocaleDateString();
    }
 }
+
+MessageNotification.propTypes = {
+   notification: PropTypes.object.isRequired,
+   onClick: PropTypes.func.isRequired,
+   isBeingRead: PropTypes.bool,
+   isRead: PropTypes.bool,
+};
+
+EmptyNotificationState.propTypes = {
+   type: PropTypes.string,
+};
 
 export default Header;

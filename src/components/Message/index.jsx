@@ -1,15 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faPaperPlane, faEllipsisV, faPaperclip, faSmile, faUserFriends, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faPaperPlane, faEllipsisV, faPaperclip, faSmile, faUserFriends, faTrash, faComment } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
 import styles from "./Message.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CONFIG } from "../../config";
 import { useSelector } from "react-redux";
 import { fetchUserConnections } from "../../api/userApi";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
+
+const EmptyConversation = ({ selectedUser }) => {
+   return (
+      <div className={styles.emptyConversation}>
+         <div className={styles.emptyStateIcon}>
+            <FontAwesomeIcon icon={faComment} />
+         </div>
+         <h3>Start a Conversation with {selectedUser?.username}</h3>
+         <p>Say hello and start connecting! 👋</p>
+         <div className={styles.suggestionBubbles}>
+            <button>👋 Hey there!</button>
+            <button>Would love to connect!</button>
+            <button>Hi, how are you?</button>
+         </div>
+      </div>
+   );
+};
 
 function Message() {
    const API_URL = CONFIG.API_URL;
@@ -28,6 +45,10 @@ function Message() {
    const [searchTerm, setSearchTerm] = useState("");
    const [searchResults, setSearchResults] = useState([]);
    const searchTimeoutRef = useRef(null);
+   const location = useLocation();
+   const queryParams = new URLSearchParams(location.search);
+   const urlUserId = queryParams.get('userId');
+   const [initialLoadDone, setInitialLoadDone] = useState(false);
 
    const initializeSocket = useCallback(() => {
       const token = localStorage.getItem("token");
@@ -73,21 +94,24 @@ function Message() {
       [API_URL],
    );
 
-   const handleSearch = useCallback(async (term) => {
-      if (term.trim() === "") {
-         setSearchResults([]);
-         return;
-      }
+   const handleSearch = useCallback(
+      async (term) => {
+         if (term.trim() === "") {
+            setSearchResults([]);
+            return;
+         }
 
-      try {
-         const response = await axios.get(`${API_URL}/users/search-connections?term=${term}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-         });
-         setSearchResults(response.data);
-      } catch (error) {
-         console.error("Error searching connections:", error);
-      }
-   }, [API_URL]);
+         try {
+            const response = await axios.get(`${API_URL}/users/search-connections?term=${term}`, {
+               headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
+            setSearchResults(response.data);
+         } catch (error) {
+            console.error("Error searching connections:", error);
+         }
+      },
+      [API_URL],
+   );
 
    const handleSearchInputChange = (e) => {
       const term = e.target.value;
@@ -139,16 +163,76 @@ function Message() {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
    }, [messages]);
 
-   const handleChatSelect = useCallback(
-      async (chatId) => {
-         setSelectedChat(chatId);
-         if (socket) {
-            socket.emit("join_room", chatId);
+   useEffect(() => {
+      const initializeChat = async () => {
+         if (!urlUserId || initialLoadDone) return;
+
+         // Clear URL parameter without page reload
+         window.history.replaceState({}, '', window.location.pathname);
+         
+         // Check if this user is in connections
+         const userExists = connections.some(conn => conn._id === urlUserId);
+         
+         if (userExists) {
+            handleChatSelect(urlUserId);
+         } else {
+            try {
+               const response = await axios.get(`${API_URL}/users/${urlUserId}`, {
+                  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+               });
+               
+               if (response.data && response.data.user) {
+                  const userData = {
+                     _id: response.data.user._id,
+                     username: response.data.user.username,
+                     profilePicture: response.data.user.profilePicture,
+                     email: response.data.user.email,
+                     isFollower: response.data.user.isFollower,
+                     isFollowing: response.data.user.isFollowing,
+                  };
+
+                  setConnections(prev => {
+                     if (!prev.some(conn => conn._id === userData._id)) {
+                        return [...prev, userData];
+                     }
+                     return prev;
+                  });
+
+                  handleChatSelect(urlUserId);
+               }
+            } catch (error) {
+               console.error("Error fetching user details:", error);
+               const errorMessage = error.response?.data?.message || "Could not find the specified user";
+               toast.error(errorMessage);
+            }
          }
+         setInitialLoadDone(true);
+      };
+
+      if (connections.length > 0) {
+         initializeChat();
+      }
+   }, [urlUserId, connections, initialLoadDone]);
+
+   const handleChatSelect = useCallback(async (chatId) => {
+      if (!chatId) return;
+
+      setSelectedChat(chatId);
+      
+      if (socket) {
+         if (selectedChat) {
+            socket.emit("leave_room", selectedChat);
+         }
+         socket.emit("join_room", chatId);
+      }
+
+      try {
          await fetchChatHistory(chatId);
-      },
-      [socket, fetchChatHistory],
-   );
+      } catch (error) {
+         console.error("Error in chat selection:", error);
+         toast.error("Failed to load chat history");
+      }
+   }, [socket, selectedChat, fetchChatHistory]);
 
    const sendPrivateMessage = useCallback(
       async (recipientId, message) => {
@@ -251,6 +335,12 @@ function Message() {
       };
    }, []);
 
+   const handleSuggestionClick = (message) => {
+      if (selectedChat) {
+         sendPrivateMessage(selectedChat, message);
+      }
+   };
+
    console.log("user", user);
    console.log("messages", messages);
 
@@ -260,12 +350,7 @@ function Message() {
             <div className={styles.searchBarWrapper}>
                <div className={styles.searchBar}>
                   <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
-                  <input 
-                     type='text' 
-                     placeholder='Search Connections...' 
-                     value={searchTerm}
-                     onChange={handleSearchInputChange}
-                  />
+                  <input type='text' placeholder='Search Connections...' value={searchTerm} onChange={handleSearchInputChange} />
                </div>
             </div>
             <div className={styles.chatList}>
@@ -331,18 +416,25 @@ function Message() {
                      </div>
                   </div>
                   <div className={styles.messageList}>
-                     {messages.map((message, index) => (
-                        <div
-                           key={index}
-                           className={`${styles.message} ${
-                              message?.sender?._id === user._id || message?.senderId === user._id ? styles.sent : styles.received
-                           }`}>
-                           <p>{message.message}</p>
-                           <span className={styles.messageTime}>
-                              {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                           </span>
-                        </div>
-                     ))}
+                     {messages.length > 0 ? (
+                        messages.map((message, index) => (
+                           <div
+                              key={index}
+                              className={`${styles.message} ${
+                                 message?.sender?._id === user._id || message?.senderId === user._id ? styles.sent : styles.received
+                              }`}>
+                              <p>{message.message}</p>
+                              <span className={styles.messageTime}>
+                                 {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                           </div>
+                        ))
+                     ) : (
+                        <EmptyConversation 
+                           selectedUser={connections.find(c => c._id === selectedChat)}
+                           onSuggestionClick={handleSuggestionClick}
+                        />
+                     )}
                      {isTyping && <div className={styles.typingIndicator}>Typing...</div>}
                      <div ref={messagesEndRef} />
                   </div>
@@ -375,7 +467,9 @@ function Message() {
                </>
             ) : (
                <div className={styles.noChatSelected}>
+                  <FontAwesomeIcon icon={faComment} className={styles.noChatIcon} />
                   <h2>Select a chat to start messaging</h2>
+                  <p>Choose from your connections on the left</p>
                </div>
             )}
          </div>

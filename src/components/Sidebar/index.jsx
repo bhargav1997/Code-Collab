@@ -12,10 +12,9 @@ import {
    faSignOutAlt,
    faMap,
 } from "@fortawesome/free-solid-svg-icons";
-import "../../styles/Sidebar.css";
+import styles from "./Sidebar.module.css";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../redux/user/userHandle";
-import logoImage from '../../assets/images/logo.png'; // Adjust the path as needed
 
 function Sidebar() {
    const location = useLocation();
@@ -42,15 +41,16 @@ function Sidebar() {
    ];
 
    return (
-      <div className='sidebar-container'>
-         <div className='sidebar-header'>
-            <img src={logoImage} alt="LearnHub" className='logo-sidebar' />
-         </div>
-         <nav className='sidebar-nav'>
+      <div className={styles.sidebar}>
+         <nav className={styles.nav}>
             <ul>
                {navItems.map((item) => (
                   <li key={item.path}>
-                     <Link to={item.path} className={location.pathname === item.path ? "active" : ""}>
+                     <Link 
+                        to={item.path} 
+                        className={`${styles.navLink} ${location.pathname === item.path ? styles.active : ""}`}
+                        title={item.label}
+                     >
                         <FontAwesomeIcon icon={item.icon} />
                         <span>{item.label}</span>
                      </Link>
@@ -58,12 +58,10 @@ function Sidebar() {
                ))}
             </ul>
          </nav>
-         <div className='sidebar-footer'>
-            <button className='logout-btn' onClick={handleLogout}>
-               <FontAwesomeIcon icon={faSignOutAlt} />
-               <span>Logout</span>
-            </button>
-         </div>
+         <button className={styles.logoutBtn} onClick={handleLogout} title="Logout">
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            <span>Logout</span>
+         </button>
       </div>
    );
 }

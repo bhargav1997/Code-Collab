@@ -453,3 +453,94 @@
    border-radius: 50%;
    /* margin-right: 1rem; */
 }
+
+.emptyConversation {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   padding: 2rem;
+   text-align: center;
+   color: #666;
+}
+
+.emptyStateIcon {
+   font-size: 3rem;
+   color: #7c4dff;
+   margin-bottom: 1.5rem;
+   animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+   0%, 100% {
+      transform: translateY(0);
+   }
+   50% {
+      transform: translateY(-10px);
+   }
+}
+
+.emptyConversation h3 {
+   font-size: 1.5rem;
+   color: #333;
+   margin-bottom: 0.5rem;
+}
+
+.emptyConversation p {
+   font-size: 1rem;
+   color: #666;
+   margin-bottom: 2rem;
+}
+
+.suggestionBubbles {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+   justify-content: center;
+   max-width: 400px;
+}
+
+.suggestionBubbles button {
+   background: #f0f2ff;
+   border: none;
+   padding: 8px 16px;
+   border-radius: 20px;
+   color: #7c4dff;
+   font-size: 0.9rem;
+   cursor: pointer;
+   transition: all 0.3s ease;
+}
+
+.suggestionBubbles button:hover {
+   background: #7c4dff;
+   color: white;
+   transform: translateY(-2px);
+}
+
+.noChatSelected {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   color: #666;
+   text-align: center;
+}
+
+.noChatIcon {
+   font-size: 4rem;
+   color: #e0e0e0;
+   margin-bottom: 1rem;
+}
+
+.noChatSelected h2 {
+   font-size: 1.5rem;
+   color: #333;
+   margin-bottom: 0.5rem;
+}
+
+.noChatSelected p {
+   font-size: 1rem;
+   color: #666;
+}
