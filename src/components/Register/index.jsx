@@ -4,7 +4,18 @@ import styles from "./Register.module.css";
 import LoadingSpinner from "../LoadingSpinner";
 import { CONFIG } from "../../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faLock, faEye, faEyeSlash, faGraduationCap } from "@fortawesome/free-solid-svg-icons";
+import {
+   faUser,
+   faEnvelope,
+   faLock,
+   faEye,
+   faEyeSlash,
+   faGraduationCap,
+   faBook,
+   faTrophy,
+   faUsers,
+   faRocket,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
 function Register() {
@@ -91,64 +102,63 @@ function Register() {
 
    return (
       <div className={styles.registerContainer}>
+         <div className={styles.backgroundWaves}>
+            <div className={`${styles.wave} ${styles.wave1}`}></div>
+            <div className={`${styles.wave} ${styles.wave2}`}></div>
+            <div className={`${styles.wave} ${styles.wave3}`}></div>
+            <div className={`${styles.blob} ${styles.blob1}`}></div>
+            <div className={`${styles.blob} ${styles.blob2}`}></div>
+         </div>
+
          <div className={styles.registerForm}>
             <div className={styles.formContent}>
-               <div className={styles.iconContainer}>
-                  <FontAwesomeIcon icon={faGraduationCap} className={styles.userIcon} />
+               <div className={styles.welcomeIcon}>
+                  <FontAwesomeIcon icon={faGraduationCap} />
                </div>
-               <h2>Join LearnHub Today</h2>
+               <div className={styles.welcomeText}>
+                  <h2>Welcome to LearnHub</h2>
+                  <p>Start your learning journey today</p>
+               </div>
+
                <form onSubmit={handleSubmitOnRegistration}>
-                  <div className={`${styles.inputGroup} ${fieldErrors.username ? styles.hasError : ""}`}>
+                  <div className={styles.inputGroup}>
                      <FontAwesomeIcon icon={faUser} className={styles.inputIcon} />
                      <input
                         type='text'
                         name='username'
-                        placeholder='Username'
+                        placeholder='Enter your username'
                         value={formData.username}
                         onChange={handleChange}
-                        required
-                        autoComplete='username'
                      />
-                     {fieldErrors.username && <span className={styles.errorMessage}>{fieldErrors.username}</span>}
                   </div>
-                  <div className={`${styles.inputGroup} ${fieldErrors.email ? styles.hasError : ""}`}>
+
+                  <div className={styles.inputGroup}>
                      <FontAwesomeIcon icon={faEnvelope} className={styles.inputIcon} />
-                     <input
-                        type='email'
-                        name='email'
-                        placeholder='Email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        autoComplete='email'
-                     />
-                     {fieldErrors.email && <span className={styles.errorMessage}>{fieldErrors.email}</span>}
+                     <input type='email' name='email' placeholder='Enter your email' value={formData.email} onChange={handleChange} />
                   </div>
+
                   <div className={styles.inputGroup}>
                      <FontAwesomeIcon icon={faLock} className={styles.inputIcon} />
                      <input
                         type={showPassword ? "text" : "password"}
                         name='password'
-                        placeholder='Password'
+                        placeholder='Create password'
                         value={formData.password}
                         onChange={handleChange}
-                        required
-                        autoComplete='new-password'
                      />
                      <button type='button' className={styles.showPasswordButton} onClick={() => setShowPassword(!showPassword)}>
                         <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                      </button>
                   </div>
+
                   <div className={styles.inputGroup}>
                      <FontAwesomeIcon icon={faLock} className={styles.inputIcon} />
                      <input
                         type={showConfirmPassword ? "text" : "password"}
                         name='confirmPassword'
-                        placeholder='Confirm Password'
+                        placeholder='Confirm password'
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        required
-                        autoComplete='new-password'
                      />
                      <button
                         type='button'
@@ -157,22 +167,43 @@ function Register() {
                         <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
                      </button>
                   </div>
-                  <button type='submit'>Register</button>
+
+                  <button type='submit' className={styles.submitButton}>
+                     Create Account
+                  </button>
                </form>
-               <p>
-                  Already have an account? <Link to='/login'>Login here</Link>
-               </p>
+
+               <div className={styles.loginLink}>
+                  Already have an account? <Link to='/login'>Sign in</Link>
+               </div>
             </div>
+
             <div className={styles.appDescription}>
-               <h3>Why Join LearnHub?</h3>
-               <ul>
-                  <li>Track progress across learning materials</li>
-                  <li>Set and achieve educational goals</li>
-                  <li>Connect with like-minded learners</li>
-                  <li>Access curated learning resources</li>
-                  <li>Get personalized recommendations</li>
-               </ul>
-               <p>Start your journey towards continuous learning and personal growth!</p>
+               <h3>Why Choose LearnHub?</h3>
+
+               <div className={styles.featureCard}>
+                  <FontAwesomeIcon icon={faRocket} className={styles.featureIcon} />
+                  <div className={styles.featureTitle}>Personalized Learning</div>
+                  <div className={styles.featureText}>Adaptive learning paths tailored to your pace and style</div>
+               </div>
+
+               <div className={styles.featureCard}>
+                  <FontAwesomeIcon icon={faBook} className={styles.featureIcon} />
+                  <div className={styles.featureTitle}>Expert-Curated Content</div>
+                  <div className={styles.featureText}>Quality content created by industry professionals</div>
+               </div>
+
+               <div className={styles.featureCard}>
+                  <FontAwesomeIcon icon={faTrophy} className={styles.featureIcon} />
+                  <div className={styles.featureTitle}>Achievement System</div>
+                  <div className={styles.featureText}>Earn certificates and track your progress</div>
+               </div>
+
+               <div className={styles.featureCard}>
+                  <FontAwesomeIcon icon={faUsers} className={styles.featureIcon} />
+                  <div className={styles.featureTitle}>Community Support</div>
+                  <div className={styles.featureText}>Connect with peers and mentors for better learning</div>
+               </div>
             </div>
          </div>
       </div>

@@ -7,174 +7,310 @@
    display: flex;
    justify-content: center;
    align-items: center;
-   background-color: rgba(0, 0, 0, 0.5);
+   background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+   overflow: hidden;
 }
 
 .loginForm {
-   background-color: #fff;
-   padding: 40px;
-   border-radius: 12px;
-   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+   position: relative;
+   z-index: 1;
+   background: white;
+   padding: 25px 20px;
+   border-radius: 24px;
+   box-shadow: 0 10px 30px rgba(124, 77, 255, 0.1);
    width: 100%;
    max-width: 400px;
-   text-align: center;
+   margin: 20px;
 }
 
-.iconContainer {
-   background-color: #7c4dff;
+.welcomeIcon {
    width: 80px;
    height: 80px;
-   border-radius: 50%;
+   background: #7c4dff;
+   border-radius: 20px;
    display: flex;
-   justify-content: center;
    align-items: center;
-   margin: 0 auto 20px;
+   justify-content: center;
+   margin: 0 auto 24px;
 }
 
-.userIcon {
-   font-size: 40px;
+.welcomeIcon svg {
    color: white;
+   font-size: 40px;
 }
 
-.loginForm h2 {
-   color: #333;
-   margin-bottom: 20px;
-   font-size: 24px;
+.welcomeText {
+   text-align: center;
+   margin-bottom: 40px;
 }
 
-.loginForm form {
-   display: flex;
-   flex-direction: column;
+.welcomeText h2 {
+   color: #7c4dff;
+   font-size: 28px;
+   font-weight: 600;
+   margin-bottom: 8px;
+}
+
+.welcomeText p {
+   color: #666;
+   font-size: 16px;
 }
 
 .inputGroup {
+   margin-bottom: 20px;
    position: relative;
-   margin-bottom: 15px;
-}
-
-.inputIcon {
-   position: absolute;
-   left: 10px;
-   top: 50%;
-   transform: translateY(-50%);
-   color: #7c4dff;
 }
 
 .inputGroup input {
    width: 100%;
-   padding: 12px 40px 12px 35px;
-   border: 2px solid #ddd;
-   border-radius: 8px;
-   font-size: 16px;
-   transition: border-color 0.3s ease;
+   padding: 15px 45px;
+   background: #f8f9ff;
+   border: 1px solid transparent;
+   border-radius: 12px;
+   color: #2c2c2c;
+   font-size: 15px;
+   transition: all 0.3s ease;
 }
 
 .inputGroup input:focus {
    border-color: #7c4dff;
    outline: none;
+   background: white;
+}
+
+.inputIcon {
+   position: absolute;
+   left: 15px;
+   top: 50%;
+   transform: translateY(-50%);
+   color: #7c4dff;
+   font-size: 18px;
 }
 
 .showPasswordButton {
    position: absolute;
-   right: 10px;
+   right: 15px;
    top: 50%;
    transform: translateY(-50%);
    background: none;
    border: none;
-   cursor: pointer;
    color: #7c4dff;
+   cursor: pointer;
 }
 
 .rememberMe {
    display: flex;
    align-items: center;
-   margin-bottom: 15px;
+   margin-bottom: 20px;
+   padding-left: 10px;
 }
 
 .rememberMe input {
    margin-right: 10px;
+   accent-color: #7c4dff;
 }
 
 .rememberMe label {
+   color: #666;
    font-size: 14px;
-   color: #666;
 }
 
-.loginForm button[type="submit"] {
+.submitButton {
    width: 100%;
-   padding: 12px;
-   background-color: #7c4dff;
-   color: white;
+   padding: 15px;
+   background: #7c4dff;
    border: none;
-   border-radius: 8px;
+   border-radius: 12px;
+   color: white;
    font-size: 16px;
+   font-weight: 600;
    cursor: pointer;
-   transition: background-color 0.3s ease;
    margin-top: 10px;
+   margin-bottom: 20px;
+   transition: all 0.3s ease;
 }
 
-.loginForm button[type="submit"]:hover {
-   background-color: #6f59ad;
+.submitButton:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 5px 15px rgba(124, 77, 255, 0.3);
 }
 
-.loginForm p {
-   margin-top: 20px;
+.registerLink {
+   text-align: center;
    color: #666;
+   font-size: 14px;
 }
 
-.loginForm a {
+.registerLink a {
    color: #7c4dff;
    text-decoration: none;
-   font-weight: bold;
+   margin-left: 5px;
+   transition: all 0.3s ease;
 }
 
-.loginForm a:hover {
+.registerLink a:hover {
+   color: #9c7fff;
    text-decoration: underline;
 }
 
-/* Add these media queries at the end of the file */
-@media (max-width: 768px) {
-   .loginForm {
-      max-width: 90%;
-      padding: 30px;
-   }
-
-   .loginForm h2 {
-      font-size: 22px;
-   }
-
-   .inputGroup input {
-      font-size: 14px;
-   }
-
-   .loginForm button {
-      font-size: 14px;
-   }
-}
-
+/* Responsive styles */
 @media (max-width: 480px) {
    .loginForm {
-      padding: 20px;
+      margin: 15px;
+      padding: 20px 15px;
    }
 
-   .iconContainer {
+   .welcomeIcon {
       width: 60px;
       height: 60px;
    }
 
-   .userIcon {
+   .welcomeIcon svg {
       font-size: 30px;
    }
 
-   .loginForm h2 {
-      font-size: 20px;
+   .welcomeText h2 {
+      font-size: 24px;
    }
 
-   .inputGroup {
-      margin-bottom: 15px;
-   }
-
-   .loginForm p {
+   .welcomeText p {
       font-size: 14px;
    }
+
+   .inputGroup input {
+      padding: 12px 40px;
+      font-size: 14px;
+   }
+}
+
+/* Right side styling */
+.appDescription {
+   width: 350px;
+   padding: 25px 20px;
+   background: white;
+   border-radius: 24px;
+   box-shadow: 0 10px 30px rgba(124, 77, 255, 0.1);
+}
+
+/* Copy the media queries from Register.module.css */
+/* ... (same responsive styles) ... */
+
+/* Background animations */
+.backgroundWaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.wave {
+  position: absolute;
+  opacity: 0.15;
+  border-radius: 50%;
+}
+
+.wave1 {
+  top: -10%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(45deg, #7c4dff, #b388ff);
+  animation: float1 20s infinite linear;
+}
+
+.wave2 {
+  bottom: -15%;
+  right: -10%;
+  width: 800px;
+  height: 800px;
+  background: linear-gradient(-45deg, #7c4dff, #9c7fff);
+  animation: float2 25s infinite linear;
+}
+
+.wave3 {
+  top: 40%;
+  right: 20%;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(90deg, #b388ff, #7c4dff);
+  animation: float3 18s infinite linear;
+}
+
+.blob {
+  position: absolute;
+  background: rgba(124, 77, 255, 0.05);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: blobAnimation 15s infinite;
+}
+
+.blob1 {
+  top: 15%;
+  left: 15%;
+  width: 400px;
+  height: 400px;
+  animation-delay: -2s;
+}
+
+.blob2 {
+  bottom: 10%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  animation-delay: -5s;
+}
+
+@keyframes float1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(100px, 50px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes float2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-100px, -50px) rotate(-180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-360deg);
+  }
+}
+
+@keyframes float3 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50px, 25px) rotate(90deg) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes blobAnimation {
+  0% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  25% { 
+    border-radius: 50% 40% 30% 70% / 60% 40% 50% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  75% {
+    border-radius: 60% 40% 30% 70% / 40% 50% 60% 40%;
+  }
+  100% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
 }

@@ -1,253 +1,491 @@
 .registerContainer {
-   position: fixed;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+  overflow: hidden;
 }
 
 .registerForm {
-   background-color: #fff;
-   border-radius: 12px;
-   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-   width: 100%;
-   max-width: 800px;
-   display: flex;
-   overflow: hidden;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  gap: 40px;
+  padding: 20px;
 }
 
 .formContent {
-   flex: 1;
-   padding: 30px;
+  flex: 1;
+  background: white;
+  padding: 25px 20px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(124, 77, 255, 0.1);
 }
 
-.iconContainer {
-   background-color: #7c4dff;
-   width: 80px;
-   height: 80px;
-   border-radius: 50%;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   margin: 0 auto 20px;
-   box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3);
-   transition: all 0.3s ease;
+.welcomeIcon {
+  width: 80px;
+  height: 80px;
+  background: #7c4dff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
 }
 
-.iconContainer:hover {
-   transform: scale(1.05);
-   box-shadow: 0 6px 15px rgba(124, 77, 255, 0.4);
+.welcomeIcon svg {
+  color: white;
+  font-size: 40px;
 }
 
-.userIcon {
-   font-size: 40px;
-   color: white;
+.welcomeText {
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.registerForm h2 {
-   color: #333;
-   margin-bottom: 15px;
-   font-size: 22px;
-   text-align: center;
+.welcomeText h2 {
+  color: #7c4dff;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
-.registerForm form {
-   display: flex;
-   flex-direction: column;
+.welcomeText p {
+  color: #666;
+  font-size: 16px;
 }
 
 .inputGroup {
-   position: relative;
-   margin-bottom: 20px;
-}
-
-.inputIcon {
-   position: absolute;
-   left: 10px;
-   top: 50%;
-   transform: translateY(-50%);
-   color: #7c4dff;
-   pointer-events: none;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .inputGroup input {
-   width: 100%;
-   padding: 10px 35px 10px 30px;
-   border: 2px solid #ddd;
-   border-radius: 8px;
-   font-size: 14px;
-   transition: border-color 0.3s ease;
+  width: 100%;
+  padding: 15px 45px;
+  background: #f8f9ff;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #2c2c2c;
+  font-size: 15px;
+  transition: all 0.3s ease;
 }
 
 .inputGroup input:focus {
-   border-color: #7c4dff;
-   outline: none;
+  border-color: #7c4dff;
+  outline: none;
+  background: white;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7c4dff;
+  font-size: 18px;
 }
 
 .showPasswordButton {
-   position: absolute;
-   right: 10px;
-   top: 50%;
-   transform: translateY(-50%);
-   background: none;
-   border: none;
-   cursor: pointer;
-   color: #7c4dff;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #7c4dff;
+  cursor: pointer;
 }
 
-.registerForm button[type="submit"] {
-   width: 100%;
-   padding: 10px;
-   background-color: #7c4dff;
-   color: white;
-   border: none;
-   border-radius: 8px;
-   font-size: 16px;
-   cursor: pointer;
-   transition: background-color 0.3s ease;
-   margin-top: 10px;
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  background: #7c4dff;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
-.registerForm button[type="submit"]:hover {
-   background-color: #6f59ad;
+.loginLink {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
 }
 
-.registerForm p {
-   margin-top: 15px;
-   color: #666;
-   font-size: 14px;
+.loginLink a {
+  color: #7c4dff;
+  text-decoration: none;
+  margin-left: 5px;
 }
 
-.registerForm a {
-   color: #7c4dff;
-   text-decoration: none;
-   font-weight: bold;
-}
-
-.registerForm a:hover {
-   text-decoration: underline;
-}
-
+/* Right side styling */
 .appDescription {
-   background-color: #f0f0f0;
-   padding: 30px;
-   width: 300px;
-   text-align: left;
+  width: 350px;
+  padding: 25px 20px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(124, 77, 255, 0.1);
 }
 
 .appDescription h3 {
-   color: #333;
-   font-size: 18px;
-   margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #44249e;
+  text-align: center;
 }
 
-.appDescription ul {
-   list-style-type: none;
-   padding-left: 0;
-   margin-bottom: 15px;
+/* Stats styling */
+.statsText {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
 }
 
-.appDescription li {
-   color: #555;
-   font-size: 14px;
-   margin-bottom: 8px;
-   padding-left: 20px;
-   position: relative;
+.statsHighlight {
+  color: #7c4dff;
+  font-weight: 500;
+  margin-right: 4px;
 }
 
-.appDescription li::before {
-   content: "•";
-   color: #7c4dff;
-   font-size: 18px;
-   position: absolute;
-   left: 0;
-   top: -2px;
+/* Feature cards styling */
+.featureCard {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
-.appDescription p {
-   color: #333;
-   font-size: 14px;
+.featureIcon {
+  color: #7c4dff;
+  font-size: 20px;
+  margin-bottom: 12px;
 }
 
-.errorMessage {
-   position: absolute;
-   left: 0;
-   bottom: -20px;
-   color: #d32f2f;
-   font-size: 12px;
-   width: 100%;
-   text-align: left;
-   padding-left: 30px;
+.featureTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 4px;
 }
 
-.errorMessage::before {
-   content: "!";
-   position: absolute;
-   left: 10px;
-   top: 50%;
-   transform: translateY(-50%);
-   width: 14px;
-   height: 14px;
-   background-color: #d32f2f;
-   color: white;
-   border-radius: 50%;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   font-size: 10px;
-   font-weight: bold;
+.featureText {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
 }
 
-.inputGroup.hasError input {
-  border-color: #d32f2f;
-}
-
-.inputGroup.hasError {
-   margin-bottom: 40px;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .registerForm {
-    flex-direction: column;
+    max-width: 900px;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .registerForm {
     max-width: 90%;
+    gap: 20px;
   }
 
   .formContent {
-    padding: 20px;
+    padding: 20px 15px;
   }
 
   .appDescription {
-    display: none;
+    width: 300px;
+    padding: 20px 15px;
   }
 
-  .inputGroup input {
-    font-size: 14px;
+  .welcomeIcon {
+    width: 70px;
+    height: 70px;
   }
 
-  .registerForm button {
-    font-size: 16px;
+  .welcomeIcon svg {
+    font-size: 35px;
+  }
+
+  .welcomeText h2 {
+    font-size: 24px;
   }
 }
 
-@media (max-width: 480px) {
-  .iconContainer {
-    width: 60px;
-    height: 60px;
+@media (max-width: 768px) {
+  .registerContainer {
+    padding: 20px;
+    height: auto;
+    min-height: 100vh;
+    align-items: flex-start;
+    overflow-y: auto;
   }
 
-  .userIcon {
-    font-size: 30px;
+  .registerForm {
+    flex-direction: column;
+    max-width: 100%;
+    gap: 30px;
+    padding: 10px;
   }
 
-  .registerForm h2 {
-    font-size: 20px;
+  .formContent, 
+  .appDescription {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .welcomeText {
+    margin-bottom: 30px;
   }
 
   .inputGroup {
     margin-bottom: 15px;
   }
+
+  .inputGroup input {
+    padding: 12px 40px;
+    font-size: 14px;
+  }
+
+  .submitButton {
+    padding: 12px;
+    font-size: 15px;
+  }
 }
+
+@media (max-width: 480px) {
+  .registerContainer {
+    padding: 15px;
+  }
+
+  .welcomeIcon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .welcomeIcon svg {
+    font-size: 30px;
+  }
+
+  .welcomeText h2 {
+    font-size: 22px;
+  }
+
+  .welcomeText p {
+    font-size: 14px;
+  }
+
+  .featureCard {
+    padding: 12px;
+  }
+
+  .featureTitle {
+    font-size: 15px;
+  }
+
+  .featureText {
+    font-size: 13px;
+  }
+
+  .loginLink {
+    font-size: 14px;
+  }
+}
+
+/* For very small devices */
+@media (max-width: 360px) {
+  .registerContainer {
+    padding: 10px;
+  }
+
+  .formContent,
+  .appDescription {
+    padding: 15px 12px;
+  }
+
+  .welcomeText h2 {
+    font-size: 20px;
+  }
+
+  .inputGroup input {
+    padding: 10px 35px;
+    font-size: 13px;
+  }
+
+  .inputIcon {
+    font-size: 16px;
+  }
+
+  .showPasswordButton {
+    font-size: 14px;
+  }
+}
+
+/* For tall mobile devices - prevent content squishing */
+@media (max-height: 700px) and (max-width: 768px) {
+  .registerContainer {
+    height: auto;
+    min-height: 100vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+/* Adjust background animations for mobile */
+@media (max-width: 768px) {
+  .wave1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .wave2 {
+    width: 400px;
+    height: 400px;
+  }
+
+  .wave3 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .blob1,
+  .blob2 {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+/* Background animations */
+.backgroundWaves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.wave {
+  position: absolute;
+  opacity: 0.15;
+  border-radius: 50%;
+}
+
+.wave1 {
+  top: -10%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(45deg, #7c4dff, #b388ff);
+  animation: float1 20s infinite linear;
+}
+
+.wave2 {
+  bottom: -15%;
+  right: -10%;
+  width: 800px;
+  height: 800px;
+  background: linear-gradient(-45deg, #7c4dff, #9c7fff);
+  animation: float2 25s infinite linear;
+}
+
+.wave3 {
+  top: 40%;
+  right: 20%;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(90deg, #b388ff, #7c4dff);
+  animation: float3 18s infinite linear;
+}
+
+.blob {
+  position: absolute;
+  background: rgba(124, 77, 255, 0.05);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: blobAnimation 15s infinite;
+}
+
+.blob1 {
+  top: 15%;
+  left: 15%;
+  width: 400px;
+  height: 400px;
+  animation-delay: -2s;
+}
+
+.blob2 {
+  bottom: 10%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  animation-delay: -5s;
+}
+
+@keyframes float1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(100px, 50px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes float2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-100px, -50px) rotate(-180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-360deg);
+  }
+}
+
+@keyframes float3 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50px, 25px) rotate(90deg) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes blobAnimation {
+  0% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+  25% { 
+    border-radius: 50% 40% 30% 70% / 60% 40% 50% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  75% {
+    border-radius: 60% 40% 30% 70% / 40% 50% 60% 40%;
+  }
+  100% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  }
+}
+

@@ -84,30 +84,43 @@ function Login() {
 
    return (
       <div className={styles.loginContainer}>
+         <div className={styles.backgroundWaves}>
+            <div className={`${styles.wave} ${styles.wave1}`}></div>
+            <div className={`${styles.wave} ${styles.wave2}`}></div>
+            <div className={`${styles.wave} ${styles.wave3}`}></div>
+            <div className={`${styles.blob} ${styles.blob1}`}></div>
+            <div className={`${styles.blob} ${styles.blob2}`}></div>
+         </div>
+
          <div className={styles.loginForm}>
-            <div className={styles.iconContainer}>
-               <FontAwesomeIcon icon={faUser} className={styles.userIcon} />
+            <div className={styles.welcomeIcon}>
+               <FontAwesomeIcon icon={faUser} />
             </div>
-            <h2>Login to Your Account</h2>
+            <div className={styles.welcomeText}>
+               <h2>Welcome Back!</h2>
+               <p>Login to continue your learning journey</p>
+            </div>
+
             <form onSubmit={handleSubmit}>
                <div className={styles.inputGroup}>
                   <FontAwesomeIcon icon={faEnvelope} className={styles.inputIcon} />
                   <input
                      type='email'
                      name='email'
-                     placeholder='Email'
+                     placeholder='Enter your email'
                      value={formData.email}
                      onChange={handleChange}
                      required
                      autoComplete='email'
                   />
                </div>
+
                <div className={styles.inputGroup}>
                   <FontAwesomeIcon icon={faLock} className={styles.inputIcon} />
                   <input
                      type={showPassword ? "text" : "password"}
                      name='password'
-                     placeholder='Password'
+                     placeholder='Enter your password'
                      value={formData.password}
                      onChange={handleChange}
                      required
@@ -117,15 +130,20 @@ function Login() {
                      <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                   </button>
                </div>
+
                <div className={styles.rememberMe}>
                   <input type='checkbox' name='rememberMe' id='rememberMe' checked={formData.rememberMe} onChange={handleChange} />
                   <label htmlFor='rememberMe'>Remember Me</label>
                </div>
-               <button type='submit'>Login</button>
+
+               <button type='submit' className={styles.submitButton}>
+                  Login
+               </button>
             </form>
-            <p>
-               {"Don't have an account? "} <Link to='/register'>Register here</Link>
-            </p>
+
+            <div className={styles.registerLink}>
+               Don&apos;t have an account? <Link to='/register'>Register here</Link>
+            </div>
          </div>
       </div>
    );

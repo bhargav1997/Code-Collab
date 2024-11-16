@@ -38,6 +38,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import LandingPage from "./components/LandingPage";
+import { AnimatePresence } from "framer-motion";
 
 function ErrorFallback({ error }) {
    return (
@@ -113,12 +114,13 @@ function AppDesktop() {
                {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
                <div className={`${styles.appContent} ${showOnboarding ? styles.blurred : ""}`}>
                   {isAuthenticated && <aside className={styles.sidebar}>{<Sidebar />}</aside>}
-                  <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ''}`}>
+                  <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
                      <Suspense fallback={<LoadingSpinner />}>
                         <Routes>
                            <Route path='/register' element={isAuthenticated ? <Navigate to='/' /> : <Register />} />
                            <Route path='/login' element={isAuthenticated ? <Navigate to='/' /> : <Login />} />
                            <Route path='/two-factor-auth' element={isAuthenticated ? <Navigate to='/' /> : <TwoFactorAuth />} />
+
                            {/* <Route path='/' element={isAuthenticated ? <Home /> : <LandingPage />} /> */}
 
                            {isAuthenticated && (
