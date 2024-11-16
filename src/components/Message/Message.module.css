@@ -632,24 +632,28 @@
    flex-wrap: wrap;
    gap: 10px;
    justify-content: center;
-   max-width: 400px;
+   margin-top: 20px;
 }
 
 .suggestionBubbles button {
-   background: #f0f2ff;
-   border: 1px solid lavender;
+   background: #f3f4f6;
+   border: 1px solid wheat;
    padding: 8px 16px;
    border-radius: 20px;
-   color: #7c4dff;
-   font-size: 0.9rem;
+   font-size: 14px;
+   color: #4b5563;
    cursor: pointer;
-   transition: all 0.3s ease;
+   transition: all 0.2s ease;
 }
 
 .suggestionBubbles button:hover {
-   background: #7c4dff;
+   background: #6366f1;
    color: white;
-   transform: translateY(-2px);
+   transform: translateY(-1px);
+}
+
+.suggestionBubbles button:active {
+   transform: translateY(0);
 }
 
 .noChatSelected {

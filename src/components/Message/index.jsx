@@ -9,7 +9,6 @@ import {
    faUserFriends,
    faTrash,
    faComment,
-   faCommentDots,
    faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
@@ -24,18 +23,35 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { SEO } from "../common/SEO";
 
-const EmptyConversation = ({ selectedUser }) => {
+const EmptyConversation = ({ selectedUser, onSuggestionClick }) => {
    return (
       <div className={styles.emptyConversation}>
-         <div className={styles.emptyStateIcon}>
-            <FontAwesomeIcon icon={faComment} />
-         </div>
-         <h3>Start a Conversation with {selectedUser?.username}</h3>
-         <p>Say hello and start connecting! 👋</p>
-         <div className={styles.suggestionBubbles}>
-            <button>👋 Hey there!</button>
-            <button>Would love to connect!</button>
-            <button>Hi, how are you?</button>
+         <div className={styles.emptyStateContent}>
+            <div className={styles.emptyStateIcon}>
+               <FontAwesomeIcon icon={faComment} />
+            </div>
+            <h3>Start a Conversation with {selectedUser?.username}</h3>
+            <p>Say hello and start connecting! 👋</p>
+            <div className={styles.suggestionBubbles}>
+               <button 
+                  className={styles.suggestionButton}
+                  onClick={() => onSuggestionClick("👋 Hey there!")}
+               >
+                  👋 Hey there!
+               </button>
+               <button 
+                  className={styles.suggestionButton}
+                  onClick={() => onSuggestionClick("Would love to connect!")}
+               >
+                  Would love to connect!
+               </button>
+               <button 
+                  className={styles.suggestionButton}
+                  onClick={() => onSuggestionClick("Hi, how are you?")}
+               >
+                  Hi, how are you?
+               </button>
+            </div>
          </div>
       </div>
    );
@@ -359,6 +375,7 @@ function Message() {
 
    const handleSuggestionClick = (message) => {
       if (selectedChat) {
+         setMessageInput(message); // Set the message in the input first
          sendPrivateMessage(selectedChat, message);
       }
    };

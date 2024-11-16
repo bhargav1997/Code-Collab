@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +19,7 @@ import {
    faTrophy,
    faMedal,
    faStar,
+   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./UserProfile.module.css";
 // import { setUser, fetchConnections } from "../../redux/user/userSlice";
@@ -41,6 +43,7 @@ function UserProfile() {
 
    const dispatch = useDispatch();
    const { user } = useSelector((state) => state.user);
+   const navigate = useNavigate();
 
    useEffect(() => {
       if (user) {
@@ -274,87 +277,137 @@ function UserProfile() {
       setShowConnectionsModal(true);
    };
 
+   const handleMessageClick = (userId) => {
+      navigate(`/message?userId=${userId}`);
+      setShowConnectionsModal(false);
+   };
+
    const ConnectionsModal = () => {
-      let connections = [];
-      if (user && user?.followers && user?.following) {
-         connections = activeTab === "followers" ? user.followers : user.following;
-      }
-      
-      // Helper function to check if we are following a user
-      const isFollowingUser = (connectionId) => {
-         return user.following.some(following => following._id === connectionId);
+      const connections = activeTab === "followers" ? user?.followers : user?.following;
+      const [filteredConnections, setFilteredConnections] = useState(connections);
+      const [localActiveTab, setLocalActiveTab] = useState(activeTab);
+
+      const handleTabChange = (tab) => {
+         setLocalActiveTab(tab);
+         setActiveTab(tab);
+         setSearchTerm('');
       };
 
+      const isFollowingUser = (connectionId) => {
+         return user?.following?.some(following => following._id === connectionId);
+      };
+
+      useEffect(() => {
+         const currentConnections = localActiveTab === "followers" ? user?.followers : user?.following;
+         const filtered = currentConnections?.filter(
+            (connection) =>
+               connection.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               (connection.title && connection.title.toLowerCase().includes(searchTerm.toLowerCase()))
+         );
+         setFilteredConnections(filtered);
+      }, [searchTerm, localActiveTab, user?.followers, user?.following]);
+
       return (
-         <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-               <div className={styles.modalHeader}>
-                  <h2>{activeTab === "followers" ? "Followers" : "Following"}</h2>
-                  <button className={styles.closeButton} onClick={() => setShowConnectionsModal(false)}>
+         <div className={styles.connectionsModal}>
+            <div className={styles.connectionsContent}>
+               <div className={styles.connectionsHeader}>
+                  <h2>Your Network</h2>
+                  <button className={styles.closeModalBtn} onClick={() => setShowConnectionsModal(false)}>
                      <FontAwesomeIcon icon={faTimes} />
                   </button>
                </div>
-               <div className={styles.tabButtons}>
-                  <button
-                     className={`${styles.tabButton} ${activeTab === "followers" ? styles.activeTab : ""}`}
-                     onClick={() => setActiveTab("followers")}>
+
+               <div className={styles.tabsContainer}>
+                  <button 
+                     className={`${styles.tabButton} ${localActiveTab === 'followers' ? styles.activeTab : ''}`}
+                     onClick={() => handleTabChange('followers')}
+                  >
+                     <span className={styles.tabCount}>{user?.followers?.length || 0}</span>
                      Followers
                   </button>
-                  <button
-                     className={`${styles.tabButton} ${activeTab === "following" ? styles.activeTab : ""}`}
-                     onClick={() => setActiveTab("following")}>
+                  <button 
+                     className={`${styles.tabButton} ${localActiveTab === 'following' ? styles.activeTab : ''}`}
+                     onClick={() => handleTabChange('following')}
+                  >
+                     <span className={styles.tabCount}>{user?.following?.length || 0}</span>
                      Following
                   </button>
                </div>
-               <ul className={styles.connectionsList}>
-                  {connections.length > 0 ? (
-                     connections.map((connection) => (
-                        <li key={connection._id} className={styles.connectionItem}>
-                           <img
-                              src={connection.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${connection.username}`}
-                              alt={connection.username}
-                              className={styles.connectionAvatar}
-                           />
+
+               <div className={styles.searchContainer}>
+                  <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+                  <input
+                     type="text"
+                     placeholder="Search connections..."
+                     value={searchTerm}
+                     onChange={(e) => setSearchTerm(e.target.value)}
+                     className={styles.searchInput}
+                  />
+               </div>
+
+               <div className={styles.connectionsList}>
+                  {filteredConnections?.length > 0 ? (
+                     filteredConnections.map((connection) => (
+                        <div key={connection._id} className={styles.connectionCard}>
                            <div className={styles.connectionInfo}>
-                              <h4>{connection.username}</h4>
-                              <p>{connection.title}</p>
+                              <div className={styles.avatarContainer}>
+                                 <img
+                                    src={connection.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${connection.username}`}
+                                    alt={connection.username}
+                                    className={styles.connectionAvatar}
+                                 />
+                                 {connection.isOnline && <div className={styles.onlineStatus}></div>}
+                              </div>
+                              <div className={styles.userDetails}>
+                                 <h3>{connection.username}</h3>
+                                 <p>{connection.title || 'No title yet'}</p>
+                                 <div className={styles.mutualConnections}>
+                                    <FontAwesomeIcon icon={faUserPlus} className={styles.mutualIcon} />
+                                    <span>12 mutual connections</span>
+                                 </div>
+                              </div>
                            </div>
-                           {activeTab === "followers" ? (
-                              // For followers tab: Show Follow/Unfollow based on if we follow them
-                              isFollowingUser(connection._id) ? (
-                                 <button 
-                                    className={styles.unfollowBtn} 
-                                    onClick={() => handleUnfollow(connection._id)}
-                                 >
-                                    <FontAwesomeIcon icon={faUserMinus} /> Unfollow
-                                 </button>
+                           
+                           <div className={styles.connectionActions}>
+                              {activeTab === 'followers' ? (
+                                 isFollowingUser(connection._id) ? (
+                                    <button className={styles.unfollowButton} onClick={() => handleUnfollow(connection._id)}>
+                                       <FontAwesomeIcon icon={faUserMinus} />
+                                       Unfollow
+                                    </button>
+                                 ) : (
+                                    <button className={styles.followButton} onClick={() => handleFollow(connection)}>
+                                       <FontAwesomeIcon icon={faUserPlus} />
+                                       Follow Back
+                                    </button>
+                                 )
                               ) : (
-                                 <button 
-                                    className={styles.followBtn} 
-                                    onClick={() => handleFollow(connection)}
-                                 >
-                                    <FontAwesomeIcon icon={faUserPlus} /> Follow
+                                 <button className={styles.unfollowButton} onClick={() => handleUnfollow(connection._id)}>
+                                    <FontAwesomeIcon icon={faUserMinus} />
+                                    Unfollow
                                  </button>
-                              )
-                           ) : (
-                              // For following tab: Always show Unfollow
+                              )}
                               <button 
-                                 className={styles.unfollowBtn} 
-                                 onClick={() => handleUnfollow(connection._id)}
+                                 className={styles.messageButton}
+                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMessageClick(connection._id);
+                                 }}
                               >
-                                 <FontAwesomeIcon icon={faUserMinus} /> Unfollow
+                                 <FontAwesomeIcon icon={faComment} />
+                                 Message
                               </button>
-                           )}
-                        </li>
+                           </div>
+                        </div>
                      ))
                   ) : (
-                     <li className={styles.noConnectionsMessage}>
-                        {activeTab === "followers"
-                           ? "No followers found. Start engaging with the community to gain followers!"
-                           : "You're not following anyone yet. Explore and connect with other users!"}
-                     </li>
+                     <div className={styles.emptyState}>
+                        <FontAwesomeIcon icon={faUserPlus} className={styles.emptyIcon} />
+                        <h3>No {activeTab} found</h3>
+                        <p>No results match your search criteria.</p>
+                     </div>
                   )}
-               </ul>
+               </div>
             </div>
          </div>
       );
@@ -393,12 +446,18 @@ function UserProfile() {
                <p>{user.bio}</p>
             </div>
             <div className={styles.stats}>
-               <div className={styles.stat} onClick={() => handleConnectionsClick("followers")}>
-                  <span className={styles.statNumber}>{user.followers?.length || 0}</span>
+               <div 
+                  className={styles.stat} 
+                  onClick={() => handleConnectionsClick('followers')}
+               >
+                  <span className={styles.statNumber}>{user?.followers?.length || 0}</span>
                   <span className={styles.statLabel}>Followers</span>
                </div>
-               <div className={styles.stat} onClick={() => handleConnectionsClick("following")}>
-                  <span className={styles.statNumber}>{user.following?.length || 0}</span>
+               <div 
+                  className={styles.stat} 
+                  onClick={() => handleConnectionsClick('following')}
+               >
+                  <span className={styles.statNumber}>{user?.following?.length || 0}</span>
                   <span className={styles.statLabel}>Following</span>
                </div>
             </div>
@@ -531,108 +590,213 @@ function UserProfile() {
                         <FontAwesomeIcon icon={faTimes} />
                      </button>
                   </div>
-                  <h4>Personal Information</h4>
-                  <input type='text' name='username' value={editedUser.username} onChange={handleInputChange} placeholder='Username' />
-                  <input type='email' name='email' value={editedUser.email} onChange={handleInputChange} placeholder='Email' disabled />
-                  <input
-                     type='text'
-                     name='profilePicture'
-                     value={editedUser.profilePicture}
-                     onChange={handleInputChange}
-                     placeholder='Profile Picture URL'
-                  />
-                  <input
-                     type='text'
-                     name='title'
-                     value={editedUser.title || ""}
-                     onChange={handleInputChange}
-                     placeholder='Your Role (eg. React Developer)'
-                  />
-                  <input type='text' name='location' value={editedUser.location} onChange={handleInputChange} placeholder='Location' />
-                  <textarea name='bio' value={editedUser.bio} onChange={handleInputChange} placeholder='Bio' />
-                  <input
-                     type='text'
-                     name='learningGoals'
-                     value={Array.isArray(editedUser.learningGoals) ? editedUser.learningGoals.join(", ") : editedUser.learningGoals || ""}
-                     onChange={(e) => handleArrayInputChange(e, "learningGoals")}
-                     onBlur={(e) => handleArrayInputBlur(e, "learningGoals")}
-                     placeholder='Learning Goals (comma-separated)'
-                  />
-                  <input
-                     type='text'
-                     name='skills'
-                     value={Array.isArray(editedUser.skills) ? editedUser.skills.join(", ") : editedUser.skills || ""}
-                     onChange={(e) => handleArrayInputChange(e, "skills")}
-                     onBlur={(e) => handleArrayInputBlur(e, "skills")}
-                     placeholder='Skills (comma-separated)'
-                  />
-                  <h4>Work</h4>
-                  <input
-                     type='text'
-                     name='title'
-                     value={editedUser.work?.title || ""}
-                     onChange={(e) => handleNestedInputChange(e, "work")}
-                     placeholder='Work Title'
-                  />
-                  <input
-                     type='text'
-                     name='company'
-                     value={editedUser.work?.company || ""}
-                     onChange={(e) => handleNestedInputChange(e, "work")}
-                     placeholder='Company'
-                  />
-                  <input
-                     type='text'
-                     name='startDate'
-                     value={editedUser.work?.startDate || ""}
-                     onChange={(e) => handleNestedInputChange(e, "work")}
-                     placeholder='Start Date'
-                  />
-                  <input
-                     type='text'
-                     name='endDate'
-                     value={editedUser.work?.endDate || ""}
-                     onChange={(e) => handleNestedInputChange(e, "work")}
-                     placeholder='End Date'
-                  />
-                  <textarea
-                     name='description'
-                     value={editedUser.work?.description || ""}
-                     onChange={(e) => handleNestedInputChange(e, "work")}
-                     placeholder='Work Description'
-                  />
-                  <h4>Education</h4>
-                  <input
-                     type='text'
-                     name='degree'
-                     value={editedUser.education?.degree || ""}
-                     onChange={(e) => handleNestedInputChange(e, "education")}
-                     placeholder='Degree'
-                  />
-                  <input
-                     type='text'
-                     name='school'
-                     value={editedUser.education?.school || ""}
-                     onChange={(e) => handleNestedInputChange(e, "education")}
-                     placeholder='School'
-                  />
-                  <input
-                     type='text'
-                     name='graduationYear'
-                     value={editedUser.education?.graduationYear || ""}
-                     onChange={(e) => handleNestedInputChange(e, "education")}
-                     placeholder='Graduation Year'
-                  />
-                  <input
-                     type='text'
-                     name='website'
-                     value={editedUser.website || ""}
-                     onChange={handleInputChange}
-                     placeholder='Your Website Link (eg. www.xyz.com)'
-                  />
+                  
+                  <form className={styles.editForm}>
+                     <div className={styles.formSection}>
+                        <h4>Personal Information</h4>
+                        <div className={styles.formGrid}>
+                           <div className={styles.inputGroup}>
+                              <label>Username</label>
+                              <input 
+                                 type='text' 
+                                 name='username' 
+                                 value={editedUser.username} 
+                                 onChange={handleInputChange} 
+                                 placeholder='Enter username'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Email</label>
+                              <input 
+                                 type='email' 
+                                 name='email' 
+                                 value={editedUser.email} 
+                                 onChange={handleInputChange} 
+                                 placeholder='Enter email'
+                                 disabled 
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Profile Picture URL</label>
+                              <input 
+                                 type='text' 
+                                 name='profilePicture' 
+                                 value={editedUser.profilePicture} 
+                                 onChange={handleInputChange} 
+                                 placeholder='Enter profile picture URL'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Title/Role</label>
+                              <input 
+                                 type='text' 
+                                 name='title' 
+                                 value={editedUser.title || ""} 
+                                 onChange={handleInputChange} 
+                                 placeholder='e.g. Senior React Developer'
+                              />
+                           </div>
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                           <label>Bio</label>
+                           <textarea 
+                              name='bio' 
+                              value={editedUser.bio} 
+                              onChange={handleInputChange} 
+                              placeholder='Tell us about yourself'
+                           />
+                        </div>
+
+                        <div className={styles.inputGroup}>
+                           <label>Location</label>
+                           <input 
+                              type='text' 
+                              name='location' 
+                              value={editedUser.location} 
+                              onChange={handleInputChange} 
+                              placeholder='Enter your location'
+                           />
+                        </div>
+                     </div>
+
+                     <div className={styles.formSection}>
+                        <h4>Skills & Goals</h4>
+                        <div className={styles.inputGroup}>
+                           <label>Skills</label>
+                           <input 
+                              type='text' 
+                              name='skills' 
+                              value={Array.isArray(editedUser.skills) ? editedUser.skills.join(", ") : editedUser.skills || ""} 
+                              onChange={(e) => handleArrayInputChange(e, "skills")} 
+                              onBlur={(e) => handleArrayInputBlur(e, "skills")} 
+                              placeholder='Enter skills (comma-separated)'
+                           />
+                        </div>
+                        <div className={styles.inputGroup}>
+                           <label>Learning Goals</label>
+                           <input 
+                              type='text' 
+                              name='learningGoals' 
+                              value={Array.isArray(editedUser.learningGoals) ? editedUser.learningGoals.join(", ") : editedUser.learningGoals || ""} 
+                              onChange={(e) => handleArrayInputChange(e, "learningGoals")} 
+                              onBlur={(e) => handleArrayInputBlur(e, "learningGoals")} 
+                              placeholder='Enter learning goals (comma-separated)'
+                           />
+                        </div>
+                     </div>
+
+                     <div className={styles.formSection}>
+                        <h4>Work Experience</h4>
+                        <div className={styles.formGrid}>
+                           <div className={styles.inputGroup}>
+                              <label>Title</label>
+                              <input 
+                                 type='text' 
+                                 name='title' 
+                                 value={editedUser.work?.title || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                                 placeholder='Job title'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Company</label>
+                              <input 
+                                 type='text' 
+                                 name='company' 
+                                 value={editedUser.work?.company || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                                 placeholder='Company name'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Start Date</label>
+                              <input 
+                                 type='date' 
+                                 name='startDate' 
+                                 value={editedUser.work?.startDate || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>End Date</label>
+                              <input 
+                                 type='date' 
+                                 name='endDate' 
+                                 value={editedUser.work?.endDate || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              />
+                           </div>
+                        </div>
+                        <div className={styles.inputGroup}>
+                           <label>Description</label>
+                           <textarea 
+                              name='description' 
+                              value={editedUser.work?.description || ""} 
+                              onChange={(e) => handleNestedInputChange(e, "work")} 
+                              placeholder='Describe your role and responsibilities'
+                           />
+                        </div>
+                     </div>
+
+                     <div className={styles.formSection}>
+                        <h4>Education</h4>
+                        <div className={styles.formGrid}>
+                           <div className={styles.inputGroup}>
+                              <label>Degree</label>
+                              <input 
+                                 type='text' 
+                                 name='degree' 
+                                 value={editedUser.education?.degree || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                                 placeholder='Your degree'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>School</label>
+                              <input 
+                                 type='text' 
+                                 name='school' 
+                                 value={editedUser.education?.school || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                                 placeholder='School name'
+                              />
+                           </div>
+                           <div className={styles.inputGroup}>
+                              <label>Graduation Year</label>
+                              <input 
+                                 type='number' 
+                                 name='graduationYear' 
+                                 value={editedUser.education?.graduationYear || ""} 
+                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                                 placeholder='YYYY'
+                              />
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className={styles.formSection}>
+                        <h4>Social</h4>
+                        <div className={styles.inputGroup}>
+                           <label>Website</label>
+                           <input 
+                              type='url' 
+                              name='website' 
+                              value={editedUser.website || ""} 
+                              onChange={handleInputChange} 
+                              placeholder='Your website URL'
+                           />
+                        </div>
+                     </div>
+                  </form>
+
                   <div className={styles.editModalButtons}>
-                     <button onClick={() => setIsEditing(false)}>Cancel</button>
-                     <button onClick={handleSaveClick}>Save</button>
+                     <button className={styles.cancelButton} onClick={() => setIsEditing(false)}>
+                        Cancel
+                     </button>
+                     <button className={styles.saveButton} onClick={handleSaveClick}>
+                        Save Changes
+                     </button>
                   </div>
                </div>
             </div>
