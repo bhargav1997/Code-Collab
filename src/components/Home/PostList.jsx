@@ -8,8 +8,6 @@ function PostList() {
    const dispatch = useDispatch();
    const { items: posts, status, error, page, hasMore } = useSelector((state) => state.posts);
 
-   console.log("posts", posts);
-
    useEffect(() => {
       if (status === "idle") {
          dispatch(fetchPosts({ page: 1, limit: 10 }));

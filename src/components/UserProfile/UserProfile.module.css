@@ -1045,7 +1045,7 @@
 
 .friendItem {
    display: flex;
-   align-items: center;
+   align-items: flex-start;
    padding: 16px;
    background: #f8fafc;
    border-radius: 12px;

@@ -10,7 +10,6 @@ import {
    faGraduationCap,
    faBriefcase,
    faMapMarkerAlt,
-   faLink,
    faPen,
    faTimes,
    faLightbulb,
@@ -280,8 +279,10 @@ function UserProfile() {
       if (user && user?.followers && user?.following) {
          connections = activeTab === "followers" ? user.followers : user.following;
       }
-      const isFollowing = (id) => {
-         return connections.some((connection) => connection._id === id);
+      
+      // Helper function to check if we are following a user
+      const isFollowingUser = (connectionId) => {
+         return user.following.some(following => following._id === connectionId);
       };
 
       return (
@@ -308,7 +309,7 @@ function UserProfile() {
                <ul className={styles.connectionsList}>
                   {connections.length > 0 ? (
                      connections.map((connection) => (
-                        <li key={connection.id} className={styles.connectionItem}>
+                        <li key={connection._id} className={styles.connectionItem}>
                            <img
                               src={connection.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${connection.username}`}
                               alt={connection.username}
@@ -319,17 +320,28 @@ function UserProfile() {
                               <p>{connection.title}</p>
                            </div>
                            {activeTab === "followers" ? (
-                              isFollowing(connection.id) ? (
-                                 <button className={styles.unfollowBtn} onClick={() => handleUnfollow(connection.id)}>
+                              // For followers tab: Show Follow/Unfollow based on if we follow them
+                              isFollowingUser(connection._id) ? (
+                                 <button 
+                                    className={styles.unfollowBtn} 
+                                    onClick={() => handleUnfollow(connection._id)}
+                                 >
                                     <FontAwesomeIcon icon={faUserMinus} /> Unfollow
                                  </button>
                               ) : (
-                                 <button className={styles.followBtn} onClick={() => handleFollow(connection)}>
+                                 <button 
+                                    className={styles.followBtn} 
+                                    onClick={() => handleFollow(connection)}
+                                 >
                                     <FontAwesomeIcon icon={faUserPlus} /> Follow
                                  </button>
                               )
                            ) : (
-                              <button className={styles.unfollowBtn} onClick={() => handleUnfollow(connection.id)}>
+                              // For following tab: Always show Unfollow
+                              <button 
+                                 className={styles.unfollowBtn} 
+                                 onClick={() => handleUnfollow(connection._id)}
+                              >
                                  <FontAwesomeIcon icon={faUserMinus} /> Unfollow
                               </button>
                            )}

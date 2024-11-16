@@ -86,8 +86,6 @@ function Header() {
    const [messageNotificationsBeingRead, setMessageNotificationsBeingRead] = useState({});
    const messageNotificationsRef = useRef(null);
 
-   console.log("notifications", notifications);
-
    useEffect(() => {
       fetchNotifications();
    }, []);
@@ -334,14 +332,13 @@ function Header() {
                      <div className={styles.messageNotificationsOverlay}>
                         <div className={styles.messageHeader}>
                            <h3 className={styles.messageHeaderTitle}>Messages</h3>
-                           {messageNotifications.some(n => !n.read) && (
-                              <button 
-                                 className={styles.messageMarkAllBtn} 
+                           {messageNotifications.some((n) => !n.read) && (
+                              <button
+                                 className={styles.messageMarkAllBtn}
                                  onClick={(e) => {
                                     e.stopPropagation();
                                     handleMarkAllMessagesAsRead();
-                                 }}
-                              >
+                                 }}>
                                  Mark all read
                               </button>
                            )}
