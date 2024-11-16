@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import { CONFIG } from "../../config";
 import ShareJourney from "./ShareJourney";
 import { debounce } from "lodash";
+import { SEO } from "../common/SEO";
 
 // If you don't want to use lodash, you can implement a simple debounce function:
 // const debounce = (func, delay) => {
@@ -231,20 +232,20 @@ const LearningJourney = () => {
    };
 
    const debouncedUpdateNotes = useCallback(
-     debounce((notes) => {
-       const updatedJourney = {
-         ...selectedJourney,
-         notes: notes,
-       };
-       dispatch(updateJourneyToUser(updatedJourney));
-     }, 500),
-     [selectedJourney]
+      debounce((notes) => {
+         const updatedJourney = {
+            ...selectedJourney,
+            notes: notes,
+         };
+         dispatch(updateJourneyToUser(updatedJourney));
+      }, 500),
+      [selectedJourney],
    );
 
    const updateNotes = (e) => {
-     const newNotes = e.target.value;
-     setLocalNotes(newNotes);
-     debouncedUpdateNotes(newNotes);
+      const newNotes = e.target.value;
+      setLocalNotes(newNotes);
+      debouncedUpdateNotes(newNotes);
    };
 
    const toggleResourceCompletion = (index) => {
@@ -310,8 +311,23 @@ const LearningJourney = () => {
       setSharingJourneyId(journeyId);
    };
 
+   const schema = {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      name: "Learning Journey - LearnHUB",
+      description: "Create and track your personalized learning path with LearnHUB's learning journey feature.",
+   };
+
    return (
       <div className={styles.learningJourneyContainer}>
+         <SEO
+            title='Learning Journey - Track Your Educational Progress'
+            description="Create custom learning paths, track your progress, and achieve your educational goals with LearnHUB's learning journey feature."
+            image='https://www.trackmyskills.tech/#/favicon.png'
+            keywords='learning journey, educational progress, skill tracking, learning path'
+            canonicalUrl='/learning-journey'
+            schema={schema}
+         />
          <h2 className={styles.journeyTitle}>Your Learning Journeys</h2>
          {!selectedJourney ? (
             <div className={styles.journeyList}>

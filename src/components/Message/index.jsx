@@ -20,6 +20,7 @@ import { fetchUserConnections } from "../../api/userApi";
 import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { SEO } from "../common/SEO";
 
 const EmptyConversation = ({ selectedUser }) => {
    return (
@@ -39,6 +40,12 @@ const EmptyConversation = ({ selectedUser }) => {
 };
 
 function Message() {
+   const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "LearnHUB - Your Personal Learning Journey Platform",
+      description: "Private messaging platform for LearnHUB users",
+   };
    const API_URL = CONFIG.API_URL;
    const { user } = useSelector((state) => state.user);
    const [selectedChat, setSelectedChat] = useState(null);
@@ -358,135 +365,145 @@ function Message() {
    console.log("messages", messages);
 
    return (
-      <div className={styles.messageContainer}>
-         <div className={styles.sidebar}>
-            <div className={styles.searchBarWrapper}>
-               <div className={styles.searchBar}>
-                  <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
-                  <input type='text' placeholder='Search Connections...' value={searchTerm} onChange={handleSearchInputChange} />
-               </div>
-            </div>
-            <div className={styles.chatList}>
-               {(searchTerm ? searchResults : connections).map((connection) => (
-                  <div
-                     key={connection._id}
-                     className={`${styles.chatItem} ${selectedChat === connection._id ? styles.active : ""}`}
-                     onClick={() => handleChatSelect(connection._id)}>
-                     <div className={styles.avatar}>
-                        {connection.profilePicture ? (
-                           <img src={connection.profilePicture} alt={connection.username} className={styles.avatarImage} />
-                        ) : (
-                           connection.username[0].toUpperCase()
-                        )}
-                     </div>
-                     <div className={styles.chatInfo}>
-                        <h4>{connection.username}</h4>
-                        <p>{connection.title || connection.email}</p>
-                     </div>
-                     <div className={styles.chatMeta}>
-                        <div className={styles.connectionStatus}>
-                           {connection.isFollower && connection.isFollowing ? (
-                              <FontAwesomeIcon icon={faUserFriends} className={styles.mutualIcon} title='Mutual Connection' />
-                           ) : connection.isFollower ? (
-                              <span className={styles.followerBadge} title='Follower'>
-                                 F
-                              </span>
-                           ) : connection.isFollowing ? (
-                              <span className={styles.followingBadge} title='Following'>
-                                 F
-                              </span>
-                           ) : null}
-                        </div>
-                     </div>
+      <>
+         <SEO
+            title='LearnHUB - Private Messaging Platform'
+            description='Private messaging platform for LearnHUB users'
+            image='https://www.trackmyskills.tech/#/favicon.png'
+            keywords='private messaging, online messaging, social networking'
+            canonicalUrl='/'
+            schema={schema}
+         />
+         <div className={styles.messageContainer}>
+            <div className={styles.sidebar}>
+               <div className={styles.searchBarWrapper}>
+                  <div className={styles.searchBar}>
+                     <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
+                     <input type='text' placeholder='Search Connections...' value={searchTerm} onChange={handleSearchInputChange} />
                   </div>
-               ))}
-            </div>
-         </div>
-         <div className={styles.chatArea}>
-            {selectedChat ? (
-               <>
-                  <div className={styles.chatHeader}>
-                     <div className={styles.chatHeaderLeft}>
+               </div>
+               <div className={styles.chatList}>
+                  {(searchTerm ? searchResults : connections).map((connection) => (
+                     <div
+                        key={connection._id}
+                        className={`${styles.chatItem} ${selectedChat === connection._id ? styles.active : ""}`}
+                        onClick={() => handleChatSelect(connection._id)}>
                         <div className={styles.avatar}>
-                           {connections.find((connection) => connection._id === selectedChat)?.username[0].toUpperCase()}
-                        </div>
-                        <h3>{connections.find((connection) => connection._id === selectedChat)?.username}</h3>
-                     </div>
-                     <div className={styles.chatHeaderRight}>
-                        <div className={styles.dropdownContainer} ref={dropdownRef}>
-                           <button className={styles.moreOptions} onClick={() => setShowDropdown(!showDropdown)}>
-                              <FontAwesomeIcon icon={faEllipsisV} />
-                           </button>
-                           {showDropdown && (
-                              <div className={styles.dropdownMenu}>
-                                 <button onClick={clearChat}>
-                                    <FontAwesomeIcon icon={faTrash} /> Clear Chat
-                                 </button>
-                                 {/* Add more options here as needed */}
-                              </div>
+                           {connection.profilePicture ? (
+                              <img src={connection.profilePicture} alt={connection.username} className={styles.avatarImage} />
+                           ) : (
+                              connection.username[0].toUpperCase()
                            )}
                         </div>
-                     </div>
-                  </div>
-                  <div className={styles.messageList}>
-                     {messages.length > 0 ? (
-                        messages.map((message, index) => (
-                           <div
-                              key={index}
-                              className={`${styles.message} ${
-                                 message?.sender?._id === user._id || message?.senderId === user._id ? styles.sent : styles.received
-                              }`}>
-                              <p>{message.message}</p>
-                              <span className={styles.messageTime}>
-                                 {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                              </span>
+                        <div className={styles.chatInfo}>
+                           <h4>{connection.username}</h4>
+                           <p>{connection.title || connection.email}</p>
+                        </div>
+                        <div className={styles.chatMeta}>
+                           <div className={styles.connectionStatus}>
+                              {connection.isFollower && connection.isFollowing ? (
+                                 <FontAwesomeIcon icon={faUserFriends} className={styles.mutualIcon} title='Mutual Connection' />
+                              ) : connection.isFollower ? (
+                                 <span className={styles.followerBadge} title='Follower'>
+                                    F
+                                 </span>
+                              ) : connection.isFollowing ? (
+                                 <span className={styles.followingBadge} title='Following'>
+                                    F
+                                 </span>
+                              ) : null}
                            </div>
-                        ))
-                     ) : (
-                        <EmptyConversation
-                           selectedUser={connections.find((c) => c._id === selectedChat)}
-                           onSuggestionClick={handleSuggestionClick}
-                        />
-                     )}
-                     {isTyping && <div className={styles.typingIndicator}>Typing...</div>}
-                     <div ref={messagesEndRef} />
-                  </div>
-                  <div className={styles.messageInputWrapper}>
-                     <button className={styles.attachButton}>
-                        <FontAwesomeIcon icon={faPaperclip} />
-                     </button>
-                     <form
-                        className={styles.messageInput}
-                        onSubmit={(e) => {
-                           e.preventDefault();
-                           sendPrivateMessage(selectedChat, messageInput);
-                        }}>
-                        <input type='text' placeholder='Type a message...' value={messageInput} onChange={handleInputChange} />
-                        <div className={styles.emojiPickerContainer}>
-                           <button type='button' className={styles.emojiButton} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
-                              <FontAwesomeIcon icon={faSmile} />
-                           </button>
-                           {showEmojiPicker && (
-                              <div className={styles.emojiPickerWrapper}>
-                                 <EmojiPicker onEmojiClick={onEmojiClick} />
-                              </div>
-                           )}
                         </div>
-                        <button type='submit' className={styles.sendButton}>
-                           <FontAwesomeIcon icon={faPaperPlane} />
-                        </button>
-                     </form>
-                  </div>
-               </>
-            ) : (
-               <div className={styles.noChatSelected}>
-                  <FontAwesomeIcon icon={faComment} className={styles.noChatIcon} />
-                  <h2>Select a chat to start messaging</h2>
-                  <p>Choose from your connections on the left</p>
+                     </div>
+                  ))}
                </div>
-            )}
+            </div>
+            <div className={styles.chatArea}>
+               {selectedChat ? (
+                  <>
+                     <div className={styles.chatHeader}>
+                        <div className={styles.chatHeaderLeft}>
+                           <div className={styles.avatar}>
+                              {connections.find((connection) => connection._id === selectedChat)?.username[0].toUpperCase()}
+                           </div>
+                           <h3>{connections.find((connection) => connection._id === selectedChat)?.username}</h3>
+                        </div>
+                        <div className={styles.chatHeaderRight}>
+                           <div className={styles.dropdownContainer} ref={dropdownRef}>
+                              <button className={styles.moreOptions} onClick={() => setShowDropdown(!showDropdown)}>
+                                 <FontAwesomeIcon icon={faEllipsisV} />
+                              </button>
+                              {showDropdown && (
+                                 <div className={styles.dropdownMenu}>
+                                    <button onClick={clearChat}>
+                                       <FontAwesomeIcon icon={faTrash} /> Clear Chat
+                                    </button>
+                                    {/* Add more options here as needed */}
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                     </div>
+                     <div className={styles.messageList}>
+                        {messages.length > 0 ? (
+                           messages.map((message, index) => (
+                              <div
+                                 key={index}
+                                 className={`${styles.message} ${
+                                    message?.sender?._id === user._id || message?.senderId === user._id ? styles.sent : styles.received
+                                 }`}>
+                                 <p>{message.message}</p>
+                                 <span className={styles.messageTime}>
+                                    {new Date(message.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                 </span>
+                              </div>
+                           ))
+                        ) : (
+                           <EmptyConversation
+                              selectedUser={connections.find((c) => c._id === selectedChat)}
+                              onSuggestionClick={handleSuggestionClick}
+                           />
+                        )}
+                        {isTyping && <div className={styles.typingIndicator}>Typing...</div>}
+                        <div ref={messagesEndRef} />
+                     </div>
+                     <div className={styles.messageInputWrapper}>
+                        <button className={styles.attachButton}>
+                           <FontAwesomeIcon icon={faPaperclip} />
+                        </button>
+                        <form
+                           className={styles.messageInput}
+                           onSubmit={(e) => {
+                              e.preventDefault();
+                              sendPrivateMessage(selectedChat, messageInput);
+                           }}>
+                           <input type='text' placeholder='Type a message...' value={messageInput} onChange={handleInputChange} />
+                           <div className={styles.emojiPickerContainer}>
+                              <button type='button' className={styles.emojiButton} onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                                 <FontAwesomeIcon icon={faSmile} />
+                              </button>
+                              {showEmojiPicker && (
+                                 <div className={styles.emojiPickerWrapper}>
+                                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                                 </div>
+                              )}
+                           </div>
+                           <button type='submit' className={styles.sendButton}>
+                              <FontAwesomeIcon icon={faPaperPlane} />
+                           </button>
+                        </form>
+                     </div>
+                  </>
+               ) : (
+                  <div className={styles.noChatSelected}>
+                     <FontAwesomeIcon icon={faComment} className={styles.noChatIcon} />
+                     <h2>Select a chat to start messaging</h2>
+                     <p>Choose from your connections on the left</p>
+                  </div>
+               )}
+            </div>
          </div>
-      </div>
+      </>
    );
 }
 

@@ -13,6 +13,7 @@ import { markAchievementSeen } from "../../redux/slices/achievementsSlice";
 import PropTypes from "prop-types";
 import { deleteChallenge, fetchChallenges } from "../../redux/challenges/challengesSlice";
 import { fetchAchievements } from "../../redux/achievements/achievementsSlice";
+import { SEO } from '../common/SEO';
 
 const Challenges = () => {
    const [showCreateModal, setShowCreateModal] = useState(false);
@@ -55,116 +56,133 @@ const Challenges = () => {
       );
    }
 
+   const schema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Coding Challenges - LearnHUB",
+      "description": "Interactive coding challenges and quizzes to test and improve your programming skills."
+   };
+
    return (
-      <div className={styles.pageContainer}>
-         {/* Progress Overview Section */}
-         <motion.div className={styles.progressSection} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <div className={styles.progressCards}>
-               <div className={styles.progressCard}>
-                  <div className={styles.progressCircle}>
-                     <CircularProgressbar
-                        value={completionRate}
-                        text={`${completionRate}%`}
-                        styles={buildStyles({
-                           pathColor: `rgba(124, 77, 255, ${completionRate / 100})`,
-                           textColor: "#2c3e50",
-                           trailColor: "#e2e8f0",
-                        })}
-                     />
+      <>
+         <SEO 
+            title="Coding Challenges - Test Your Skills"
+            description="Push yourself with interactive coding challenges and quizzes. Improve your programming skills with LearnHUB's comprehensive challenge system."
+            image="https://www.trackmyskills.tech/challenges-banner.jpg"
+            keywords="coding challenges, programming quizzes, skill testing, interactive learning"
+            canonicalUrl="/challenges"
+            schema={schema}
+         />
+         <div className={styles.pageContainer}>
+            {/* Progress Overview Section */}
+            <motion.div className={styles.progressSection} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+               <div className={styles.progressCards}>
+                  <div className={styles.progressCard}>
+                     <div className={styles.progressCircle}>
+                        <CircularProgressbar
+                           value={completionRate}
+                           text={`${completionRate}%`}
+                           styles={buildStyles({
+                              pathColor: `rgba(124, 77, 255, ${completionRate / 100})`,
+                              textColor: "#2c3e50",
+                              trailColor: "#e2e8f0",
+                           })}
+                        />
+                     </div>
+                     <h3>Completion Rate</h3>
                   </div>
-                  <h3>Completion Rate</h3>
-               </div>
 
-               <div className={styles.progressCard}>
-                  <div className={styles.streakIcon}>
-                     <FontAwesomeIcon icon={faFire} />
-                     <span>{currentStreak}</span>
+                  <div className={styles.progressCard}>
+                     <div className={styles.streakIcon}>
+                        <FontAwesomeIcon icon={faFire} />
+                        <span>{currentStreak}</span>
+                     </div>
+                     <h3>Day Streak</h3>
                   </div>
-                  <h3>Day Streak</h3>
-               </div>
 
-               <div className={styles.progressCard}>
-                  <div className={styles.totalChallenges}>
+                  <div className={styles.progressCard}>
+                     <div className={styles.totalChallenges}>
+                        <FontAwesomeIcon icon={faRocket} />
+                        <span>{challenges.length}</span>
+                     </div>
+                     <h3>Active Challenges</h3>
+                  </div>
+               </div>
+            </motion.div>
+
+            {/* Challenges Section */}
+            <div className={styles.mainContent}>
+               <div className={styles.sectionHeader}>
+                  <h2>
                      <FontAwesomeIcon icon={faRocket} />
-                     <span>{challenges.length}</span>
-                  </div>
-                  <h3>Active Challenges</h3>
+                     Your Challenges
+                  </h2>
+                  <motion.button
+                     className={styles.createButton}
+                     onClick={() => setShowCreateModal(true)}
+                     whileHover={{ scale: 1.05 }}
+                     whileTap={{ scale: 0.95 }}>
+                     <FontAwesomeIcon icon={faPlus} />
+                     Create Challenge
+                  </motion.button>
                </div>
-            </div>
-         </motion.div>
 
-         {/* Challenges Section */}
-         <div className={styles.mainContent}>
-            <div className={styles.sectionHeader}>
-               <h2>
-                  <FontAwesomeIcon icon={faRocket} />
-                  Your Challenges
-               </h2>
-               <motion.button
-                  className={styles.createButton}
-                  onClick={() => setShowCreateModal(true)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}>
-                  <FontAwesomeIcon icon={faPlus} />
-                  Create Challenge
-               </motion.button>
-            </div>
+               <motion.div className={styles.challengesGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+                  {challenges.length === 0 ? (
+                     <div className={styles.emptyState}>
+                        <FontAwesomeIcon icon={faRocket} />
+                        <h3>No Challenges Yet</h3>
+                        <p>Create your first challenge to start your learning journey!</p>
+                     </div>
+                  ) : (
+                     <AnimatePresence>
+                        {challenges.map((challenge, index) => (
+                           <motion.div
+                              key={challenge._id}
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                              transition={{ delay: index * 0.1 }}>
+                              <ChallengeCard challenge={challenge} onDelete={handleDelete} />
+                           </motion.div>
+                        ))}
+                     </AnimatePresence>
+                  )}
+               </motion.div>
 
-            <motion.div className={styles.challengesGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-               {challenges.length === 0 ? (
-                  <div className={styles.emptyState}>
-                     <FontAwesomeIcon icon={faRocket} />
-                     <h3>No Challenges Yet</h3>
-                     <p>Create your first challenge to start your learning journey!</p>
-                  </div>
-               ) : (
-                  <AnimatePresence>
-                     {challenges.map((challenge, index) => (
+               {/* Recent Achievements Section */}
+               <div className={styles.sectionHeader}>
+                  <h2>
+                     <FontAwesomeIcon icon={faTrophy} />
+                     Recent Achievements
+                  </h2>
+               </div>
+
+               <motion.div className={styles.achievementsGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                  {achievements.length > 0 ? (
+                     achievements.slice(0, 3).map((achievement, index) => (
                         <motion.div
-                           key={challenge._id}
+                           key={achievement.id}
                            initial={{ opacity: 0, y: 20 }}
                            animate={{ opacity: 1, y: 0 }}
-                           exit={{ opacity: 0, y: -20 }}
-                           transition={{ delay: index * 0.1 }}>
-                           <ChallengeCard challenge={challenge} onDelete={handleDelete} />
+                           transition={{ delay: 0.4 + index * 0.1 }}>
+                           <AchievementBadge {...achievement} />
                         </motion.div>
-                     ))}
-                  </AnimatePresence>
-               )}
-            </motion.div>
-
-            {/* Recent Achievements Section */}
-            <div className={styles.sectionHeader}>
-               <h2>
-                  <FontAwesomeIcon icon={faTrophy} />
-                  Recent Achievements
-               </h2>
+                     ))
+                  ) : (
+                     <div className={styles.emptyAchievements}>
+                        <FontAwesomeIcon icon={faTrophy} />
+                        <h3>No Achievements Yet</h3>
+                        <p>Complete challenges to earn achievements!</p>
+                     </div>
+                  )}
+               </motion.div>
             </div>
 
-            <motion.div className={styles.achievementsGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-               {achievements.length > 0 ? (
-                  achievements.slice(0, 3).map((achievement, index) => (
-                     <motion.div
-                        key={achievement.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 + index * 0.1 }}>
-                        <AchievementBadge {...achievement} />
-                     </motion.div>
-                  ))
-               ) : (
-                  <div className={styles.emptyAchievements}>
-                     <FontAwesomeIcon icon={faTrophy} />
-                     <h3>No Achievements Yet</h3>
-                     <p>Complete challenges to earn achievements!</p>
-                  </div>
-               )}
-            </motion.div>
+            {/* Create Challenge Modal */}
+            <AnimatePresence>{showCreateModal && <CreateChallengeModal onClose={() => setShowCreateModal(false)} />}</AnimatePresence>
          </div>
-
-         {/* Create Challenge Modal */}
-         <AnimatePresence>{showCreateModal && <CreateChallengeModal onClose={() => setShowCreateModal(false)} />}</AnimatePresence>
-      </div>
+      </>
    );
 };
 

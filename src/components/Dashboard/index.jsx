@@ -24,6 +24,7 @@ import { addLearningTask } from "../../redux/task/learningTaskSlice";
 import axios from "axios";
 import { CONFIG } from "../../config";
 import { faBookOpen, faRocket, faStar } from "@fortawesome/free-solid-svg-icons";
+import { SEO } from "../common/SEO";
 
 function Dashboard() {
    const [showCreateTask, setShowCreateTask] = useState(false);
@@ -286,145 +287,162 @@ function Dashboard() {
       }
    };
 
+   const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "LearnHUB - Your Personal Learning Journey Platform",
+      description: "Track your learning progress, join challenges, and achieve your educational goals with LearnHUB",
+   };
+
    return (
-      <div className='dashboard'>
-         <ToastContainer />
-         <div className='main-content'>
-            <div className='hero-banner'>
-               <div className='hero-content'>
-                  <h2>Sharpen Your Coding Skills With Professional Online Courses</h2>
-                  <button className='create-log-btn' onClick={() => setShowCreateTask(true)}>
-                     Create Log Now <FontAwesomeIcon icon={faChevronRight} />
-                  </button>
-                  {showCreateTask && <CreateLearningTask onClose={() => setShowCreateTask(false)} handleSubmit={handleSubmit} />}
+      <>
+         <SEO
+            title='LearnHUB - Your Personal Learning Journey Platform'
+            description='Track your learning progress, join challenges, and achieve your educational goals with LearnHUB'
+            image='https://www.trackmyskills.tech/#/favicon.png'
+            keywords='learning platform, online education, skill tracking, learning management'
+            canonicalUrl='/'
+            schema={schema}
+         />
+         <div className='dashboard'>
+            <ToastContainer />
+            <div className='main-content'>
+               <div className='hero-banner'>
+                  <div className='hero-content'>
+                     <h2>Sharpen Your Coding Skills With Professional Online Courses</h2>
+                     <button className='create-log-btn' onClick={() => setShowCreateTask(true)}>
+                        Create Log Now <FontAwesomeIcon icon={faChevronRight} />
+                     </button>
+                     {showCreateTask && <CreateLearningTask onClose={() => setShowCreateTask(false)} handleSubmit={handleSubmit} />}
+                  </div>
+                  <div className='hero-image'></div>
                </div>
-               <div className='hero-image'></div>
-            </div>
-            <div className='stats-container'>
-               <div className='stat-card'>
-                  <h3>{enrolledCourses}</h3>
-                  <p>Enrolled Course{enrolledCourses !== 1 ? "s" : ""}</p>
-                  <a href='#'>
-                     View Details <FontAwesomeIcon icon={faChevronRight} />
-                  </a>
+               <div className='stats-container'>
+                  <div className='stat-card'>
+                     <h3>{enrolledCourses}</h3>
+                     <p>Enrolled Course{enrolledCourses !== 1 ? "s" : ""}</p>
+                     <a href='#'>
+                        View Details <FontAwesomeIcon icon={faChevronRight} />
+                     </a>
+                  </div>
+                  <div className='stat-card'>
+                     <h3>{totalLessons}</h3>
+                     <p>Lesson{totalLessons !== 1 ? "s" : ""}</p>
+                     <a href='#'>
+                        View Details <FontAwesomeIcon icon={faChevronRight} />
+                     </a>
+                  </div>
+                  <div className='stat-card'>
+                     <h3>{earnedCertificates}</h3>
+                     <p>Certificate{earnedCertificates !== 1 ? "s" : ""}</p>
+                     <a href='#'>
+                        View Details <FontAwesomeIcon icon={faChevronRight} />
+                     </a>
+                  </div>
                </div>
-               <div className='stat-card'>
-                  <h3>{totalLessons}</h3>
-                  <p>Lesson{totalLessons !== 1 ? "s" : ""}</p>
-                  <a href='#'>
-                     View Details <FontAwesomeIcon icon={faChevronRight} />
-                  </a>
-               </div>
-               <div className='stat-card'>
-                  <h3>{earnedCertificates}</h3>
-                  <p>Certificate{earnedCertificates !== 1 ? "s" : ""}</p>
-                  <a href='#'>
-                     View Details <FontAwesomeIcon icon={faChevronRight} />
-                  </a>
-               </div>
-            </div>
-            <div className='learning-journey'>
-               <div className='section-header'>
-                  <h3>My Learning Journey</h3>
-                  {learningTasks.length > 0 && <a href='#'>View All</a>}
-               </div>
-               <>
-                  {isLoading ? (
-                     <div>Loading...</div>
-                  ) : learningTasks.length > 0 ? (
-                     <div className='learning-journey-content'>
-                        {learningTasks.map((task) => (
-                           <div key={task.id} className='course-card'>
-                              <div className='course-card-header'>
-                                 <div className={`course-icon ${task.type ? task.type.toLowerCase() : "unknown"}`}>
-                                    <FontAwesomeIcon icon={getCourseIcon(task.type)} />
-                                 </div>
-                                 <div className='course-details'>
-                                    <h4>{task.name}</h4>
-                                    <span className='course-level'>{task.level}</span>
-                                 </div>
-                                 <button className='edit-progress-btn' onClick={() => handleEditClick(task)}>
-                                    <FontAwesomeIcon icon={faEdit} />
-                                 </button>
-                                 <button className='delete-task-btn' onClick={() => handleDeleteClick(task)}>
-                                    <FontAwesomeIcon icon={faTrash} />
-                                 </button>
-                              </div>
-                              <div className='course-card-body'>
-                                 <div className='progress-container'>
-                                    <div className='progress-bar'>
-                                       <div className='progress' style={{ width: `${Math.round(task.progress)}%` }}></div>
+               <div className='learning-journey'>
+                  <div className='section-header'>
+                     <h3>My Learning Journey</h3>
+                     {learningTasks.length > 0 && <a href='#'>View All</a>}
+                  </div>
+                  <>
+                     {isLoading ? (
+                        <div>Loading...</div>
+                     ) : learningTasks.length > 0 ? (
+                        <div className='learning-journey-content'>
+                           {learningTasks.map((task) => (
+                              <div key={task.id} className='course-card'>
+                                 <div className='course-card-header'>
+                                    <div className={`course-icon ${task.type ? task.type.toLowerCase() : "unknown"}`}>
+                                       <FontAwesomeIcon icon={getCourseIcon(task.type)} />
                                     </div>
-                                    <span className='progress-text'>{Math.round(task.progress)}%</span>
+                                    <div className='course-details'>
+                                       <h4>{task.name}</h4>
+                                       <span className='course-level'>{task.level}</span>
+                                    </div>
+                                    <button className='edit-progress-btn' onClick={() => handleEditClick(task)}>
+                                       <FontAwesomeIcon icon={faEdit} />
+                                    </button>
+                                    <button className='delete-task-btn' onClick={() => handleDeleteClick(task)}>
+                                       <FontAwesomeIcon icon={faTrash} />
+                                    </button>
                                  </div>
-                                 <div className='course-meta'>
-                                    {task.type === "Book" && (
-                                       <span className='course-pages'>
-                                          <FontAwesomeIcon icon={faBook} /> {task.taskSpecificProgress} pages
-                                       </span>
-                                    )}
-                                    {task.type === "Video" && (
-                                       <span className='course-duration'>
-                                          <FontAwesomeIcon icon={faVideo} /> {task.estimatedTime}
-                                       </span>
-                                    )}
-                                    {task.type === "Course" && (
-                                       <span className='course-duration'>
-                                          <FontAwesomeIcon icon={faVideo} /> {task.timeSpent} Minutes
-                                       </span>
-                                    )}
-                                    {/* <span className='time-remain'>
+                                 <div className='course-card-body'>
+                                    <div className='progress-container'>
+                                       <div className='progress-bar'>
+                                          <div className='progress' style={{ width: `${Math.round(task.progress)}%` }}></div>
+                                       </div>
+                                       <span className='progress-text'>{Math.round(task.progress)}%</span>
+                                    </div>
+                                    <div className='course-meta'>
+                                       {task.type === "Book" && (
+                                          <span className='course-pages'>
+                                             <FontAwesomeIcon icon={faBook} /> {task.taskSpecificProgress} pages
+                                          </span>
+                                       )}
+                                       {task.type === "Video" && (
+                                          <span className='course-duration'>
+                                             <FontAwesomeIcon icon={faVideo} /> {task.estimatedTime}
+                                          </span>
+                                       )}
+                                       {task.type === "Course" && (
+                                          <span className='course-duration'>
+                                             <FontAwesomeIcon icon={faVideo} /> {task.timeSpent} Minutes
+                                          </span>
+                                       )}
+                                       {/* <span className='time-remain'>
                                        <FontAwesomeIcon icon={faClock} /> {task.timeRemain}
                                     </span> */}
+                                    </div>
+                                 </div>
+                                 <div className='course-card-footer'>
+                                    <span className={`status ${task.status.toLowerCase().replace(" ", "-")}`}>{task.status}</span>
                                  </div>
                               </div>
-                              <div className='course-card-footer'>
-                                 <span className={`status ${task.status.toLowerCase().replace(" ", "-")}`}>{task.status}</span>
-                              </div>
-                           </div>
-                        ))}
-                     </div>
-                  ) : (
-                     <div className='empty-state'>
-                        <div className='empty-state-icons'>
-                           <FontAwesomeIcon icon={faBookOpen} className='icon-book' />
-                           <FontAwesomeIcon icon={faRocket} className='icon-rocket' />
-                           <FontAwesomeIcon icon={faStar} className='icon-star' />
+                           ))}
                         </div>
-                        <h3>Your Learning Adventure Begins Here!</h3>
-                        <p>Ready to start your learning journey? Create your first learning task and let&apos;s get started!</p>
-                        <button className='create-task-btn' onClick={() => setShowCreateTask(true)}>
-                           Create Your First Task
-                        </button>
-                     </div>
-                  )}
-               </>
-            </div>
-         </div>
-
-         <Sidebar />
-
-         {showEditPopup && (
-            <EditProgressPopup task={editingTask} onUpdateProgress={handleUpdateProgress} onClose={() => setShowEditPopup(false)} />
-         )}
-         {showQuizModal && currentQuiz && (
-            <QuizModal
-               quiz={currentQuiz}
-               onClose={() => setShowQuizModal(false)}
-               onQuizComplete={handleQuizComplete}
-               showNotification={showNotification}
-            />
-         )}
-         {showDeleteConfirmation && (
-            <div className='delete-confirmation-overlay'>
-               <div className='delete-confirmation-modal'>
-                  <p>Are you sure you want to delete this task?</p>
-                  <button onClick={confirmDelete}>Yes, delete</button>
-                  <button onClick={() => setShowDeleteConfirmation(false)}>Cancel</button>
+                     ) : (
+                        <div className='empty-state'>
+                           <div className='empty-state-icons'>
+                              <FontAwesomeIcon icon={faBookOpen} className='icon-book' />
+                              <FontAwesomeIcon icon={faRocket} className='icon-rocket' />
+                              <FontAwesomeIcon icon={faStar} className='icon-star' />
+                           </div>
+                           <h3>Your Learning Adventure Begins Here!</h3>
+                           <p>Ready to start your learning journey? Create your first learning task and let&apos;s get started!</p>
+                           <button className='create-task-btn' onClick={() => setShowCreateTask(true)}>
+                              Create Your First Task
+                           </button>
+                        </div>
+                     )}
+                  </>
                </div>
             </div>
-         )}
-      </div>
+
+            <Sidebar />
+
+            {showEditPopup && (
+               <EditProgressPopup task={editingTask} onUpdateProgress={handleUpdateProgress} onClose={() => setShowEditPopup(false)} />
+            )}
+            {showQuizModal && currentQuiz && (
+               <QuizModal
+                  quiz={currentQuiz}
+                  onClose={() => setShowQuizModal(false)}
+                  onQuizComplete={handleQuizComplete}
+                  showNotification={showNotification}
+               />
+            )}
+            {showDeleteConfirmation && (
+               <div className='delete-confirmation-overlay'>
+                  <div className='delete-confirmation-modal'>
+                     <p>Are you sure you want to delete this task?</p>
+                     <button onClick={confirmDelete}>Yes, delete</button>
+                     <button onClick={() => setShowDeleteConfirmation(false)}>Cancel</button>
+                  </div>
+               </div>
+            )}
+         </div>
+      </>
    );
 }
 
