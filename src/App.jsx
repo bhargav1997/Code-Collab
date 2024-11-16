@@ -9,7 +9,7 @@ import styles from "./styles/App.module.css";
 // Import components
 import Sidebar from "./components/Sidebar";
 import Onboarding from "./components/Onboarding";
-import SidebarSkeleton from "./components/Sidebar/SidebarSkeleton";
+// import SidebarSkeleton from "./components/Sidebar/SidebarSkeleton";
 import LoadingSpinner from "./components/LoadingSpinner";
 import PropTypes from "prop-types";
 import TwoFactorAuth from "./components/TwoFactorAuth/TwoFactorAuth";
@@ -38,7 +38,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import LandingPage from "./components/LandingPage";
-import { AnimatePresence } from "framer-motion";
 
 function ErrorFallback({ error }) {
    return (

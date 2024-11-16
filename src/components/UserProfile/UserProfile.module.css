@@ -572,11 +572,17 @@
 }
 
 .badgesSection {
-   padding: 32px;
-   background-color: #ffffff;
+   padding: 24px;
+   background: #fff;
    border-radius: 16px;
-   margin: 0 32px 32px;
-   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.badgesSection h3 {
+   font-size: 18px;
+   font-weight: 600;
+   color: #000;
+   margin-bottom: 24px;
 }
 
 .badgeGrid {
@@ -829,8 +835,12 @@
 }
 
 @keyframes modalFadeIn {
-   from { opacity: 0; }
-   to { opacity: 1; }
+   from {
+      opacity: 0;
+   }
+   to {
+      opacity: 1;
+   }
 }
 
 .editModalContent {
@@ -846,8 +856,14 @@
 }
 
 @keyframes modalSlideUp {
-   from { transform: translateY(50px); opacity: 0; }
-   to { transform: translateY(0); opacity: 1; }
+   from {
+      transform: translateY(50px);
+      opacity: 0;
+   }
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
 }
 
 .editModalHeader {
@@ -1833,5 +1849,83 @@
    .connectionActions {
       width: 100%;
       justify-content: space-between;
+   }
+}
+
+.emptyAchievements {
+   text-align: center;
+   padding: 32px 24px;
+}
+
+.emptyIcon {
+   font-size: 40px;
+   color: #94a3b8;
+   margin-bottom: 16px;
+}
+
+.emptyAchievements h4 {
+   font-size: 16px;
+   font-weight: 600;
+   color: #1f2937;
+   margin-bottom: 8px;
+}
+
+.emptyAchievements p {
+   font-size: 14px;
+   color: #6b7280;
+   margin-bottom: 32px;
+}
+
+.achievementList {
+   text-align: left;
+   padding: 24px;
+   background: #f8fafc;
+   border-radius: 12px;
+}
+
+.achievementList h5 {
+   font-size: 14px;
+   font-weight: 600;
+   color: #4b5563;
+   margin-bottom: 16px;
+}
+
+.achievementList ul {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+.achievementList li {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   padding: 12px 0;
+   color: #6b7280;
+   font-size: 14px;
+}
+
+.achievementIcon {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 24px;
+   height: 24px;
+   background: #fff;
+   border-radius: 6px;
+   color: #7c3aed;
+}
+
+@media (max-width: 768px) {
+   .badgesSection {
+      padding: 16px;
+   }
+
+   .emptyAchievements {
+      padding: 24px 16px;
+   }
+
+   .achievementList {
+      padding: 16px;
    }
 }

@@ -290,11 +290,11 @@ function UserProfile() {
       const handleTabChange = (tab) => {
          setLocalActiveTab(tab);
          setActiveTab(tab);
-         setSearchTerm('');
+         setSearchTerm("");
       };
 
       const isFollowingUser = (connectionId) => {
-         return user?.following?.some(following => following._id === connectionId);
+         return user?.following?.some((following) => following._id === connectionId);
       };
 
       useEffect(() => {
@@ -302,7 +302,7 @@ function UserProfile() {
          const filtered = currentConnections?.filter(
             (connection) =>
                connection.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-               (connection.title && connection.title.toLowerCase().includes(searchTerm.toLowerCase()))
+               (connection.title && connection.title.toLowerCase().includes(searchTerm.toLowerCase())),
          );
          setFilteredConnections(filtered);
       }, [searchTerm, localActiveTab, user?.followers, user?.following]);
@@ -318,17 +318,15 @@ function UserProfile() {
                </div>
 
                <div className={styles.tabsContainer}>
-                  <button 
-                     className={`${styles.tabButton} ${localActiveTab === 'followers' ? styles.activeTab : ''}`}
-                     onClick={() => handleTabChange('followers')}
-                  >
+                  <button
+                     className={`${styles.tabButton} ${localActiveTab === "followers" ? styles.activeTab : ""}`}
+                     onClick={() => handleTabChange("followers")}>
                      <span className={styles.tabCount}>{user?.followers?.length || 0}</span>
                      Followers
                   </button>
-                  <button 
-                     className={`${styles.tabButton} ${localActiveTab === 'following' ? styles.activeTab : ''}`}
-                     onClick={() => handleTabChange('following')}
-                  >
+                  <button
+                     className={`${styles.tabButton} ${localActiveTab === "following" ? styles.activeTab : ""}`}
+                     onClick={() => handleTabChange("following")}>
                      <span className={styles.tabCount}>{user?.following?.length || 0}</span>
                      Following
                   </button>
@@ -337,8 +335,8 @@ function UserProfile() {
                <div className={styles.searchContainer}>
                   <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
                   <input
-                     type="text"
-                     placeholder="Search connections..."
+                     type='text'
+                     placeholder='Search connections...'
                      value={searchTerm}
                      onChange={(e) => setSearchTerm(e.target.value)}
                      className={styles.searchInput}
@@ -352,7 +350,9 @@ function UserProfile() {
                            <div className={styles.connectionInfo}>
                               <div className={styles.avatarContainer}>
                                  <img
-                                    src={connection.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${connection.username}`}
+                                    src={
+                                       connection.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${connection.username}`
+                                    }
                                     alt={connection.username}
                                     className={styles.connectionAvatar}
                                  />
@@ -360,16 +360,16 @@ function UserProfile() {
                               </div>
                               <div className={styles.userDetails}>
                                  <h3>{connection.username}</h3>
-                                 <p>{connection.title || 'No title yet'}</p>
+                                 <p>{connection.title || "No title yet"}</p>
                                  <div className={styles.mutualConnections}>
                                     <FontAwesomeIcon icon={faUserPlus} className={styles.mutualIcon} />
                                     <span>12 mutual connections</span>
                                  </div>
                               </div>
                            </div>
-                           
+
                            <div className={styles.connectionActions}>
-                              {activeTab === 'followers' ? (
+                              {activeTab === "followers" ? (
                                  isFollowingUser(connection._id) ? (
                                     <button className={styles.unfollowButton} onClick={() => handleUnfollow(connection._id)}>
                                        <FontAwesomeIcon icon={faUserMinus} />
@@ -387,13 +387,12 @@ function UserProfile() {
                                     Unfollow
                                  </button>
                               )}
-                              <button 
+                              <button
                                  className={styles.messageButton}
                                  onClick={(e) => {
                                     e.stopPropagation();
                                     handleMessageClick(connection._id);
-                                 }}
-                              >
+                                 }}>
                                  <FontAwesomeIcon icon={faComment} />
                                  Message
                               </button>
@@ -446,17 +445,11 @@ function UserProfile() {
                <p>{user.bio}</p>
             </div>
             <div className={styles.stats}>
-               <div 
-                  className={styles.stat} 
-                  onClick={() => handleConnectionsClick('followers')}
-               >
+               <div className={styles.stat} onClick={() => handleConnectionsClick("followers")}>
                   <span className={styles.statNumber}>{user?.followers?.length || 0}</span>
                   <span className={styles.statLabel}>Followers</span>
                </div>
-               <div 
-                  className={styles.stat} 
-                  onClick={() => handleConnectionsClick('following')}
-               >
+               <div className={styles.stat} onClick={() => handleConnectionsClick("following")}>
                   <span className={styles.statNumber}>{user?.following?.length || 0}</span>
                   <span className={styles.statLabel}>Following</span>
                </div>
@@ -502,9 +495,9 @@ function UserProfile() {
             </div>
             <div className={styles.badgesSection}>
                <h3>Achievements</h3>
-               <div className={styles.badgeGrid}>
-                  {user.achievements &&
-                     user.achievements.map((achievement, index) => (
+               {user.achievements && user.achievements.length > 0 ? (
+                  <div className={styles.badgeGrid}>
+                     {user.achievements.map((achievement, index) => (
                         <div key={index} className={styles.badge}>
                            <FontAwesomeIcon
                               icon={achievement.type === "challenge" ? faTrophy : achievement.type === "streak" ? faMedal : faStar}
@@ -514,7 +507,14 @@ function UserProfile() {
                            <span className={styles.badgeDate}>{new Date(achievement.date).toLocaleDateString()}</span>
                         </div>
                      ))}
-               </div>
+                  </div>
+               ) : (
+                  <div className={styles.emptyAchievements}>
+                     <FontAwesomeIcon icon={faTrophy} className={styles.emptyIcon} />
+                     <h4>No Achievements Yet</h4>
+                     <p>Start your learning journey to earn achievements!</p>
+                  </div>
+               )}
             </div>
          </div>
 
@@ -590,49 +590,49 @@ function UserProfile() {
                         <FontAwesomeIcon icon={faTimes} />
                      </button>
                   </div>
-                  
+
                   <form className={styles.editForm}>
                      <div className={styles.formSection}>
                         <h4>Personal Information</h4>
                         <div className={styles.formGrid}>
                            <div className={styles.inputGroup}>
                               <label>Username</label>
-                              <input 
-                                 type='text' 
-                                 name='username' 
-                                 value={editedUser.username} 
-                                 onChange={handleInputChange} 
+                              <input
+                                 type='text'
+                                 name='username'
+                                 value={editedUser.username}
+                                 onChange={handleInputChange}
                                  placeholder='Enter username'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Email</label>
-                              <input 
-                                 type='email' 
-                                 name='email' 
-                                 value={editedUser.email} 
-                                 onChange={handleInputChange} 
+                              <input
+                                 type='email'
+                                 name='email'
+                                 value={editedUser.email}
+                                 onChange={handleInputChange}
                                  placeholder='Enter email'
-                                 disabled 
+                                 disabled
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Profile Picture URL</label>
-                              <input 
-                                 type='text' 
-                                 name='profilePicture' 
-                                 value={editedUser.profilePicture} 
-                                 onChange={handleInputChange} 
+                              <input
+                                 type='text'
+                                 name='profilePicture'
+                                 value={editedUser.profilePicture}
+                                 onChange={handleInputChange}
                                  placeholder='Enter profile picture URL'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Title/Role</label>
-                              <input 
-                                 type='text' 
-                                 name='title' 
-                                 value={editedUser.title || ""} 
-                                 onChange={handleInputChange} 
+                              <input
+                                 type='text'
+                                 name='title'
+                                 value={editedUser.title || ""}
+                                 onChange={handleInputChange}
                                  placeholder='e.g. Senior React Developer'
                               />
                            </div>
@@ -640,21 +640,16 @@ function UserProfile() {
 
                         <div className={styles.inputGroup}>
                            <label>Bio</label>
-                           <textarea 
-                              name='bio' 
-                              value={editedUser.bio} 
-                              onChange={handleInputChange} 
-                              placeholder='Tell us about yourself'
-                           />
+                           <textarea name='bio' value={editedUser.bio} onChange={handleInputChange} placeholder='Tell us about yourself' />
                         </div>
 
                         <div className={styles.inputGroup}>
                            <label>Location</label>
-                           <input 
-                              type='text' 
-                              name='location' 
-                              value={editedUser.location} 
-                              onChange={handleInputChange} 
+                           <input
+                              type='text'
+                              name='location'
+                              value={editedUser.location}
+                              onChange={handleInputChange}
                               placeholder='Enter your location'
                            />
                         </div>
@@ -664,23 +659,27 @@ function UserProfile() {
                         <h4>Skills & Goals</h4>
                         <div className={styles.inputGroup}>
                            <label>Skills</label>
-                           <input 
-                              type='text' 
-                              name='skills' 
-                              value={Array.isArray(editedUser.skills) ? editedUser.skills.join(", ") : editedUser.skills || ""} 
-                              onChange={(e) => handleArrayInputChange(e, "skills")} 
-                              onBlur={(e) => handleArrayInputBlur(e, "skills")} 
+                           <input
+                              type='text'
+                              name='skills'
+                              value={Array.isArray(editedUser.skills) ? editedUser.skills.join(", ") : editedUser.skills || ""}
+                              onChange={(e) => handleArrayInputChange(e, "skills")}
+                              onBlur={(e) => handleArrayInputBlur(e, "skills")}
                               placeholder='Enter skills (comma-separated)'
                            />
                         </div>
                         <div className={styles.inputGroup}>
                            <label>Learning Goals</label>
-                           <input 
-                              type='text' 
-                              name='learningGoals' 
-                              value={Array.isArray(editedUser.learningGoals) ? editedUser.learningGoals.join(", ") : editedUser.learningGoals || ""} 
-                              onChange={(e) => handleArrayInputChange(e, "learningGoals")} 
-                              onBlur={(e) => handleArrayInputBlur(e, "learningGoals")} 
+                           <input
+                              type='text'
+                              name='learningGoals'
+                              value={
+                                 Array.isArray(editedUser.learningGoals)
+                                    ? editedUser.learningGoals.join(", ")
+                                    : editedUser.learningGoals || ""
+                              }
+                              onChange={(e) => handleArrayInputChange(e, "learningGoals")}
+                              onBlur={(e) => handleArrayInputBlur(e, "learningGoals")}
                               placeholder='Enter learning goals (comma-separated)'
                            />
                         </div>
@@ -691,49 +690,49 @@ function UserProfile() {
                         <div className={styles.formGrid}>
                            <div className={styles.inputGroup}>
                               <label>Title</label>
-                              <input 
-                                 type='text' 
-                                 name='title' 
-                                 value={editedUser.work?.title || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              <input
+                                 type='text'
+                                 name='title'
+                                 value={editedUser.work?.title || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "work")}
                                  placeholder='Job title'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Company</label>
-                              <input 
-                                 type='text' 
-                                 name='company' 
-                                 value={editedUser.work?.company || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              <input
+                                 type='text'
+                                 name='company'
+                                 value={editedUser.work?.company || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "work")}
                                  placeholder='Company name'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Start Date</label>
-                              <input 
-                                 type='date' 
-                                 name='startDate' 
-                                 value={editedUser.work?.startDate || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              <input
+                                 type='date'
+                                 name='startDate'
+                                 value={editedUser.work?.startDate || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "work")}
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>End Date</label>
-                              <input 
-                                 type='date' 
-                                 name='endDate' 
-                                 value={editedUser.work?.endDate || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "work")} 
+                              <input
+                                 type='date'
+                                 name='endDate'
+                                 value={editedUser.work?.endDate || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "work")}
                               />
                            </div>
                         </div>
                         <div className={styles.inputGroup}>
                            <label>Description</label>
-                           <textarea 
-                              name='description' 
-                              value={editedUser.work?.description || ""} 
-                              onChange={(e) => handleNestedInputChange(e, "work")} 
+                           <textarea
+                              name='description'
+                              value={editedUser.work?.description || ""}
+                              onChange={(e) => handleNestedInputChange(e, "work")}
                               placeholder='Describe your role and responsibilities'
                            />
                         </div>
@@ -744,31 +743,31 @@ function UserProfile() {
                         <div className={styles.formGrid}>
                            <div className={styles.inputGroup}>
                               <label>Degree</label>
-                              <input 
-                                 type='text' 
-                                 name='degree' 
-                                 value={editedUser.education?.degree || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                              <input
+                                 type='text'
+                                 name='degree'
+                                 value={editedUser.education?.degree || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "education")}
                                  placeholder='Your degree'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>School</label>
-                              <input 
-                                 type='text' 
-                                 name='school' 
-                                 value={editedUser.education?.school || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                              <input
+                                 type='text'
+                                 name='school'
+                                 value={editedUser.education?.school || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "education")}
                                  placeholder='School name'
                               />
                            </div>
                            <div className={styles.inputGroup}>
                               <label>Graduation Year</label>
-                              <input 
-                                 type='number' 
-                                 name='graduationYear' 
-                                 value={editedUser.education?.graduationYear || ""} 
-                                 onChange={(e) => handleNestedInputChange(e, "education")} 
+                              <input
+                                 type='number'
+                                 name='graduationYear'
+                                 value={editedUser.education?.graduationYear || ""}
+                                 onChange={(e) => handleNestedInputChange(e, "education")}
                                  placeholder='YYYY'
                               />
                            </div>
@@ -779,11 +778,11 @@ function UserProfile() {
                         <h4>Social</h4>
                         <div className={styles.inputGroup}>
                            <label>Website</label>
-                           <input 
-                              type='url' 
-                              name='website' 
-                              value={editedUser.website || ""} 
-                              onChange={handleInputChange} 
+                           <input
+                              type='url'
+                              name='website'
+                              value={editedUser.website || ""}
+                              onChange={handleInputChange}
                               placeholder='Your website URL'
                            />
                         </div>
