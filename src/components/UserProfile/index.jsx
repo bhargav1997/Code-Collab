@@ -25,6 +25,7 @@ import styles from "./UserProfile.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../../redux/user/userSlice";
 import { CONFIG } from "../../config";
+import CoverPhotoImage from "../../assets/images/coverPhoto.png";
 // import { updateUserAchievements } from '../../redux/user/userSlice';
 
 function UserProfile() {
@@ -350,23 +351,32 @@ function UserProfile() {
    return (
       <div className={styles.userProfile}>
          <div className={styles.profileSection}>
+            <div className={styles.coverPhoto}>
+               <img src={user.coverPhoto || CoverPhotoImage} alt='Cover' />
+            </div>
+
             <div className={styles.profileHeader}>
-               <img
-                  src={user.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${user.username}`}
-                  alt={user.username}
-                  className={styles.avatar}
-               />
+               <div className={styles.avatarContainer}>
+                  <img
+                     src={user.profilePicture || `https://api.dicebear.com/6.x/initials/svg?seed=${user.username}`}
+                     alt={user.username}
+                     className={styles.avatar}
+                  />
+               </div>
                <div className={styles.profileInfo}>
-                  <h2 className={styles.name}>{user.username}</h2>
+                  <div className={styles.nameSection}>
+                     <h2 className={styles.name}>{user.username}</h2>
+                     <button className={styles.editButton} onClick={handleEditClick}>
+                        <FontAwesomeIcon icon={faPen} /> Edit Profile
+                     </button>
+                  </div>
                   <p className={styles.title}>{user.title ? user.title : user.role}</p>
                   <p className={styles.location}>
                      <FontAwesomeIcon icon={faMapMarkerAlt} /> {user.location}
                   </p>
                </div>
-               <button className={styles.editButton} onClick={handleEditClick}>
-                  <FontAwesomeIcon icon={faPen} />
-               </button>
             </div>
+
             <div className={styles.bio}>
                <p>{user.bio}</p>
             </div>
@@ -382,42 +392,40 @@ function UserProfile() {
             </div>
             <div className={styles.details}>
                <div className={styles.detailItem}>
-                  <FontAwesomeIcon icon={faBriefcase} className={styles.detailIcon} />
-                  <div>
-                     <h4>Work</h4>
-                     <p>
-                        {user.work?.title} at {user.work?.company}
-                     </p>
-                     <p>
-                        {user.work?.startDate} - {user.work?.endDate}
-                     </p>
-                     <p>{user.work?.description}</p>
+                  <div className={styles.sectionHeader}>
+                     <FontAwesomeIcon icon={faBriefcase} className={styles.detailIcon} />
+                     <h4 className={styles.sectionTitle}>Work</h4>
+                  </div>
+                  <div className={styles.mainContent}>
+                     <div className={styles.position}>Software Engineer</div>
+                     <div className={styles.company}>Surekha Tech</div>
+                     <div className={styles.timeline}>2015 - 2019</div>
                   </div>
                </div>
+
                <div className={styles.detailItem}>
-                  <FontAwesomeIcon icon={faGraduationCap} className={styles.detailIcon} />
-                  <div>
-                     <h4>Education</h4>
-                     <p>{user.education?.degree}</p>
-                     <p>
-                        {user.education?.school}, {user.education?.graduationYear}
-                     </p>
+                  <div className={styles.sectionHeader}>
+                     <FontAwesomeIcon icon={faGraduationCap} className={styles.detailIcon} />
+                     <h4 className={styles.sectionTitle}>Education</h4>
+                  </div>
+                  <div className={styles.mainContent}>
+                     <div className={styles.position}>Bachelors degree</div>
+                     <div className={styles.company}>GTU</div>
+                     <div className={styles.timeline}>2019</div>
                   </div>
                </div>
+
                <div className={styles.detailItem}>
-                  <FontAwesomeIcon icon={faCode} className={styles.detailIcon} />
-                  <div>
-                     <h4>Skills</h4>
-                     <p>{user.skills?.join(", ")}</p>
+                  <div className={styles.sectionHeader}>
+                     <FontAwesomeIcon icon={faCode} className={styles.detailIcon} />
+                     <h4 className={styles.sectionTitle}>Skills</h4>
                   </div>
-               </div>
-               <div className={styles.detailItem}>
-                  <FontAwesomeIcon icon={faLink} className={styles.detailIcon} />
-                  <div>
-                     <h4>Website</h4>
-                     <a href={`https://${user.website}`} target='_blank' rel='noopener noreferrer'>
-                        {user.website}
-                     </a>
+                  <div className={styles.skillsContainer}>
+                     {user.skills?.map((skill, index) => (
+                        <span key={index} className={styles.skillTag}>
+                           {skill}
+                        </span>
+                     ))}
                   </div>
                </div>
             </div>

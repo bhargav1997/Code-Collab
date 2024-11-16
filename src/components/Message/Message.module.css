@@ -349,14 +349,147 @@
 
 .noChatSelected {
    display: flex;
+   flex-direction: column;
    align-items: center;
    justify-content: center;
    height: 100%;
-   font-size: 18px;
-   color: #54656f;
+   background: linear-gradient(135deg, #f8faff 0%, #f3f4f9 100%);
+   padding: 3rem;
+   text-align: center;
+   position: relative;
+   overflow: hidden;
 }
 
-/* Add this to your Message.module.css file */
+.noChatSelected::before {
+   content: "";
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: radial-gradient(circle at 20% 20%, rgba(124, 77, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(124, 77, 255, 0.05) 0%, transparent 50%);
+   opacity: 0.6;
+   z-index: 0;
+}
+
+.noChatIcon {
+   font-size: 4.5rem;
+   color: #7c4dff;
+   margin-bottom: 2rem;
+   animation: floatIcon 3s ease-in-out infinite;
+   position: relative;
+   z-index: 1;
+   filter: drop-shadow(0 4px 20px rgba(124, 77, 255, 0.2));
+}
+
+.noChatSelected h2 {
+   font-size: 2.2rem;
+   font-weight: 700;
+   color: #2d3748;
+   margin-bottom: 1rem;
+   position: relative;
+   z-index: 1;
+   background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+}
+
+.noChatSelected p {
+   font-size: 1.1rem;
+   color: #666;
+   margin-bottom: 2.5rem;
+   position: relative;
+   z-index: 1;
+   max-width: 400px;
+   line-height: 1.6;
+}
+
+.chatSuggestions {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   justify-content: center;
+   position: relative;
+   z-index: 1;
+}
+
+.suggestionBubble {
+   display: flex;
+   align-items: center;
+   gap: 0.8rem;
+   background: white;
+   border: 1px solid rgba(124, 77, 255, 0.15);
+   padding: 0.9rem 1.6rem;
+   border-radius: 50px;
+   color: #7c4dff;
+   font-size: 0.95rem;
+   font-weight: 500;
+   cursor: pointer;
+   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   box-shadow: 0 2px 10px rgba(124, 77, 255, 0.08);
+}
+
+.suggestionBubble svg {
+   font-size: 1.1rem;
+   transition: transform 0.3s ease;
+}
+
+.suggestionBubble:hover {
+   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   color: white;
+   transform: translateY(-2px);
+   box-shadow: 0 4px 20px rgba(124, 77, 255, 0.2);
+}
+
+.suggestionBubble:hover svg {
+   transform: scale(1.1);
+}
+
+.suggestionBubble:active {
+   transform: translateY(0);
+   box-shadow: 0 2px 10px rgba(124, 77, 255, 0.1);
+}
+
+@keyframes floatIcon {
+   0%,
+   100% {
+      transform: translateY(0);
+   }
+   50% {
+      transform: translateY(-20px) scale(1.05);
+   }
+}
+
+@media (max-width: 768px) {
+   .noChatSelected {
+      padding: 2rem;
+   }
+
+   .noChatIcon {
+      font-size: 3.5rem;
+   }
+
+   .noChatSelected h2 {
+      font-size: 1.8rem;
+   }
+
+   .noChatSelected p {
+      font-size: 1rem;
+   }
+
+   .chatSuggestions {
+      flex-direction: column;
+      width: 100%;
+      max-width: 300px;
+   }
+
+   .suggestionBubble {
+      width: 100%;
+      justify-content: center;
+   }
+}
+
 .unreadIndicator {
    width: 10px;
    height: 10px;
@@ -473,7 +606,8 @@
 }
 
 @keyframes bounce {
-   0%, 100% {
+   0%,
+   100% {
       transform: translateY(0);
    }
    50% {
@@ -503,7 +637,7 @@
 
 .suggestionBubbles button {
    background: #f0f2ff;
-   border: none;
+   border: 1px solid lavender;
    padding: 8px 16px;
    border-radius: 20px;
    color: #7c4dff;
@@ -529,9 +663,20 @@
 }
 
 .noChatIcon {
-   font-size: 4rem;
-   color: #e0e0e0;
-   margin-bottom: 1rem;
+   font-size: 3rem;
+   color: #7c4dff;
+   margin-bottom: 1.5rem;
+   animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+   0%,
+   100% {
+      transform: translateY(0);
+   }
+   50% {
+      transform: translateY(-10px);
+   }
 }
 
 .noChatSelected h2 {

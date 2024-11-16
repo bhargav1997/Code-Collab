@@ -9,6 +9,8 @@ import {
    faUserFriends,
    faTrash,
    faComment,
+   faCommentDots,
+   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -497,8 +499,20 @@ function Message() {
                ) : (
                   <div className={styles.noChatSelected}>
                      <FontAwesomeIcon icon={faComment} className={styles.noChatIcon} />
-                     <h2>Select a chat to start messaging</h2>
-                     <p>Choose from your connections on the left</p>
+
+                     <h2>Start a Conversation</h2>
+                     <p>Select a connection to begin messaging</p>
+                     <div className={styles.chatSuggestions}>
+                        <button className={styles.suggestionBubble}>
+                           <FontAwesomeIcon icon={faUserFriends} /> Find Connections
+                        </button>
+                        <button className={styles.suggestionBubble}>
+                           <FontAwesomeIcon icon={faSearch} /> Search Messages
+                        </button>
+                        <button className={styles.suggestionBubble}>
+                           <FontAwesomeIcon icon={faStar} /> Starred Messages
+                        </button>
+                     </div>
                   </div>
                )}
             </div>
