@@ -36,7 +36,7 @@ function PostList() {
          ) : (
             posts.map((post) => <Post key={post._id} post={post} />)
          )}
-         {status === "loading" && <div className={styles.loading}>Loading...</div>}
+         {status === "loading" && <div className={styles.loading}>Loading..</div>}
          {/* {renderError()} */}
          {status !== "loading" && !error && hasMore && (
             <button className={styles.loadMore} onClick={handleLoadMore}>

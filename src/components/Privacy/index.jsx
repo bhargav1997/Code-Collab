@@ -30,90 +30,111 @@ function Privacy() {
       <div className={styles.privacyContainer}>
          <h1 className={styles.privacyTitle}>Privacy Settings</h1>
 
-         <div className={styles.settingSection}>
-            <h2>
-               <FontAwesomeIcon icon={faEye} /> Profile Visibility
-            </h2>
-            <p>Control who can see your profile and learning progress.</p>
-            <select value={settings.profileVisibility} onChange={handleProfileVisibilityChange} className={styles.selectInput}>
-               <option value='public'>Public</option>
-               <option value='friends'>Friends Only</option>
-               <option value='private'>Private</option>
-            </select>
-         </div>
+         <div className={styles.settingsGrid}>
+            <div className={styles.settingSection}>
+               <div className={styles.settingHeader}>
+                  <div className={styles.settingIcon}>
+                     <FontAwesomeIcon icon={faEye} />
+                  </div>
+                  <h2>Profile Visibility</h2>
+               </div>
+               <p>Control who can see your profile and learning progress.</p>
+               <div className={styles.settingControl}>
+                  <select value={settings.profileVisibility} onChange={handleProfileVisibilityChange} className={styles.selectInput}>
+                     <option value='public'>Public</option>
+                     <option value='friends'>Friends Only</option>
+                     <option value='private'>Private</option>
+                  </select>
+               </div>
+            </div>
 
-         <div className={styles.settingSection}>
-            <h2>
-               <FontAwesomeIcon icon={faUserFriends} /> Leaderboards
-            </h2>
-            <p>Choose whether to show your progress on public leaderboards.</p>
-            <label className={styles.toggleSwitch} htmlFor='showProgressOnLeaderboards'>
-               <input
-                  type='checkbox'
-                  id='showProgressOnLeaderboards'
-                  checked={settings.showProgressOnLeaderboards}
-                  onChange={() => handleToggle("showProgressOnLeaderboards")}
-               />
-               <span className={styles.slider}></span>
-            </label>
-            <span className={styles.toggleLabel}>
-               {settings.showProgressOnLeaderboards ? "Visible on Leaderboards" : "Hidden from Leaderboards"}
-            </span>
-         </div>
+            <div className={styles.settingSection}>
+               <div className={styles.settingHeader}>
+                  <div className={styles.settingIcon}>
+                     <FontAwesomeIcon icon={faUserFriends} />
+                  </div>
+                  <h2>Leaderboards</h2>
+               </div>
+               <p>Choose whether to show your progress on public leaderboards.</p>
+               <div className={styles.settingControl}>
+                  <label htmlFor='leaderboardsToggle' className={styles.toggleSwitch}>
+                     <input
+                        id='leaderboardsToggle'
+                        type='checkbox'
+                        checked={settings.showProgressOnLeaderboards}
+                        onChange={() => handleToggle("showProgressOnLeaderboards")}
+                     />
+                     <span className={styles.slider}></span>
+                  </label>
+                  <span className={styles.toggleLabel}>{settings.showProgressOnLeaderboards ? "Visible" : "Hidden"}</span>
+               </div>
+            </div>
 
-         <div className={styles.settingSection}>
-            <h2>
-               <FontAwesomeIcon icon={faChartLine} /> Task Recommendations
-            </h2>
-            <p>Allow Learn Hub to suggest personalized learning tasks based on your activity.</p>
-            <label className={styles.toggleSwitch} htmlFor='allowTaskRecommendations'>
-               <input
-                  type='checkbox'
-                  id='allowTaskRecommendations'
-                  checked={settings.allowTaskRecommendations}
-                  onChange={() => handleToggle("allowTaskRecommendations")}
-               />
-               <span className={styles.slider}></span>
-            </label>
-            <span className={styles.toggleLabel}>
-               {settings.allowTaskRecommendations ? "Task Recommendations Enabled" : "Task Recommendations Disabled"}
-            </span>
-         </div>
+            <div className={styles.settingSection}>
+               <div className={styles.settingHeader}>
+                  <div className={styles.settingIcon}>
+                     <FontAwesomeIcon icon={faChartLine} />
+                  </div>
+                  <h2>Task Recommendations</h2>
+               </div>
+               <p>Allow Learn Hub to suggest personalized learning tasks.</p>
+               <div className={styles.settingControl}>
+                  <label htmlFor='taskRecommendationsToggle' className={styles.toggleSwitch}>
+                     <input
+                        type='checkbox'
+                        id='taskRecommendationsToggle'
+                        checked={settings.allowTaskRecommendations}
+                        onChange={() => handleToggle("allowTaskRecommendations")}
+                     />
+                     <span className={styles.slider}></span>
+                  </label>
+                  <span className={styles.toggleLabel}>{settings.allowTaskRecommendations ? "Enabled" : "Disabled"}</span>
+               </div>
+            </div>
 
-         <div className={styles.settingSection}>
-            <h2>
-               <FontAwesomeIcon icon={faEyeSlash} /> Mentor Analytics Sharing
-            </h2>
-            <p>Share your learning analytics with assigned mentors for better guidance.</p>
-            <label className={styles.toggleSwitch} htmlFor='shareAnalyticsWithMentors'>
-               <input
-                  type='checkbox'
-                  id='shareAnalyticsWithMentors'
-                  checked={settings.shareAnalyticsWithMentors}
-                  onChange={() => handleToggle("shareAnalyticsWithMentors")}
-               />
-               <span className={styles.slider}></span>
-            </label>
-            <span className={styles.toggleLabel}>
-               {settings.shareAnalyticsWithMentors ? "Sharing Analytics with Mentors" : "Not Sharing Analytics with Mentors"}
-            </span>
-         </div>
+            <div className={styles.settingSection}>
+               <div className={styles.settingHeader}>
+                  <div className={styles.settingIcon}>
+                     <FontAwesomeIcon icon={faEyeSlash} />
+                  </div>
+                  <h2>Mentor Analytics Sharing</h2>
+               </div>
+               <p>Share your learning analytics with assigned mentors for better guidance.</p>
+               <div className={styles.settingControl}>
+                  <label htmlFor='mentorAnalyticsToggle' className={styles.toggleSwitch}>
+                     <input
+                        type='checkbox'
+                        id='mentorAnalyticsToggle'
+                        checked={settings.shareAnalyticsWithMentors}
+                        onChange={() => handleToggle("shareAnalyticsWithMentors")}
+                     />
+                     <span className={styles.slider}></span>
+                  </label>
+                  <span className={styles.toggleLabel}>{settings.shareAnalyticsWithMentors ? "Sharing" : "Not Sharing"}</span>
+               </div>
+            </div>
 
-         <div className={styles.settingSection}>
-            <h2>
-               <FontAwesomeIcon icon={faBullhorn} /> Social Sharing
-            </h2>
-            <p>Allow automatic sharing of your achievements on connected social platforms.</p>
-            <label className={styles.toggleSwitch} htmlFor='allowSocialSharing'>
-               <input
-                  type='checkbox'
-                  id='allowSocialSharing'
-                  checked={settings.allowSocialSharing}
-                  onChange={() => handleToggle("allowSocialSharing")}
-               />
-               <span className={styles.slider}></span>
-            </label>
-            <span className={styles.toggleLabel}>{settings.allowSocialSharing ? "Social Sharing Enabled" : "Social Sharing Disabled"}</span>
+            <div className={styles.settingSection}>
+               <div className={styles.settingHeader}>
+                  <div className={styles.settingIcon}>
+                     <FontAwesomeIcon icon={faBullhorn} />
+                  </div>
+                  <h2>Social Sharing</h2>
+               </div>
+               <p>Allow automatic sharing of your achievements on connected social platforms.</p>
+               <div className={styles.settingControl}>
+                  <label htmlFor='socialSharingToggle' className={styles.toggleSwitch}>
+                     <input
+                        type='checkbox'
+                        id='socialSharingToggle'
+                        checked={settings.allowSocialSharing}
+                        onChange={() => handleToggle("allowSocialSharing")}
+                     />
+                     <span className={styles.slider}></span>
+                  </label>
+                  <span className={styles.toggleLabel}>{settings.allowSocialSharing ? "Enabled" : "Disabled"}</span>
+               </div>
+            </div>
          </div>
 
          <div className={styles.privacyInfo}>

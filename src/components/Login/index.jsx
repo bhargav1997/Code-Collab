@@ -17,7 +17,7 @@ function Login() {
       rememberMe: false,
    });
    const [showPassword, setShowPassword] = useState(false);
-   const user = useSelector((state) => state.user);
+   const { user } = useSelector((state) => state.user);
 
    const dispatch = useDispatch();
    const navigate = useNavigate();
@@ -48,6 +48,7 @@ function Login() {
                navigate("/two-factor-auth", { state: { email: formData.email } });
             } else {
                handleSuccessfulLogin(data);
+               navigate("/");
             }
          } else {
             toast.error(data.message || "Login failed");

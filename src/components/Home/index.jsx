@@ -9,8 +9,29 @@ import Progress from "./Progress";
 import CourseRecommendations from "./CourseRecommendations";
 // import LearningGoals from "./LearningGoals";
 import { SEO } from "../common/SEO";
+import { useSelector, useDispatch } from 'react-redux';
+import { getUserSettings } from '../../redux/user/userHandle';
+import { useState, useEffect } from 'react';
 
 function Home() {
+   const userSettings = useSelector((state) => state.user.user?.settings);
+   const dispatch = useDispatch();
+   const [isMounted, setIsMounted] = useState(false);
+
+   useEffect(() => {
+      if (!isMounted && !userSettings) {
+         const fetchSettings = async () => {
+            try {
+               await dispatch(getUserSettings());
+               setIsMounted(true);
+            } catch (error) {
+               console.error("Failed to load settings:", error);
+            }
+         };
+         fetchSettings();
+      }
+   }, [dispatch, isMounted, userSettings]);
+
    const schema = {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -39,11 +60,10 @@ function Home() {
                <CreatePost />
                <PostList />
                <Progress />
-               <CourseRecommendations />
+               {userSettings?.enableCourseRecommendations && <CourseRecommendations />}
             </div>
             <aside className={styles.sidebar}>
                <Profile />
-               {/* <LearningGoals /> */}
                <PopularTags />
             </aside>
          </div>

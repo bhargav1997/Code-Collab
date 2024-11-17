@@ -9,7 +9,6 @@ import {
    faUserFriends,
    faTrash,
    faComment,
-   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -33,22 +32,13 @@ const EmptyConversation = ({ selectedUser, onSuggestionClick }) => {
             <h3>Start a Conversation with {selectedUser?.username}</h3>
             <p>Say hello and start connecting! 👋</p>
             <div className={styles.suggestionBubbles}>
-               <button 
-                  className={styles.suggestionButton}
-                  onClick={() => onSuggestionClick("👋 Hey there!")}
-               >
+               <button className={styles.suggestionButton} onClick={() => onSuggestionClick("👋 Hey there!")}>
                   👋 Hey there!
                </button>
-               <button 
-                  className={styles.suggestionButton}
-                  onClick={() => onSuggestionClick("Would love to connect!")}
-               >
+               <button className={styles.suggestionButton} onClick={() => onSuggestionClick("Would love to connect!")}>
                   Would love to connect!
                </button>
-               <button 
-                  className={styles.suggestionButton}
-                  onClick={() => onSuggestionClick("Hi, how are you?")}
-               >
+               <button className={styles.suggestionButton} onClick={() => onSuggestionClick("Hi, how are you?")}>
                   Hi, how are you?
                </button>
             </div>
@@ -84,6 +74,7 @@ function Message() {
    const queryParams = new URLSearchParams(location.search);
    const urlUserId = queryParams.get("userId");
    const [initialLoadDone, setInitialLoadDone] = useState(false);
+   const searchInputRef = useRef(null);
 
    const initializeSocket = useCallback(() => {
       const token = localStorage.getItem("token");
@@ -380,6 +371,12 @@ function Message() {
       }
    };
 
+   const handleSearchClick = () => {
+      if (searchInputRef.current) {
+         searchInputRef.current.focus();
+      }
+   };
+
    console.log("user", user);
    console.log("messages", messages);
 
@@ -398,7 +395,7 @@ function Message() {
                <div className={styles.searchBarWrapper}>
                   <div className={styles.searchBar}>
                      <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
-                     <input type='text' placeholder='Search Connections...' value={searchTerm} onChange={handleSearchInputChange} />
+                     <input type='text' placeholder='Search conversations...' value={searchTerm} onChange={handleSearchInputChange} ref={searchInputRef} />
                   </div>
                </div>
                <div className={styles.chatList}>
@@ -457,7 +454,6 @@ function Message() {
                                     <button onClick={clearChat}>
                                        <FontAwesomeIcon icon={faTrash} /> Clear Chat
                                     </button>
-                                    {/* Add more options here as needed */}
                                  </div>
                               )}
                            </div>
@@ -503,7 +499,12 @@ function Message() {
                               </button>
                               {showEmojiPicker && (
                                  <div className={styles.emojiPickerWrapper}>
-                                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                                    <EmojiPicker
+                                       onEmojiClick={onEmojiClick}
+                                       searchPlaceholder='Search emojis...'
+                                       width={340}
+                                       height={400}
+                                    />
                                  </div>
                               )}
                            </div>
@@ -520,15 +521,15 @@ function Message() {
                      <h2>Start a Conversation</h2>
                      <p>Select a connection to begin messaging</p>
                      <div className={styles.chatSuggestions}>
-                        <button className={styles.suggestionBubble}>
+                        <button className={styles.suggestionBubble} onClick={() => navigate("/user-profile")}>
                            <FontAwesomeIcon icon={faUserFriends} /> Find Connections
                         </button>
-                        <button className={styles.suggestionBubble}>
+                        <button className={styles.suggestionBubble} onClick={handleSearchClick}>
                            <FontAwesomeIcon icon={faSearch} /> Search Messages
                         </button>
-                        <button className={styles.suggestionBubble}>
+                        {/* <button className={styles.suggestionBubble}>
                            <FontAwesomeIcon icon={faStar} /> Starred Messages
-                        </button>
+                        </button> */}
                      </div>
                   </div>
                )}

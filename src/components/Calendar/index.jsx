@@ -210,7 +210,7 @@ function Calendar() {
 
       const label = () => {
          const date = moment(toolbar.date);
-         return <span className={styles.calendarTitle}>{date.format("MMMM YYYY")}</span>;
+         return date.format("MMMM YYYY");
       };
 
       return (
@@ -218,13 +218,15 @@ function Calendar() {
             <button className={styles.toolbarButton} onClick={goToBack}>
                <FontAwesomeIcon icon={faChevronLeft} />
             </button>
-            <button className={styles.toolbarButton} onClick={goToCurrent}>
-               Today
-            </button>
+            <div className={styles.toolbarCenter}>
+               <button className={styles.toolbarButton} onClick={goToCurrent}>
+                  Today
+               </button>
+               <span className={styles.toolbarLabel}>{`( ${label()} )`}</span>
+            </div>
             <button className={styles.toolbarButton} onClick={goToNext}>
                <FontAwesomeIcon icon={faChevronRight} />
             </button>
-            <span className={styles.toolbarLabel}>{label()}</span>
          </div>
       );
    };

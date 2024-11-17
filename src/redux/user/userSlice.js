@@ -22,12 +22,6 @@ const userSlice = createSlice({
          state.user = null;
          state.error = null;
       },
-      // setConnections: (state, action) => {
-      //    if (state.user) {
-      //       state.user.followers = action.payload.followers;
-      //       state.user.following = action.payload.following;
-      //    }
-      // },
       setError: (state, action) => {
          state.error = action.payload;
          state.isLoading = false;
@@ -38,8 +32,24 @@ const userSlice = createSlice({
             state.user.achievements.push(action.payload);
          }
       },
+      updateUserSettings: (state, action) => {
+         if (state.user) {
+            state.user.settings = {
+               ...state.user.settings,
+               ...action.payload
+            };
+         }
+      },
    },
 });
 
-export const { setUser, setLoading, clearUser, setError, updateUserAchievements } = userSlice.actions;
+export const { 
+   setUser, 
+   setLoading, 
+   clearUser, 
+   setError, 
+   updateUserAchievements,
+   updateUserSettings 
+} = userSlice.actions;
+
 export default userSlice.reducer;

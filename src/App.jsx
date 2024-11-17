@@ -37,7 +37,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import LandingPage from "./components/LandingPage";
+// import LandingPage from "./components/LandingPage";
 
 function ErrorFallback({ error }) {
    return (
@@ -52,8 +52,10 @@ ErrorFallback.propTypes = {
    error: PropTypes.object.isRequired,
 };
 
+// Modify AppDesktop to use these new components
 function AppDesktop() {
    const [showOnboarding, setShowOnboarding] = useState(false);
+   const [isInitialized, setIsInitialized] = useState(false);
    const dispatch = useDispatch();
    const { user, isLoading } = useSelector((state) => state.user);
    const API_URL = CONFIG.API_URL;
@@ -73,7 +75,6 @@ function AppDesktop() {
                if (response.ok) {
                   const userData = await response.json();
                   dispatch(setUser(userData));
-                  // Remove the startTransition here as it's not necessary for this operation
                   const hasCompletedOnboarding = localStorage.getItem("hasCompletedOnboarding");
                   if (!hasCompletedOnboarding || hasCompletedOnboarding !== "true") {
                      setShowOnboarding(true);
@@ -91,6 +92,7 @@ function AppDesktop() {
             dispatch(setUser(null));
          }
          dispatch(setLoading(false));
+         setIsInitialized(true);
       };
 
       checkAuthStatus();
@@ -101,7 +103,7 @@ function AppDesktop() {
       localStorage.setItem("hasCompletedOnboarding", "true");
    };
 
-   if (isLoading) {
+   if (isLoading || !isInitialized) {
       return <LoadingSpinner />;
    }
 
@@ -116,12 +118,13 @@ function AppDesktop() {
                   <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
                      <Suspense fallback={<LoadingSpinner />}>
                         <Routes>
+                           {/* Landing page */}
+                           {/* {!isAuthenticated && <Route path='/' element={<LandingPage />} />} */}
                            <Route path='/register' element={isAuthenticated ? <Navigate to='/' /> : <Register />} />
                            <Route path='/login' element={isAuthenticated ? <Navigate to='/' /> : <Login />} />
                            <Route path='/two-factor-auth' element={isAuthenticated ? <Navigate to='/' /> : <TwoFactorAuth />} />
 
-                           {/* <Route path='/' element={isAuthenticated ? <Home /> : <LandingPage />} /> */}
-
+                           {/* Protected routes */}
                            {isAuthenticated && (
                               <Route element={<AuthenticatedLayout />}>
                                  <Route path='/' element={<Home />} />
@@ -140,7 +143,10 @@ function AppDesktop() {
                               </Route>
                            )}
 
-                           {!isLoading && !isAuthenticated && <Route path='*' element={<Login />} />}
+                           {/* {!isLoading && !isAuthenticated && <Route path='*' element={<Login />} />} */}
+
+                           {/* Catch-all route */}
+                           <Route path='*' element={<Navigate to='/login' replace />} />
                         </Routes>
                      </Suspense>
                   </div>

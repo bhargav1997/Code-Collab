@@ -111,6 +111,10 @@
    border-radius: 5px;
 }
 
+.deleteBtn {
+   color: #ff5757;
+}
+
 .editBtn:hover,
 .deleteBtn:hover,
 .saveBtn:hover,

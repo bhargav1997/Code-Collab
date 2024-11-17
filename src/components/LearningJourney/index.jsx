@@ -400,7 +400,7 @@ const LearningJourney = () => {
                <header className={styles.journeyHeader}>
                   <h2>{selectedJourney.name}</h2>
                   <button onClick={() => dispatch(setSelectedJourneyToUser(null))} className={styles.backButton}>
-                     <FaArrowLeft /> Back to Journeys
+                     <FaArrowLeft /> Back to Journey
                   </button>
                </header>
 

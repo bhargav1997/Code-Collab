@@ -25,6 +25,7 @@ import {
 import styles from "./Report.module.css";
 import axios from "axios";
 import { CONFIG } from "../../config";
+import LoadingSpinner from "../LoadingSpinner";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, BarElement);
 
@@ -81,7 +82,7 @@ function Report() {
       fetchReportData();
    }, []);
 
-   if (!reportData) return <div>Loading...</div>;
+   if (!reportData) return <LoadingSpinner />;
 
    const pieChartData = {
       labels: Object.keys(reportData.taskCategories || {

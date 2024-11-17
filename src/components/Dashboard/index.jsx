@@ -25,6 +25,7 @@ import axios from "axios";
 import { CONFIG } from "../../config";
 import { faBookOpen, faRocket, faStar } from "@fortawesome/free-solid-svg-icons";
 import { SEO } from "../common/SEO";
+import LoadingSpinner from "../LoadingSpinner";
 
 function Dashboard() {
    const [showCreateTask, setShowCreateTask] = useState(false);
@@ -347,7 +348,7 @@ function Dashboard() {
                   </div>
                   <>
                      {isLoading ? (
-                        <div>Loading...</div>
+                        <LoadingSpinner />
                      ) : learningTasks.length > 0 ? (
                         <div className='learning-journey-content'>
                            {learningTasks.map((task) => (

@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faLock, faGlobe, faChartBar, faCog, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faGlobe, faChartBar, faCog, faExclamationTriangle, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Setting.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserSettings, updateSettings, deleteUser } from "../../redux/user/userHandle";
+import LoadingSpinner from "../LoadingSpinner";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Setting() {
+   const dispatch = useDispatch();
+   const userSettings = useSelector((state) => state.user.user?.settings);
+   const isLoading = useSelector((state) => state.user.isLoading);
+   const navigate = useNavigate();
+   const [isMounted, setIsMounted] = useState(false);
+
    const [settings, setSettings] = useState({
       emailNotifications: true,
       pushNotifications: false,
       inactivityReminders: true,
       deadlineReminders: true,
-      makeProfilePublic: false,
-      showProgressOnLeaderboards: true,
-      allowTaskRecommendations: true,
       language: "en",
       timezone: "UTC",
       enableDarkMode: false,
@@ -20,7 +28,32 @@ function Setting() {
       shareAnalyticsWithMentors: false,
       enableOfflineMode: false,
       useAIRecommendations: true,
+      enableCourseRecommendations: true,
    });
+
+   useEffect(() => {
+      if (!isMounted && !userSettings) {
+         const fetchSettings = async () => {
+            try {
+               await dispatch(getUserSettings());
+               setIsMounted(true);
+            } catch (error) {
+               console.error("Failed to load settings:", error);
+               toast.error("Failed to load settings");
+            }
+         };
+         fetchSettings();
+      }
+   }, [dispatch, isMounted, userSettings]);
+
+   useEffect(() => {
+      if (userSettings) {
+         setSettings((prevSettings) => ({
+            ...prevSettings,
+            ...userSettings,
+         }));
+      }
+   }, [userSettings]);
 
    const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
@@ -30,12 +63,33 @@ function Setting() {
       }));
    };
 
-   const handleSave = (e) => {
-      e.preventDefault();
-      // Here you would typically send the settings to your backend
-      console.log("Settings saved:", settings);
-      // You can also show a success message to the user
+   const handleDelete = async () => {
+      try {
+         await dispatch(deleteUser());
+         toast.success("User deleted successfully");
+         navigate("/");
+      } catch (error) {
+         console.error("Error deleting user:", error);
+         toast.error("Failed to delete user");
+      }
    };
+
+   const handleSave = async (e) => {
+      e.preventDefault();
+      try {
+         const result = await dispatch(updateSettings(settings)).unwrap();
+         if (result.success) {
+            toast.success("Settings updated successfully");
+         }
+      } catch (error) {
+         toast.error("Failed to update settings");
+         console.error("Error saving settings:", error);
+      }
+   };
+
+   if (isLoading) {
+      return <LoadingSpinner />;
+   }
 
    return (
       <div className={styles.settingsContainer}>
@@ -43,109 +97,78 @@ function Setting() {
 
          <form onSubmit={handleSave}>
             <div className={styles.settingsGrid}>
-               <section className={styles.settingSection}>
-                  <h2>
-                     <FontAwesomeIcon icon={faBell} /> Notification Settings
-                  </h2>
-                  <div className={styles.settingOption}>
+               {/* Notification Settings */}
+               <div className={styles.settingSection}>
+                  <div className={styles.settingHeader}>
+                     <div className={styles.settingIcon}>
+                        <FontAwesomeIcon icon={faBell} />
+                     </div>
+                     <h2>Notification Settings</h2>
+                  </div>
+                  <p>Control your notification preferences.</p>
+                  <div className={styles.settingControl}>
                      <label>
                         <input type='checkbox' name='emailNotifications' checked={settings.emailNotifications} onChange={handleChange} />
                         Email notifications
                      </label>
                   </div>
-                  <div className={styles.settingOption}>
-                     <label>
-                        <input type='checkbox' name='pushNotifications' checked={settings.pushNotifications} onChange={handleChange} />
-                        Push notifications
-                     </label>
-                  </div>
-                  <div className={styles.settingOption}>
+
+                  <div className={styles.settingControl}>
                      <label>
                         <input type='checkbox' name='inactivityReminders' checked={settings.inactivityReminders} onChange={handleChange} />
                         Inactivity reminders
                      </label>
                   </div>
-                  <div className={styles.settingOption}>
+                  <div className={styles.settingControl}>
                      <label>
                         <input type='checkbox' name='deadlineReminders' checked={settings.deadlineReminders} onChange={handleChange} />
                         Deadline reminders
                      </label>
                   </div>
-               </section>
+               </div>
 
-               <section className={styles.settingSection}>
-                  <h2>
-                     <FontAwesomeIcon icon={faLock} /> Privacy Settings
-                  </h2>
-                  <div className={styles.settingOption}>
-                     <label>
-                        <input type='checkbox' name='makeProfilePublic' checked={settings.makeProfilePublic} onChange={handleChange} />
-                        Make profile public
-                     </label>
+               {/* Preference Settings */}
+               <div className={styles.settingSection}>
+                  <div className={styles.settingHeader}>
+                     <div className={styles.settingIcon}>
+                        <FontAwesomeIcon icon={faGlobe} />
+                     </div>
+                     <h2>Preference Settings</h2>
                   </div>
-                  <div className={styles.settingOption}>
-                     <label>
-                        <input
-                           type='checkbox'
-                           name='showProgressOnLeaderboards'
-                           checked={settings.showProgressOnLeaderboards}
-                           onChange={handleChange}
-                        />
-                        Show progress on leaderboards
-                     </label>
-                  </div>
-                  <div className={styles.settingOption}>
-                     <label>
-                        <input
-                           type='checkbox'
-                           name='allowTaskRecommendations'
-                           checked={settings.allowTaskRecommendations}
-                           onChange={handleChange}
-                        />
-                        Allow task recommendations
-                     </label>
-                  </div>
-               </section>
-
-               <section className={styles.settingSection}>
-                  <h2>
-                     <FontAwesomeIcon icon={faGlobe} /> Preference Settings
-                  </h2>
+                  <p>Customize your learning experience.</p>
                   <div className={styles.formGroup}>
                      <label htmlFor='language'>Language</label>
-                     <select id='language' name='language' value={settings.language} onChange={handleChange}>
+                     <select id='language' name='language' value={settings.language} onChange={handleChange} className={styles.selectInput}>
                         <option value='en'>English</option>
-                        <option value='es'>Spanish</option>
                         <option value='fr'>French</option>
                      </select>
                   </div>
                   <div className={styles.formGroup}>
                      <label htmlFor='timezone'>Timezone</label>
-                     <select id='timezone' name='timezone' value={settings.timezone} onChange={handleChange}>
+                     <select id='timezone' name='timezone' value={settings.timezone} onChange={handleChange} className={styles.selectInput}>
                         <option value='UTC'>UTC</option>
                         <option value='EST'>EST</option>
                         <option value='PST'>PST</option>
                      </select>
                   </div>
-                  <div className={styles.settingOption}>
-                     <label>
-                        <input type='checkbox' name='enableDarkMode' checked={settings.enableDarkMode} onChange={handleChange} />
-                        Enable dark mode
-                     </label>
-                  </div>
-               </section>
+               </div>
 
-               <section className={styles.settingSection}>
-                  <h2>
-                     <FontAwesomeIcon icon={faChartBar} /> Analytics Settings
-                  </h2>
-                  <div className={styles.settingOption}>
+               {/* Analytics Settings */}
+               <div className={styles.settingSection}>
+                  <div className={styles.settingHeader}>
+                     <div className={styles.settingIcon}>
+                        <FontAwesomeIcon icon={faChartBar} />
+                     </div>
+                     <h2>Analytics Settings</h2>
+                  </div>
+                  <p>Manage your learning analytics preferences.</p>
+                  <div className={styles.settingControl}>
                      <label>
                         <input type='checkbox' name='trackLearningTime' checked={settings.trackLearningTime} onChange={handleChange} />
                         Track learning time
                      </label>
                   </div>
-                  <div className={styles.settingOption}>
+                  <div className={styles.settingControl}>
                      <label>
                         <input
                            type='checkbox'
@@ -156,30 +179,35 @@ function Setting() {
                         Generate weekly reports
                      </label>
                   </div>
-                  <div className={styles.settingOption}>
+                  <div className={styles.settingControl}>
                      <label>
                         <input
                            type='checkbox'
-                           name='shareAnalyticsWithMentors'
-                           checked={settings.shareAnalyticsWithMentors}
+                           name='enableCourseRecommendations'
+                           checked={settings.enableCourseRecommendations}
                            onChange={handleChange}
                         />
-                        Share analytics with mentors
+                        Enable course recommendations
                      </label>
                   </div>
-               </section>
+               </div>
 
-               <section className={styles.settingSection}>
-                  <h2>
-                     <FontAwesomeIcon icon={faCog} /> Advanced Settings
-                  </h2>
-                  <div className={styles.settingOption}>
+               {/* Advanced Settings */}
+               <div className={styles.settingSection}>
+                  <div className={styles.settingHeader}>
+                     <div className={styles.settingIcon}>
+                        <FontAwesomeIcon icon={faCog} />
+                     </div>
+                     <h2>Advanced Settings</h2>
+                  </div>
+                  <p>Configure advanced features.</p>
+                  <div className={styles.settingControl}>
                      <label>
                         <input type='checkbox' name='enableOfflineMode' checked={settings.enableOfflineMode} onChange={handleChange} />
                         Enable offline mode
                      </label>
                   </div>
-                  <div className={styles.settingOption}>
+                  <div className={styles.settingControl}>
                      <label>
                         <input
                            type='checkbox'
@@ -190,23 +218,37 @@ function Setting() {
                         Use AI-powered recommendations
                      </label>
                   </div>
-               </section>
+               </div>
             </div>
 
             <div className={styles.saveButtonContainer}>
-               <button type='submit' className={styles.saveButton}>
-                  Save All Settings
+               <button type='submit' className={styles.saveButton} disabled={isLoading}>
+                  {isLoading ? "Saving..." : "Save All Settings"}
                </button>
             </div>
          </form>
 
-         <section className={`${styles.settingSection} ${styles.dangerZone}`}>
-            <h2>
-               <FontAwesomeIcon icon={faExclamationTriangle} /> Danger Zone
-            </h2>
-            <p>Deleting your account is permanent and cannot be undone.</p>
-            <button className={styles.dangerButton}>Delete Account</button>
-         </section>
+         <div className={styles.infoContainer}>
+            <div className={styles.privacyInfo}>
+               <h2>
+                  <FontAwesomeIcon icon={faShieldAlt} /> Your Settings are Secure
+               </h2>
+               <p>
+                  Your settings are securely stored and can be updated at any time. For more information about how we handle your data, please
+                  read our <a href='/privacy-policy'>Privacy Policy</a>.
+               </p>
+            </div>
+
+            <div className={styles.dangerZone}>
+               <h2>
+                  <FontAwesomeIcon icon={faExclamationTriangle} /> Danger Zone
+               </h2>
+               <p>Deleting your account is permanent and cannot be undone.</p>
+               <button className={styles.dangerButton} onClick={handleDelete}>
+                  Delete Account
+               </button>
+            </div>
+         </div>
       </div>
    );
 }
