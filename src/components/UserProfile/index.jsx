@@ -529,7 +529,7 @@ function UserProfile() {
             ) : suggestionsError ? (
                <p className={styles.errorMessage}>{suggestionsError}</p>
             ) : filteredConnections.length === 0 ? (
-               <p className={styles.noResults}>No connections found matching your search.</p>
+               <p className={styles.noResults}>No connections found.</p>
             ) : (
                <>
                   {followSuccess && (

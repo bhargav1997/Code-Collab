@@ -377,9 +377,6 @@ function Message() {
       }
    };
 
-   console.log("user", user);
-   console.log("messages", messages);
-
    return (
       <>
          <SEO

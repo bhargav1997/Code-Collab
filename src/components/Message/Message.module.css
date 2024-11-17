@@ -75,8 +75,40 @@
 
 .chatList {
    overflow-y: auto;
-   flex-grow: 1;
-   padding: 10px;
+   height: calc(100vh - 120px); /* Adjust based on your header height */
+   padding-right: 4px; /* Give space for scrollbar */
+}
+
+.chatList::-webkit-scrollbar {
+   width: 6px;
+   background: transparent;
+}
+
+.chatList::-webkit-scrollbar-track {
+   background: rgba(124, 77, 255, 0.05);
+   border-radius: 10px;
+   margin: 4px;
+}
+
+.chatList::-webkit-scrollbar-thumb {
+   background: rgba(124, 77, 255, 0.2);
+   border-radius: 10px;
+   transition: all 0.3s ease;
+}
+
+.chatList::-webkit-scrollbar-thumb:hover {
+   background: rgba(124, 77, 255, 0.3);
+}
+
+/* For Firefox */
+.chatList {
+   scrollbar-width: thin;
+   scrollbar-color: rgba(124, 77, 255, 0.2) rgba(124, 77, 255, 0.05);
+}
+
+/* When scrolling - show scrollbar */
+.chatList:hover::-webkit-scrollbar-thumb {
+   background: rgba(124, 77, 255, 0.3);
 }
 
 .chatItem {
