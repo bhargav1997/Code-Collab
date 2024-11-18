@@ -59,9 +59,6 @@ function AboutMe() {
                      <a href='mailto:sutharbhargav1997@gmail.com'>
                         <FontAwesomeIcon icon={faEnvelope} /> sutharbhargav1997@gmail.com
                      </a>
-                     <a href='tel:+16472610782'>
-                        <FontAwesomeIcon icon={faPhone} /> +1 647-261-0782
-                     </a>
                      <span>
                         <FontAwesomeIcon icon={faMapMarkerAlt} /> Moose Jaw, SK
                      </span>
