@@ -10,7 +10,7 @@ export function SEO({ title, description, image, type = "website", keywords, pat
    const canonicalUrl = path ? `${siteUrl}${path}` : siteUrl;
 
    // Ensure image URL is absolute
-   const fullImageUrl = image.startsWith("http") ? image : `${siteUrl}${image}`;
+   const fullImageUrl = image?.startsWith("http") ? image : `${siteUrl}${image}`;
 
    return (
       <Helmet>
@@ -53,7 +53,7 @@ export function SEO({ title, description, image, type = "website", keywords, pat
 SEO.propTypes = {
    title: PropTypes.string.isRequired,
    description: PropTypes.string.isRequired,
-   image: PropTypes.string.isRequired,
+   image: PropTypes.string,
    type: PropTypes.string,
    keywords: PropTypes.string,
    path: PropTypes.string,

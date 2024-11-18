@@ -37,7 +37,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-// import LandingPage from "./components/LandingPage";
+import LandingPage from "./components/LandingPage";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsOfUse from "./components/TermsOfUse";
+import Guidelines from "./components/Guidelines";
+import AboutMe from "./components/AboutMe";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 function ErrorFallback({ error }) {
    return (
@@ -109,6 +114,7 @@ function AppDesktop() {
 
    return (
       <Router>
+         <ScrollToTop />
          <ErrorBoundary FallbackComponent={ErrorFallback}>
             <ToastContainer />
             <div className={styles.appContainer}>
@@ -123,7 +129,11 @@ function AppDesktop() {
                            <Route path='/register' element={isAuthenticated ? <Navigate to='/' /> : <Register />} />
                            <Route path='/login' element={isAuthenticated ? <Navigate to='/' /> : <Login />} />
                            <Route path='/two-factor-auth' element={isAuthenticated ? <Navigate to='/' /> : <TwoFactorAuth />} />
-
+                           <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+                           <Route path='/terms-of-use' element={<TermsOfUse />} />
+                           <Route path='/guidelines' element={<Guidelines />} />
+                           <Route path='/about-me' element={<AboutMe />} />
+                           <Route path='/landing-page' element={<LandingPage />} />
                            {/* Protected routes */}
                            {isAuthenticated && (
                               <Route element={<AuthenticatedLayout />}>

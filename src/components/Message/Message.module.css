@@ -1,7 +1,8 @@
 .messageContainer {
    display: flex;
-   height: calc(100vh - 60px); /* Adjust based on your layout */
+   height: calc(100vh - 60px);
    background-color: #f0f2f5;
+   position: relative;
 }
 
 .sidebar {
@@ -126,7 +127,8 @@
 .chatItem:hover {
    background: rgba(124, 77, 255, 0.05);
    border-color: rgba(124, 77, 255, 0.1);
-   transform: translateX(5px);
+   transform: translateX(6px);
+   border-radius: 12px 0 0 12px;
 }
 
 .chatItem.active {
@@ -136,28 +138,28 @@
 }
 
 .avatar {
-   width: 50px;
-   height: 50px;
+   width: 40px;
+   height: 40px;
    border-radius: 50%;
-   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   background: #7c4dff;
    color: white;
    display: flex;
    align-items: center;
    justify-content: center;
-   font-size: 18px;
-   margin-right: 15px;
-   flex-shrink: 0;
-   position: relative;
+   margin-right: 12px;
    overflow: hidden;
-   box-shadow: 0 4px 15px rgba(124, 77, 255, 0.2);
+}
+
+.avatarInitial {
+   color: white;
+   font-size: 18px;
+   font-weight: 500;
 }
 
 .avatarImage {
    width: 100%;
    height: 100%;
    object-fit: cover;
-   border-radius: 16px;
-   transition: transform 0.3s ease;
 }
 
 .chatItem:hover .avatarImage {
@@ -265,7 +267,9 @@
 }
 
 .chatHeader {
-   background: rgba(255, 255, 255, 0.9);
+   position: relative;
+   z-index: 2;
+   background: white;
    backdrop-filter: blur(10px);
    padding: 16px 24px;
    display: flex;
@@ -340,8 +344,10 @@
 }
 
 .messageList {
-   flex-grow: 1;
+   position: relative;
+   z-index: 1;
    overflow-y: auto;
+   flex: 1;
    padding: 24px;
    display: flex;
    flex-direction: column;
@@ -910,4 +916,290 @@
 .noChatSelected p {
    font-size: 1rem;
    color: #666;
+}
+
+/* Modern dropdown styles */
+.modernDropdown {
+   position: absolute;
+   top: 60px;
+   right: 20px;
+   width: 320px;
+   background: white;
+   border-radius: 20px;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+   overflow: hidden;
+   animation: slideIn 0.2s ease-out;
+   z-index: 1001;
+   padding: 6px;
+}
+
+@keyframes slideIn {
+   from {
+      opacity: 0;
+      transform: translateY(-10px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+.dropdownHeader {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 8px 8px 16px 8px;
+   border-bottom: 1px solid #f0f2f5;
+}
+
+.dropdownHeader h4 {
+   margin: 0;
+   color: #1c1e21;
+   font-size: 18px;
+   font-weight: 600;
+}
+
+.closeButton {
+   background: none;
+   border: none;
+   color: #65676b;
+   cursor: pointer;
+   padding: 8px;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+   background: #f2f2f2;
+}
+
+.clearChatOption {
+   display: flex;
+   align-items: center;
+   width: 100%;
+   padding: 12px;
+   border: none;
+   background: none;
+   cursor: pointer;
+   border-radius: 8px;
+   transition: all 0.2s ease;
+   margin-top: 8px;
+}
+
+.clearChatOption:hover {
+   background: #f2f2f2;
+}
+
+.optionIcon {
+   width: 40px;
+   height: 40px;
+   background: #ffebee;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-right: 12px;
+}
+
+.optionIcon svg {
+   color: #dc3545;
+   font-size: 20px;
+}
+
+.optionInfo {
+   text-align: left;
+   flex: 1;
+}
+
+.optionInfo span {
+   display: block;
+   color: #dc3545;
+   font-weight: 500;
+   font-size: 16px;
+   margin-bottom: 4px;
+}
+
+.optionInfo small {
+   display: block;
+   color: #65676b;
+   font-size: 13px;
+}
+
+/* Confirmation Dialog */
+.modalOverlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: rgba(0, 0, 0, 0.5);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index: 9999;
+   backdrop-filter: blur(4px);
+}
+
+.confirmDialog {
+   background: white;
+   border-radius: 16px;
+   padding: 24px;
+   width: 90%;
+   max-width: 400px;
+   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+   animation: dialogAppear 0.3s ease-out;
+}
+
+@keyframes dialogAppear {
+   from {
+      opacity: 0;
+      transform: scale(0.9);
+   }
+   to {
+      opacity: 1;
+      transform: scale(1);
+   }
+}
+
+.confirmHeader {
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+.warningIcon {
+   font-size: 32px;
+   color: #dc3545;
+   margin-bottom: 16px;
+}
+
+.confirmDialog h3 {
+   margin: 0;
+   color: #2d3748;
+   font-size: 20px;
+}
+
+.confirmDialog p {
+   color: #718096;
+   text-align: center;
+   margin: 16px 0 24px;
+   line-height: 1.5;
+}
+
+.confirmActions {
+   display: flex;
+   gap: 12px;
+   justify-content: center;
+}
+
+.cancelButton,
+.clearButton {
+   padding: 10px 24px;
+   border-radius: 8px;
+   font-weight: 500;
+   transition: all 0.2s ease;
+   border: none;
+   cursor: pointer;
+}
+
+.cancelButton {
+   background: #f3f4f6;
+   color: #4b5563;
+}
+
+.cancelButton:hover {
+   background: #e5e7eb;
+}
+
+.clearButton {
+   background: #dc3545;
+   color: white;
+}
+
+.clearButton:hover {
+   background: #bb2d3b;
+   transform: translateY(-1px);
+}
+
+.settingsButton {
+   background: none;
+   border: none;
+   color: #718096;
+   font-size: 18px;
+   padding: 8px;
+   border-radius: 50%;
+   cursor: pointer;
+   transition: all 0.2s ease;
+}
+
+.settingsButton:hover {
+   background: rgba(124, 77, 255, 0.1);
+   color: #7c4dff;
+   transform: rotate(30deg);
+}
+
+/* Update the online status styles */
+.onlineStatus {
+   font-size: 12px;
+   color: #65676b;
+   display: flex;
+   align-items: center;
+   gap: 4px;
+}
+
+.onlineIndicator {
+   width: 8px;
+   height: 8px;
+   border-radius: 50%;
+   background-color: #31a24c;
+   display: inline-block;
+}
+
+.headerInfo {
+   display: flex;
+   flex-direction: column;
+}
+
+.headerInfo h3 {
+   margin: 0;
+   font-size: 16px;
+   font-weight: 600;
+   color: #1c1e21;
+}
+
+.dropdownWrapper {
+   position: static;
+}
+
+.dropdownOverlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: transparent;
+   z-index: 1000;
+}
+
+.noResults {
+   padding: 20px;
+   text-align: center;
+   color: #65676B;
+}
+
+.searchBar input {
+   width: 100%;
+   border: none;
+   background: transparent;
+   font-size: 14px;
+   color: #2d3748;
+   outline: none;
+   padding: 0 8px;
+}
+
+.searchIcon {
+   color: #65676B;
+   font-size: 14px;
 }

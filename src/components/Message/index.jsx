@@ -1,14 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faSearch,
    faPaperPlane,
-   faEllipsisV,
    faPaperclip,
    faSmile,
    faUserFriends,
    faTrash,
    faComment,
+   faCog,
+   faTimes,
+   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { io } from "socket.io-client";
 import axios from "axios";
@@ -21,6 +23,7 @@ import EmojiPicker from "emoji-picker-react";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { SEO } from "../common/SEO";
+import DefaultAvatar from "../../assets/images/default-profile.jpeg";
 
 const EmptyConversation = ({ selectedUser, onSuggestionClick }) => {
    return (
@@ -75,6 +78,10 @@ function Message() {
    const urlUserId = queryParams.get("userId");
    const [initialLoadDone, setInitialLoadDone] = useState(false);
    const searchInputRef = useRef(null);
+   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+   const [selectedUser, setSelectedUser] = useState(null);
+   const [isUserOnline, setIsUserOnline] = useState(false);
+   const [lastMessages, setLastMessages] = useState({});
 
    const initializeSocket = useCallback(() => {
       const token = localStorage.getItem("token");
@@ -105,23 +112,28 @@ function Message() {
       return newSocket;
    }, [API_URL, navigate]);
 
-   const fetchChatHistory = useCallback(
-      async (recipientId) => {
-         try {
-            const response = await axios.get(`${API_URL}/chat/history/${recipientId}`, {
-               headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            });
-            console.log("Fetched messages:", response.data);
-            setMessages(response.data);
-         } catch (error) {
-            console.error("Error fetching chat history:", error);
+   const fetchChatHistory = useCallback(async (chatId) => {
+      try {
+         const response = await axios.get(`${CONFIG.API_URL}/chat/history/${chatId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+         });
+         setMessages(response.data);
+
+         // Store the last message for this chat
+         if (response.data.length > 0) {
+            setLastMessages((prev) => ({
+               ...prev,
+               [chatId]: response.data[response.data.length - 1],
+            }));
          }
-      },
-      [API_URL],
-   );
+      } catch (error) {
+         console.error("Error fetching chat history:", error);
+      }
+   }, []);
 
    const handleSearch = useCallback(
       async (term) => {
+         setSearchTerm(term);
          if (term.trim() === "") {
             setSearchResults([]);
             return;
@@ -168,6 +180,9 @@ function Message() {
          });
 
          newSocket.on("user_status", ({ userId, status }) => {
+            if (selectedChat === userId) {
+               setIsUserOnline(status === "online");
+            }
             setConnections((prevConnections) => prevConnections.map((conn) => (conn._id === userId ? { ...conn, status } : conn)));
          });
 
@@ -244,24 +259,37 @@ function Message() {
       async (chatId) => {
          if (!chatId) return;
 
-         setSelectedChat(chatId);
-
-         if (socket) {
-            if (selectedChat) {
-               socket.emit("leave_room", selectedChat);
-            }
-            socket.emit("join_room", chatId);
-         }
-
          try {
+            // Find the selected connection
+            const selectedConnection = connections.find((conn) => conn._id === chatId);
+
+            if (selectedConnection) {
+               setSelectedChat(chatId);
+               setSelectedUser(selectedConnection); // Set the selected user data
+            }
+
+            // Socket handling
+            if (socket) {
+               if (selectedChat) {
+                  socket.emit("leave_room", selectedChat);
+               }
+               socket.emit("join_room", chatId);
+            }
+
             await fetchChatHistory(chatId);
          } catch (error) {
             console.error("Error in chat selection:", error);
             toast.error("Failed to load chat history");
          }
       },
-      [socket, selectedChat, fetchChatHistory],
+      [socket, selectedChat, connections, fetchChatHistory],
    );
+
+   useEffect(() => {
+      if (urlUserId && connections.length > 0 && !selectedChat) {
+         handleChatSelect(urlUserId);
+      }
+   }, [urlUserId, connections, handleChatSelect]);
 
    const sendPrivateMessage = useCallback(
       async (recipientId, message) => {
@@ -377,6 +405,45 @@ function Message() {
       }
    };
 
+   // Use useMemo to prevent unnecessary re-sorting
+   const sortedConnections = useMemo(() => {
+      return [...connections].sort((a, b) => {
+         const lastMessageA = lastMessages[a._id];
+         const lastMessageB = lastMessages[b._id];
+
+         const timeA = lastMessageA ? new Date(lastMessageA.timestamp).getTime() : 0;
+         const timeB = lastMessageB ? new Date(lastMessageB.timestamp).getTime() : 0;
+
+         return timeB - timeA;
+      });
+   }, [connections, lastMessages]);
+
+   useEffect(() => {
+      if (socket) {
+         socket.on("receive_message", (data) => {
+            if (selectedChat === data.senderId || selectedChat === data.receiverId) {
+               setMessages((prevMessages) => [...prevMessages, data]);
+            }
+
+            // Update last message for this chat
+            const chatId = data.senderId === user._id ? data.receiverId : data.senderId;
+            setLastMessages((prev) => ({
+               ...prev,
+               [chatId]: data,
+            }));
+         });
+
+         return () => socket.off("receive_message");
+      }
+   }, [socket, selectedChat, user._id]);
+
+   const displayedConnections = useMemo(() => {
+      if (searchTerm.trim() === "") {
+         return sortedConnections; // Show normal sorted list when no search
+      }
+      return searchResults; // Show search results when searching
+   }, [searchTerm, searchResults, sortedConnections]);
+
    return (
       <>
          <SEO
@@ -392,25 +459,35 @@ function Message() {
                <div className={styles.searchBarWrapper}>
                   <div className={styles.searchBar}>
                      <FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
-                     <input type='text' placeholder='Search conversations...' value={searchTerm} onChange={handleSearchInputChange} ref={searchInputRef} />
+                     <input
+                        type='text'
+                        placeholder='Search conversations...'
+                        value={searchTerm}
+                        onChange={handleSearchInputChange}
+                        ref={searchInputRef}
+                     />
                   </div>
                </div>
                <div className={styles.chatList}>
-                  {(searchTerm ? searchResults : connections).map((connection) => (
+                  {displayedConnections.map((connection) => (
                      <div
                         key={connection._id}
                         className={`${styles.chatItem} ${selectedChat === connection._id ? styles.active : ""}`}
                         onClick={() => handleChatSelect(connection._id)}>
                         <div className={styles.avatar}>
                            {connection.profilePicture ? (
-                              <img src={connection.profilePicture} alt={connection.username} className={styles.avatarImage} />
+                              <img
+                                 src={connection.profilePicture || DefaultAvatar}
+                                 alt={connection.username}
+                                 className={styles.avatarImage}
+                              />
                            ) : (
                               connection.username[0].toUpperCase()
                            )}
                         </div>
                         <div className={styles.chatInfo}>
                            <h4>{connection.username}</h4>
-                           <p>{connection.title || connection.email}</p>
+                           {lastMessages[connection._id] && <p className={styles.lastMessage}>{lastMessages[connection._id].message}</p>}
                         </div>
                         <div className={styles.chatMeta}>
                            <div className={styles.connectionStatus}>
@@ -429,6 +506,11 @@ function Message() {
                         </div>
                      </div>
                   ))}
+                  {searchTerm && displayedConnections.length === 0 && (
+                     <div className={styles.noResults}>
+                        <p>No results found</p>
+                     </div>
+                  )}
                </div>
             </div>
             <div className={styles.chatArea}>
@@ -437,20 +519,61 @@ function Message() {
                      <div className={styles.chatHeader}>
                         <div className={styles.chatHeaderLeft}>
                            <div className={styles.avatar}>
-                              {connections.find((connection) => connection._id === selectedChat)?.username[0].toUpperCase()}
+                              {selectedUser ? (
+                                 selectedUser.profilePicture ? (
+                                    <img
+                                       src={selectedUser.profilePicture || DefaultAvatar}
+                                       alt={selectedUser.username}
+                                       className={styles.avatarImage}
+                                    />
+                                 ) : (
+                                    <span className={styles.avatarInitial}>{selectedUser.username?.[0]?.toUpperCase()}</span>
+                                 )
+                              ) : null}
                            </div>
-                           <h3>{connections.find((connection) => connection._id === selectedChat)?.username}</h3>
+                           <div className={styles.headerInfo}>
+                              <h3>{selectedUser?.username || ""}</h3>
+                              {isTyping ? (
+                                 <span className={styles.onlineStatus}>typing...</span>
+                              ) : (
+                                 isUserOnline && (
+                                    <span className={styles.onlineStatus}>
+                                       <span className={styles.onlineIndicator}></span>
+                                       active now
+                                    </span>
+                                 )
+                              )}
+                           </div>
                         </div>
                         <div className={styles.chatHeaderRight}>
-                           <div className={styles.dropdownContainer} ref={dropdownRef}>
-                              <button className={styles.moreOptions} onClick={() => setShowDropdown(!showDropdown)}>
-                                 <FontAwesomeIcon icon={faEllipsisV} />
+                           <div className={styles.dropdownWrapper}>
+                              <button className={styles.settingsButton} onClick={() => setShowDropdown(!showDropdown)}>
+                                 <FontAwesomeIcon icon={faCog} />
                               </button>
                               {showDropdown && (
-                                 <div className={styles.dropdownMenu}>
-                                    <button onClick={clearChat}>
-                                       <FontAwesomeIcon icon={faTrash} /> Clear Chat
-                                    </button>
+                                 <div className={styles.dropdownOverlay}>
+                                    <div className={styles.modernDropdown}>
+                                       <div className={styles.dropdownHeader}>
+                                          <h4>Chat Settings</h4>
+                                          <button className={styles.closeButton} onClick={() => setShowDropdown(false)}>
+                                             <FontAwesomeIcon icon={faTimes} />
+                                          </button>
+                                       </div>
+                                       <button
+                                          className={styles.clearChatOption}
+                                          onClick={() => {
+                                             setShowConfirmDialog(true);
+                                             setShowDropdown(false);
+                                          }}>
+                                          <div className={styles.optionIcon}>
+                                             <FontAwesomeIcon icon={faTrash} />
+                                          </div>
+                                          <div className={styles.optionInfo}>
+                                             <span>Clear Chat</span>
+                                             <small>Delete all messages in this conversation</small>
+                                          </div>
+                                       </button>
+                                    </div>
                                  </div>
                               )}
                            </div>
@@ -532,6 +655,30 @@ function Message() {
                )}
             </div>
          </div>
+         {showConfirmDialog && (
+            <div className={styles.modalOverlay}>
+               <div className={styles.confirmDialog}>
+                  <div className={styles.confirmHeader}>
+                     <FontAwesomeIcon icon={faTrashAlt} className={styles.warningIcon} />
+                     <h3>Clear Chat History</h3>
+                  </div>
+                  <p>Are you sure you want to clear all messages? This action cannot be undone.</p>
+                  <div className={styles.confirmActions}>
+                     <button className={styles.cancelButton} onClick={() => setShowConfirmDialog(false)}>
+                        Cancel
+                     </button>
+                     <button
+                        className={styles.clearButton}
+                        onClick={() => {
+                           clearChat();
+                           setShowConfirmDialog(false);
+                        }}>
+                        Clear Chat
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
       </>
    );
 }
