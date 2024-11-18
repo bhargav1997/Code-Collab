@@ -13,6 +13,9 @@ import {
    faBolt,
    faChevronLeft,
    faChevronRight,
+   faQuestionCircle,
+   faTimes,
+   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { CONFIG } from "../../config";
@@ -28,6 +31,7 @@ function Leaderboard() {
    const [pagination, setPagination] = useState(null);
    const [userRank, setUserRank] = useState(null);
    const [nearbyUsers, setNearbyUsers] = useState([]);
+   const [showPointsInfo, setShowPointsInfo] = useState(false);
 
    const fetchLeaderboardData = async () => {
       setLoading(true);
@@ -78,9 +82,9 @@ function Leaderboard() {
       fetchLeaderboardData();
    }, [category, currentPage]);
 
-   const formatTime = (hours) => {
-      return `${hours}h`;
-   };
+   // const formatTime = (hours) => {
+   //    return `${hours}h`;
+   // };
 
    if (loading) {
       return (
@@ -108,7 +112,128 @@ function Leaderboard() {
          <h1 className={styles.leaderboardTitle}>
             <FontAwesomeIcon icon={faTrophy} className={styles.titleIcon} />
             Leaderboard
+            <button className={styles.helpButton} onClick={() => setShowPointsInfo(true)} title='Learn about points system'>
+               <FontAwesomeIcon icon={faQuestionCircle} />
+            </button>
          </h1>
+
+         {showPointsInfo && (
+            <div className={styles.popupOverlay}>
+               <div className={styles.pointsInfoPopup}>
+                  <div className={styles.popupHeader}>
+                     <h2>Learning Platform Points System</h2>
+                     <button className={styles.closeButton} onClick={() => setShowPointsInfo(false)}>
+                        <FontAwesomeIcon icon={faTimes} />
+                     </button>
+                  </div>
+
+                  <div className={styles.popupContent}>
+                     <h3>Point Breakdown</h3>
+                     <div className={styles.pointsList}>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faBolt} />
+                           <div>
+                              <h4>Challenges</h4>
+                              <p>50 points per completed challenge</p>
+                           </div>
+                        </div>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faGraduationCap} />
+                           <div>
+                              <h4>Courses</h4>
+                              <p>30 points per completed course</p>
+                           </div>
+                        </div>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faMedal} />
+                           <div>
+                              <h4>Achievements</h4>
+                              <p>20 points per achievement earned</p>
+                           </div>
+                        </div>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faClock} />
+                           <div>
+                              <h4>Learning Time</h4>
+                              <p>15 points per hour spent learning</p>
+                           </div>
+                        </div>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faBook} />
+                           <div>
+                              <h4>Tasks</h4>
+                              <p>10 points per completed task</p>
+                           </div>
+                        </div>
+
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faFire} />
+                           <div>
+                              <h4>Learning Streak</h4>
+                              <p>5 points per day of continuous activity</p>
+                           </div>
+                        </div>
+                        <div className={styles.pointItem}>
+                           <FontAwesomeIcon icon={faUsers} />
+                           <div>
+                              <h4>Social Engagement</h4>
+                              <p>2 points per follower</p>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className={styles.exampleCalculation}>
+                        <h3>Example Calculation</h3>
+                        <div className={styles.calculationList}>
+                           <div className={styles.calculationItem}>
+                              <span>5 tasks completed</span>
+                              <span>50 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>2 challenges completed</span>
+                              <span>100 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>7-day streak</span>
+                              <span>35 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>3 achievements earned</span>
+                              <span>60 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>4 hours learning</span>
+                              <span>60 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>10 followers</span>
+                              <span>20 points</span>
+                           </div>
+                           <div className={styles.calculationItem}>
+                              <span>1 course completed</span>
+                              <span>30 points</span>
+                           </div>
+                           <div className={styles.calculationTotal}>
+                              <span>Total Score</span>
+                              <span>355 points</span>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className={styles.additionalInfo}>
+                        <h3>Additional Information</h3>
+                        <ul>
+                           <li>Points are automatically calculated and updated after each activity</li>
+                           <li>Streaks require daily activity to maintain</li>
+                           <li>The leaderboard is updated in real-time</li>
+                           <li>Weekly leaderboards reset every Monday at midnight</li>
+                           <li>Your highest achieved streak is permanently recorded</li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         )}
 
          <div className={styles.categorySelector}>
             <button
