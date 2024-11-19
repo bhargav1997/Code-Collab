@@ -15,11 +15,124 @@ import {
    faCode,
    faCog,
    faEnvelope,
+   faLightbulb,
+   faUserGroup,
+   faPuzzlePiece,
+   faChartSimple,
+   faBug,
+   faClockRotateLeft,
+   faShieldHeart,
+   faPaperPlane,
+   faImage,
+   faFileImage,
+   faFileVideo,
+   faFilePdf,
+   faFileZipper,
+   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import styles from "./LandingPage.module.css";
+import { useState } from "react";
 
 function LandingPage() {
+   const [touchedFields, setTouchedFields] = useState({});
+
+   const handleBlur = (fieldName) => {
+      setTouchedFields(prev => ({
+         ...prev,
+         [fieldName]: true
+      }));
+   };
+
+   const features = [
+      {
+         icon: faMessage,
+         title: "Real-time Chat",
+         description: "Connect instantly with fellow learners through our messaging system",
+         color: "#7c4dff",
+         gradient: "linear-gradient(135deg, #7c4dff20 0%, #7c4dff10 100%)",
+      },
+      {
+         icon: faChartLine,
+         title: "Learning Journey",
+         description: "Create custom learning paths and track your educational goals",
+         color: "#00bfa5",
+         gradient: "linear-gradient(135deg, #00bfa520 0%, #00bfa510 100%)",
+      },
+      {
+         icon: faTrophy,
+         title: "Leaderboard",
+         description: "Compete with others and track your position as you progress",
+         color: "#ff5252",
+         gradient: "linear-gradient(135deg, #ff525220 0%, #ff525210 100%)",
+      },
+      {
+         icon: faCalendarCheck,
+         title: "Calendar & Reminders",
+         description: "Schedule study sessions and never miss important deadlines",
+         color: "#ffd740",
+         gradient: "linear-gradient(135deg, #ffd74020 0%, #ffd74010 100%)",
+      },
+      {
+         icon: faShareNodes,
+         title: "Share Journey",
+         description: "Share your learning journey and inspire others in the community",
+         color: "#2196f3",
+         gradient: "linear-gradient(135deg, #2196f320 0%, #2196f310 100%)",
+      },
+      {
+         icon: faCode,
+         title: "Coding Challenges",
+         description: "Practice and improve your coding skills with regular challenges",
+         color: "#9c27b0",
+         gradient: "linear-gradient(135deg, #9c27b020 0%, #9c27b010 100%)",
+      },
+      {
+         icon: faRocket,
+         title: "Create Journey",
+         description: "Design and customize your own learning path from scratch",
+         color: "#4caf50",
+         gradient: "linear-gradient(135deg, #4caf5020 0%, #4caf5010 100%)",
+      },
+      {
+         icon: faCog,
+         title: "Customization",
+         description: "Personalize your learning environment to suit your needs",
+         color: "#ff9800",
+         gradient: "linear-gradient(135deg, #ff980020 0%, #ff980010 100%)",
+      },
+   ];
+   const howItWorksSteps = [
+      {
+         number: "01",
+         icon: faRocket,
+         title: "Create Your Profile",
+         description: "Set up your personalized learning space and define your goals. Choose your interests and preferred learning style.",
+         color: "#7c4dff",
+      },
+      {
+         number: "02",
+         icon: faUsers,
+         title: "Join Learning Circles",
+         description: "Connect with like-minded learners in your field. Share resources and learn from each other's experiences.",
+         color: "#6366f1",
+      },
+      {
+         number: "03",
+         icon: faTrophy,
+         title: "Practice & Compete",
+         description: "Take on coding challenges, participate in hackathons, and climb the leaderboard rankings.",
+         color: "#7c4dff",
+      },
+      {
+         number: "04",
+         icon: faChartLine,
+         title: "Track Your Growth",
+         description: "Monitor your progress with detailed analytics. Celebrate milestones and unlock achievements.",
+         color: "#6366f1",
+      },
+   ];
+
    return (
       <div className={styles.landingWrapper}>
          {/* Hero Section */}
@@ -41,8 +154,8 @@ function LandingPage() {
 
                {/* Graduation Cap */}
                <div className={styles.graduationCap}>
-                  <svg viewBox="0 0 24 24" fill="#7c4dff">
-                     <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/>
+                  <svg viewBox='0 0 24 24' fill='#7c4dff'>
+                     <path d='M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z' />
                   </svg>
                </div>
 
@@ -103,64 +216,7 @@ function LandingPage() {
             </div>
 
             <div className={styles.featuresRow}>
-               {[
-                  {
-                     icon: faMessage,
-                     title: "Real-time Chat",
-                     description: "Connect instantly with fellow learners through our messaging system",
-                     color: "#7c4dff",
-                     gradient: "linear-gradient(135deg, #7c4dff20 0%, #7c4dff10 100%)",
-                  },
-                  {
-                     icon: faChartLine,
-                     title: "Learning Journey",
-                     description: "Create custom learning paths and track your educational goals",
-                     color: "#00bfa5",
-                     gradient: "linear-gradient(135deg, #00bfa520 0%, #00bfa510 100%)",
-                  },
-                  {
-                     icon: faTrophy,
-                     title: "Leaderboard",
-                     description: "Compete with others and track your position as you progress",
-                     color: "#ff5252",
-                     gradient: "linear-gradient(135deg, #ff525220 0%, #ff525210 100%)",
-                  },
-                  {
-                     icon: faCalendarCheck,
-                     title: "Calendar & Reminders",
-                     description: "Schedule study sessions and never miss important deadlines",
-                     color: "#ffd740",
-                     gradient: "linear-gradient(135deg, #ffd74020 0%, #ffd74010 100%)",
-                  },
-                  {
-                     icon: faShareNodes,
-                     title: "Share Journey",
-                     description: "Share your learning journey and inspire others in the community",
-                     color: "#2196f3",
-                     gradient: "linear-gradient(135deg, #2196f320 0%, #2196f310 100%)",
-                  },
-                  {
-                     icon: faCode,
-                     title: "Coding Challenges",
-                     description: "Practice and improve your coding skills with regular challenges",
-                     color: "#9c27b0",
-                     gradient: "linear-gradient(135deg, #9c27b020 0%, #9c27b010 100%)",
-                  },
-                  {
-                     icon: faRocket,
-                     title: "Create Journey",
-                     description: "Design and customize your own learning path from scratch",
-                     color: "#4caf50",
-                     gradient: "linear-gradient(135deg, #4caf5020 0%, #4caf5010 100%)",
-                  },
-                  {
-                     icon: faCog,
-                     title: "Customization",
-                     description: "Personalize your learning environment to suit your needs",
-                     color: "#ff9800",
-                     gradient: "linear-gradient(135deg, #ff980020 0%, #ff980010 100%)",
-                  },
-               ].map((feature, index) => (
+               {features.map((feature, index) => (
                   <motion.div
                      key={index}
                      className={styles.featureCard}
@@ -200,44 +256,14 @@ function LandingPage() {
 
             <div className={styles.timelineWrapper}>
                <div className={styles.timeline}>
-                  {[
-                     {
-                        number: "01",
-                        icon: faRocket,
-                        title: "Create Your Profile",
-                        description: "Set up your personalized learning space and define your goals. Choose your interests and preferred learning style.",
-                        color: "#7c4dff"
-                     },
-                     {
-                        number: "02",
-                        icon: faUsers,
-                        title: "Join Learning Circles",
-                        description: "Connect with like-minded learners in your field. Share resources and learn from each other's experiences.",
-                        color: "#6366f1"
-                     },
-                     {
-                        number: "03",
-                        icon: faTrophy,
-                        title: "Practice & Compete",
-                        description: "Take on coding challenges, participate in hackathons, and climb the leaderboard rankings.",
-                        color: "#7c4dff"
-                     },
-                     {
-                        number: "04",
-                        icon: faChartLine,
-                        title: "Track Your Growth",
-                        description: "Monitor your progress with detailed analytics. Celebrate milestones and unlock achievements.",
-                        color: "#6366f1"
-                     }
-                  ].map((step, index) => (
+                  {howItWorksSteps.map((step, index) => (
                      <motion.div
                         key={index}
                         className={styles.timelineStep}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: index * 0.2 }}
-                     >
+                        transition={{ delay: index * 0.2 }}>
                         <div className={styles.stepCard}>
                            <div className={styles.stepNumber}>{step.number}</div>
                            <div className={styles.stepIcon}>
@@ -246,8 +272,8 @@ function LandingPage() {
                            <div className={styles.stepContent}>
                               <h3>{step.title}</h3>
                               <p>{step.description}</p>
-                              <a href="#" className={styles.learnMore}>
-                                 Learn more 
+                              <a href='#' className={styles.learnMore}>
+                                 Learn more
                                  <FontAwesomeIcon icon={faArrowRight} />
                               </a>
                            </div>
@@ -258,15 +284,84 @@ function LandingPage() {
             </div>
          </section>
 
-         {/* CTA Section */}
-         <section className={styles.ctaSection}>
-            <div className={styles.ctaContent}>
-               <h2>Ready to Start Your Journey?</h2>
-               <p>Join thousands of learners already on LearnHUB</p>
-               <Link to='/register' className={styles.primaryButton}>
-                  Get Started Free
-                  <FontAwesomeIcon icon={faArrowRight} />
-               </Link>
+         {/* Why LearnHUB Section */}
+         <section className={styles.whySection}>
+            <div className={styles.whyWrapper}>
+               <motion.div
+                  className={styles.whyContent}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}>
+                  <span className={styles.missionTag}>
+                     <FontAwesomeIcon icon={faLightbulb} /> Why We Built This
+                  </span>
+                  <h2 className={styles.whyTitle}>Reimagining Learning for Today&apos;s Digital Age</h2>
+
+                  <div className={styles.problemPoints}>
+                     <motion.div
+                        className={styles.problemPoint}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}>
+                        <div className={styles.pointIcon}>
+                           <FontAwesomeIcon icon={faUserGroup} />
+                        </div>
+                        <div className={styles.pointContent}>
+                           <h3>Isolation in Online Learning</h3>
+                           <p>
+                              Many students feel disconnected and alone in their learning journey, missing the collaborative spirit of
+                              traditional classrooms.
+                           </p>
+                        </div>
+                     </motion.div>
+
+                     <motion.div
+                        className={styles.problemPoint}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}>
+                        <div className={styles.pointIcon}>
+                           <FontAwesomeIcon icon={faPuzzlePiece} />
+                        </div>
+                        <div className={styles.pointContent}>
+                           <h3>Fragmented Resources</h3>
+                           <p>
+                              Learning resources are scattered across platforms, making it difficult to maintain a structured and effective
+                              learning path.
+                           </p>
+                        </div>
+                     </motion.div>
+
+                     <motion.div
+                        className={styles.problemPoint}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 }}>
+                        <div className={styles.pointIcon}>
+                           <FontAwesomeIcon icon={faChartSimple} />
+                        </div>
+                        <div className={styles.pointContent}>
+                           <h3>Lack of Progress Tracking</h3>
+                           <p>
+                              Students struggle to measure their progress and stay motivated without clear milestones and achievement
+                              markers.
+                           </p>
+                        </div>
+                     </motion.div>
+                  </div>
+               </motion.div>
+
+               <motion.div
+                  className={styles.solutionVisual}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}>
+                  <img src='/learning-community.png' alt='LearnHUB Community Learning' className={styles.visualImage} />
+                  <div className={styles.gradientOverlay}></div>
+               </motion.div>
             </div>
          </section>
 
@@ -330,7 +425,368 @@ function LandingPage() {
             </div>
          </section>
 
-         {/* Modern Footer */}
+         {/* FAQ Section */}
+         <section className={styles.faqSection}>
+            <div className={styles.faqWrapper}>
+               <motion.div
+                  className={styles.faqHeader}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}>
+                  <h2>Frequently Asked Questions</h2>
+                  <p>Everything you need to know about LearnHUB</p>
+               </motion.div>
+
+               <div className={styles.faqGrid}>
+                  <motion.div
+                     className={styles.faqCategory}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}>
+                     <h3>Getting Started</h3>
+                     <div className={styles.faqList}>
+                        <details className={styles.faqItem}>
+                           <summary>What is LearnHUB?</summary>
+                           <p>
+                              LearnHUB is a collaborative learning platform designed for students to connect, share knowledge, and grow
+                              together. It combines real-time communication, resource sharing, and interactive learning tools to create an
+                              engaging educational experience.
+                           </p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>How do I get started?</summary>
+                           <p>
+                              Simply sign up for a free account, complete your profile, and start exploring! You can join study groups,
+                              participate in discussions, or create your own learning content.
+                           </p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>Is LearnHUB free to use?</summary>
+                           <p>
+                              Yes, LearnHUB's core features are completely free for students. We believe in making quality education
+                              accessible to everyone.
+                           </p>
+                        </details>
+                     </div>
+                  </motion.div>
+
+                  <motion.div
+                     className={styles.faqCategory}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}>
+                     <h3>Features & Usage</h3>
+                     <div className={styles.faqList}>
+                        <details className={styles.faqItem}>
+                           <summary>What features does LearnHUB offer?</summary>
+                           <p>
+                              LearnHUB includes real-time chat, video calls, document sharing, collaborative whiteboards, study group
+                              formation, progress tracking, and personalized learning paths.
+                           </p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>Can I create my own study group?</summary>
+                           <p>
+                              Yes! You can create custom study groups, invite peers, share resources, and collaborate in real-time. Groups
+                              can be public or private based on your preferences.
+                           </p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>How does the messaging system work?</summary>
+                           <p>
+                              Our real-time messaging system allows you to communicate with peers instantly. You can share text, files, code
+                              snippets, and even conduct video calls within the platform.
+                           </p>
+                        </details>
+                     </div>
+                  </motion.div>
+
+                  <motion.div
+                     className={styles.faqCategory}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}>
+                     <h3>Privacy & Security</h3>
+                     <div className={styles.faqList}>
+                        <details className={styles.faqItem}>
+                           <summary>Is my data secure on LearnHUB?</summary>
+                           <p>
+                              Yes, we take security seriously. All data is encrypted, and we follow industry-standard security practices to
+                              protect your information.
+                           </p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>Who can see my profile?</summary>
+                           <p>
+                              You have full control over your privacy settings. You can choose what information is visible to others and
+                              manage who can contact you.
+                           </p>
+                        </details>
+                     </div>
+                  </motion.div>
+
+                  <motion.div
+                     className={styles.faqCategory}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}>
+                     <h3>Support & Community</h3>
+                     <div className={styles.faqList}>
+                        <details className={styles.faqItem}>
+                           <summary>How can I get help if I need it?</summary>
+                           <p>You can reach our support team at hello.learnhub@gmail.com. We typically respond within 24-48 hours.</p>
+                        </details>
+
+                        <details className={styles.faqItem}>
+                           <summary>Can I contribute to LearnHUB?</summary>
+                           <p>
+                              Yes! We welcome feedback and suggestions. You can report bugs, suggest features, or even contribute to our
+                              open-source components.
+                           </p>
+                        </details>
+                     </div>
+                  </motion.div>
+               </div>
+            </div>
+         </section>
+
+         {/* Bug Report Section */}
+         <section className={styles.bugReportSection}>
+            <div className={styles.bugReportWrapper}>
+               <motion.div
+                  className={styles.bugReportGrid}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}>
+                  <div className={styles.reportInfo}>
+                     <div className={styles.reportHeader}>
+                        <div className={styles.bugReportIcon}>
+                           <FontAwesomeIcon icon={faBug} />
+                        </div>
+                        <h2>Help Us Improve LearnHUB</h2>
+                     </div>
+                     <p>Found a bug? Have a suggestion? We're here to listen and make LearnHUB better for everyone.</p>
+
+                     <div className={styles.reportFeatures}>
+                        <div className={styles.featureItem}>
+                           <FontAwesomeIcon icon={faClockRotateLeft} />
+                           <span>24-48 hour response time</span>
+                        </div>
+                        <div className={styles.featureItem}>
+                           <FontAwesomeIcon icon={faShieldHeart} />
+                           <span>Private and secure</span>
+                        </div>
+                        <div className={styles.featureItem}>
+                           <FontAwesomeIcon icon={faMessage} />
+                           <span>Direct communication</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className={styles.reportFormContainer}>
+                     <form
+                        className={styles.reportForm}
+                        onSubmit={(e) => {
+                           e.preventDefault();
+                           // Mark all fields as touched on submit attempt
+                           const formElements = e.target.elements;
+                           const newTouchedFields = {};
+                           for (let element of formElements) {
+                              if (element.name) {
+                                 newTouchedFields[element.name] = true;
+                              }
+                           }
+                           setTouchedFields(newTouchedFields);
+
+                           // Continue with form submission if valid
+                           if (e.target.checkValidity()) {
+                              const formData = new FormData(e.target);
+                              const subject = `${formData.get("type")}: ${formData.get("subject")}`;
+                              const body = `Type: ${formData.get("type")}%0D%0A
+                                           Priority: ${formData.get("priority")}%0D%0A
+                                           Description: ${formData.get("description")}%0D%0A
+                                           Steps to Reproduce: ${formData.get("steps")}%0D%0A
+                                           Expected Result: ${formData.get("expected")}%0D%0A
+                                           Actual Result: ${formData.get("actual")}%0D%0A
+                                           Additional Info: ${formData.get("additional")}%0D%0A
+                                           File Sharing Link: ${formData.get("attachmentLink")}%0D%0A%0D%0A
+                                           Note: Please attach any relevant screenshots or files to this email.`;
+
+                              window.location.href = `mailto:hello.learnhub@gmail.com?subject=${subject}&body=${body}`;
+                           }
+                        }}>
+                        <div className={styles.formGrid}>
+                           <div className={styles.formGroup}>
+                              <label>
+                                 Report Type 
+                                 <span className={styles.required}>*</span>
+                                 <span className={styles.tooltip}>
+                                    <FontAwesomeIcon icon={faCircleInfo} />
+                                    <span className={styles.tooltipText}>Please select the type of report you're submitting</span>
+                                 </span>
+                              </label>
+                              <select 
+                                 name="type" 
+                                 required
+                                 className={`${styles.requiredField} ${touchedFields.type && styles.touched}`}
+                                 onBlur={() => handleBlur('type')}
+                              >
+                                 <option value="">Select type</option>
+                                 <option value="Bug Report">Bug Report</option>
+                                 <option value="Feature Request">Feature Request</option>
+                                 <option value="Improvement">Improvement Suggestion</option>
+                              </select>
+                              {touchedFields.type && <span className={styles.validationMessage}>Please select a report type</span>}
+                           </div>
+
+                           <div className={styles.formGroup}>
+                              <label>
+                                 Priority Level 
+                                 <span className={styles.required}>*</span>
+                              </label>
+                              <select 
+                                 name="priority" 
+                                 required
+                                 className={`${styles.requiredField} ${touchedFields.priority ? styles.touched : ''}`}
+                                 onBlur={() => handleBlur('priority')}
+                              >
+                                 <option value="">Select priority</option>
+                                 <option value="Low">Low</option>
+                                 <option value="Medium">Medium</option>
+                                 <option value="High">High</option>
+                              </select>
+                              <span className={styles.validationMessage}>Please select a priority level</span>
+                           </div>
+
+                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                              <label>
+                                 Subject 
+                                 <span className={styles.required}>*</span>
+                              </label>
+                              <input 
+                                 type="text" 
+                                 name="subject" 
+                                 placeholder="Brief description of the issue" 
+                                 required
+                                 className={`${styles.requiredField} ${touchedFields.subject ? styles.touched : ''}`}
+                                 minLength="10"
+                                 onBlur={() => handleBlur('subject')}
+                              />
+                              <span className={styles.validationMessage}>Please provide a subject (minimum 10 characters)</span>
+                           </div>
+
+                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                              <label>
+                                 Description 
+                                 <span className={styles.required}>*</span>
+                              </label>
+                              <textarea 
+                                 name="description" 
+                                 placeholder="Detailed description of what you encountered"
+                                 rows="3"
+                                 required
+                                 className={styles.requiredField}
+                                 minLength="30"
+                              ></textarea>
+                              <span className={styles.validationMessage}>Please provide a detailed description (minimum 30 characters)</span>
+                           </div>
+
+                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                              <label>
+                                 Steps to Reproduce
+                                 <span className={styles.optional}>(Optional)</span>
+                              </label>
+                              <textarea 
+                                 name="steps" 
+                                 placeholder="1. First step&#10;2. Second step&#10;3. ..."
+                                 rows="3"
+                              ></textarea>
+                           </div>
+
+                           <div className={styles.formGroup}>
+                              <label>Expected Result</label>
+                              <input type='text' name='expected' placeholder='What should happen' />
+                           </div>
+
+                           <div className={styles.formGroup}>
+                              <label>Actual Result</label>
+                              <input type='text' name='actual' placeholder='What actually happened' />
+                           </div>
+
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
+                              <label>Additional Information</label>
+                              <textarea name='additional' placeholder='Any other details that might be helpful' rows='2'></textarea>
+                           </div>
+
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
+                              <label>Screenshots/Files</label>
+                              <div className={styles.attachmentInfo}>
+                                 <div className={styles.attachmentMessage}>
+                                    <FontAwesomeIcon icon={faImage} className={styles.attachIcon} />
+                                    <p>
+                                       Please attach any relevant screenshots or files in your email response. You can also upload them to a
+                                       service like Google Drive or Dropbox and share the link below.
+                                    </p>
+                                 </div>
+                                 <div className={styles.formGroup}>
+                                    <input
+                                       type='text'
+                                       name='attachmentLink'
+                                       placeholder='Paste your file sharing link here (Google Drive, Dropbox, etc.)'
+                                    />
+                                 </div>
+                              </div>
+                           </div>
+
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
+                              <div className={styles.supportedFormats}>
+                                 <h4>Supported Formats:</h4>
+                                 <div className={styles.formatList}>
+                                    <span className={styles.formatBadge}>
+                                       <FontAwesomeIcon icon={faFileImage} /> Images (PNG, JPG)
+                                    </span>
+                                    <span className={styles.formatBadge}>
+                                       <FontAwesomeIcon icon={faFileVideo} /> Videos (MP4)
+                                    </span>
+                                    <span className={styles.formatBadge}>
+                                       <FontAwesomeIcon icon={faFilePdf} /> Documents (PDF)
+                                    </span>
+                                    <span className={styles.formatBadge}>
+                                       <FontAwesomeIcon icon={faFileZipper} /> Archives (ZIP)
+                                    </span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <button type='submit' className={styles.submitButton}>
+                           <FontAwesomeIcon icon={faPaperPlane} />
+                           Submit Report
+                        </button>
+                     </form>
+                  </div>
+               </motion.div>
+            </div>
+         </section>
+
+         {/* CTA Section */}
+         <section className={styles.ctaSection}>
+            <div className={styles.ctaContent}>
+               <h2>Ready to Start Your Journey?</h2>
+               <p>Join thousands of learners already on LearnHUB</p>
+               <Link to='/register' className={styles.primaryButton}>
+                  Get Started Free
+                  <FontAwesomeIcon icon={faArrowRight} />
+               </Link>
+            </div>
+         </section>
+
+         {/* Footer */}
          <footer className={styles.footer}>
             <div className={styles.footerContent}>
                <div className={styles.footerBrand}>
