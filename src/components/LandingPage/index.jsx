@@ -38,9 +38,9 @@ function LandingPage() {
    const [touchedFields, setTouchedFields] = useState({});
 
    const handleBlur = (fieldName) => {
-      setTouchedFields(prev => ({
+      setTouchedFields((prev) => ({
          ...prev,
-         [fieldName]: true
+         [fieldName]: true,
       }));
    };
 
@@ -623,108 +623,114 @@ function LandingPage() {
                         <div className={styles.formGrid}>
                            <div className={styles.formGroup}>
                               <label>
-                                 Report Type 
+                                 Report Type
                                  <span className={styles.required}>*</span>
                                  <span className={styles.tooltip}>
                                     <FontAwesomeIcon icon={faCircleInfo} />
                                     <span className={styles.tooltipText}>Please select the type of report you're submitting</span>
                                  </span>
                               </label>
-                              <select 
-                                 name="type" 
+                              <select
+                                 name='type'
                                  required
                                  className={`${styles.requiredField} ${touchedFields.type && styles.touched}`}
-                                 onBlur={() => handleBlur('type')}
-                              >
-                                 <option value="">Select type</option>
-                                 <option value="Bug Report">Bug Report</option>
-                                 <option value="Feature Request">Feature Request</option>
-                                 <option value="Improvement">Improvement Suggestion</option>
+                                 onBlur={() => handleBlur("type")}>
+                                 <option value=''>Select type</option>
+                                 <option value='Bug Report'>Bug Report</option>
+                                 <option value='Feature Request'>Feature Request</option>
+                                 <option value='Improvement'>Improvement Suggestion</option>
                               </select>
                               {touchedFields.type && <span className={styles.validationMessage}>Please select a report type</span>}
                            </div>
 
                            <div className={styles.formGroup}>
                               <label>
-                                 Priority Level 
+                                 Priority Level
                                  <span className={styles.required}>*</span>
                               </label>
-                              <select 
-                                 name="priority" 
+                              <select
+                                 name='priority'
                                  required
-                                 className={`${styles.requiredField} ${touchedFields.priority ? styles.touched : ''}`}
-                                 onBlur={() => handleBlur('priority')}
-                              >
-                                 <option value="">Select priority</option>
-                                 <option value="Low">Low</option>
-                                 <option value="Medium">Medium</option>
-                                 <option value="High">High</option>
+                                 className={`${styles.requiredField} ${touchedFields.priority ? styles.touched : ""}`}
+                                 onBlur={() => handleBlur("priority")}>
+                                 <option value=''>Select priority</option>
+                                 <option value='Low'>Low</option>
+                                 <option value='Medium'>Medium</option>
+                                 <option value='High'>High</option>
                               </select>
                               <span className={styles.validationMessage}>Please select a priority level</span>
                            </div>
 
-                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
                               <label>
-                                 Subject 
+                                 Subject
                                  <span className={styles.required}>*</span>
                               </label>
-                              <input 
-                                 type="text" 
-                                 name="subject" 
-                                 placeholder="Brief description of the issue" 
+                              <input
+                                 type='text'
+                                 name='subject'
+                                 placeholder='Brief description of the issue'
                                  required
-                                 className={`${styles.requiredField} ${touchedFields.subject ? styles.touched : ''}`}
-                                 minLength="10"
-                                 onBlur={() => handleBlur('subject')}
+                                 className={`${styles.requiredField} ${touchedFields.subject ? styles.touched : ""}`}
+                                 minLength='10'
+                                 onBlur={() => handleBlur("subject")}
                               />
                               <span className={styles.validationMessage}>Please provide a subject (minimum 10 characters)</span>
                            </div>
 
-                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
                               <label>
-                                 Description 
+                                 Description
                                  <span className={styles.required}>*</span>
                               </label>
-                              <textarea 
-                                 name="description" 
-                                 placeholder="Detailed description of what you encountered"
-                                 rows="3"
+                              <textarea
+                                 name='description'
+                                 placeholder='Detailed description of what you encountered'
+                                 rows='3'
                                  required
                                  className={styles.requiredField}
-                                 minLength="30"
-                              ></textarea>
-                              <span className={styles.validationMessage}>Please provide a detailed description (minimum 30 characters)</span>
+                                 minLength='30'></textarea>
+                              <span className={styles.validationMessage}>
+                                 Please provide a detailed description (minimum 30 characters)
+                              </span>
                            </div>
 
-                           <div className={styles.formGroup + ' ' + styles.fullWidth}>
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
                               <label>
                                  Steps to Reproduce
                                  <span className={styles.optional}>(Optional)</span>
                               </label>
-                              <textarea 
-                                 name="steps" 
-                                 placeholder="1. First step&#10;2. Second step&#10;3. ..."
-                                 rows="3"
-                              ></textarea>
+                              <textarea
+                                 name='steps'
+                                 placeholder='1. First step&#10;2. Second step&#10;3. ...'
+                                 rows='3'></textarea>
                            </div>
 
                            <div className={styles.formGroup}>
-                              <label>Expected Result</label>
+                              <label>
+                                 Expected Result <span className={styles.optional}>(Optional)</span>
+                              </label>
                               <input type='text' name='expected' placeholder='What should happen' />
                            </div>
 
                            <div className={styles.formGroup}>
-                              <label>Actual Result</label>
+                              <label>
+                                 Actual Result <span className={styles.optional}>(Optional)</span>
+                              </label>
                               <input type='text' name='actual' placeholder='What actually happened' />
                            </div>
 
                            <div className={styles.formGroup + " " + styles.fullWidth}>
-                              <label>Additional Information</label>
+                              <label>
+                                 Additional Information <span className={styles.optional}>(Optional)</span>
+                              </label>
                               <textarea name='additional' placeholder='Any other details that might be helpful' rows='2'></textarea>
                            </div>
 
                            <div className={styles.formGroup + " " + styles.fullWidth}>
-                              <label>Screenshots/Files</label>
+                              <label>
+                                 Screenshots/Files <span className={styles.optional}>(Optional)</span>
+                              </label>
                               <div className={styles.attachmentInfo}>
                                  <div className={styles.attachmentMessage}>
                                     <FontAwesomeIcon icon={faImage} className={styles.attachIcon} />

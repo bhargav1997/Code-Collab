@@ -12,7 +12,7 @@
    width: 100%;
    display: flex;
    align-items: center;
-   padding: 6rem 8%;
+   padding: 2rem 8%;
    background: linear-gradient(135deg, #f8faff 0%, #f1f4f9 100%);
    overflow: hidden;
 }
@@ -557,7 +557,7 @@
 }
 
 .howItWorksSection {
-   padding: 6rem 8%;
+   padding: 4rem 8%;
    background: #fff;
    position: relative;
    overflow: hidden;
@@ -1083,7 +1083,7 @@
 }
 
 .whySection {
-   padding: 8rem 8%;
+   padding: 4rem 8%;
    background: white;
    position: relative;
 }
@@ -1349,16 +1349,16 @@
    .bugReportSection {
       padding: 4rem 4%;
    }
-   
+
    .reportInfo,
    .reportFormContainer {
       padding: 2rem;
    }
-   
+
    .reportInfo h2 {
       font-size: 2rem;
    }
-   
+
    .formGrid {
       grid-template-columns: 1fr;
    }
@@ -1494,7 +1494,7 @@
 }
 
 .faqItem summary::after {
-   content: '+';
+   content: "+";
    position: absolute;
    right: 1.25rem;
    top: 50%;
@@ -1505,7 +1505,7 @@
 }
 
 .faqItem[open] summary::after {
-   content: '−';
+   content: "−";
 }
 
 .faqItem p {
@@ -1655,9 +1655,16 @@
 
 /* Error state animation */
 @keyframes shake {
-   0%, 100% { transform: translateX(0); }
-   25% { transform: translateX(-5px); }
-   75% { transform: translateX(5px); }
+   0%,
+   100% {
+      transform: translateX(0);
+   }
+   25% {
+      transform: translateX(-5px);
+   }
+   75% {
+      transform: translateX(5px);
+   }
 }
 
 .requiredField:invalid:not(:placeholder-shown) {
@@ -1694,9 +1701,16 @@
 
 /* Error state animation - only for touched fields */
 @keyframes shake {
-   0%, 100% { transform: translateX(0); }
-   25% { transform: translateX(-5px); }
-   75% { transform: translateX(5px); }
+   0%,
+   100% {
+      transform: translateX(0);
+   }
+   25% {
+      transform: translateX(-5px);
+   }
+   75% {
+      transform: translateX(5px);
+   }
 }
 
 .requiredField.touched:invalid {
