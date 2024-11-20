@@ -1,0 +1,11 @@
+/* TEAM */
+Developer: Bhargav Suthar
+GitHub: https://github.com/bhargav1997
+LinkedIn: https://linkedin.com/in/bhargav-suthar
+Twitter: @bsuthar_712
+
+/* SITE */
+Last update: 2024/03/20
+Standards: HTML5, CSS3, JavaScript
+Components: React, Vite, FontAwesome
+Software: VS Code, Git

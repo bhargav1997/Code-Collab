@@ -1,0 +1,54 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.trackmyskills.tech/sitemap.xml
+
+# Allow public pages
+Allow: /
+Allow: /about-me
+Allow: /privacy-policy
+Allow: /terms-of-use
+Allow: /guidelines
+Allow: /register
+Allow: /login
+
+# Disallow private/authenticated routes
+Disallow: /messages/
+Disallow: /report/
+Disallow: /user-profile/
+Disallow: /learning-journey/
+Disallow: /challenges/
+Disallow: /challenge-details/
+Disallow: /api/
+
+# Based on your lazy-loaded components from App.jsx
+Disallow: /Message/
+Disallow: /Report/
+Disallow: /Privacy/
+Disallow: /UserProfile/
+Disallow: /LearningJourney/
+Disallow: /Challenges/
+Disallow: /ChallengeDetails/
+
+# Analytics and Speed Insights (from your imports)
+Allow: /analytics
+Allow: /speed-insights
+
+# Crawl-delay
+Crawl-delay: 10
+
+# Additional Search Engine Specific Rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 5
+
+# Block potential harmful bots
+User-agent: *
+Disallow: /*?*
+Disallow: /*&*
