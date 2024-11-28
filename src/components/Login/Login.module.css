@@ -197,120 +197,127 @@
 
 /* Background animations */
 .backgroundWaves {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 0;
 }
 
 .wave {
-  position: absolute;
-  opacity: 0.15;
-  border-radius: 50%;
+   position: absolute;
+   opacity: 0.15;
+   border-radius: 50%;
 }
 
 .wave1 {
-  top: -10%;
-  left: -5%;
-  width: 600px;
-  height: 600px;
-  background: linear-gradient(45deg, #7c4dff, #b388ff);
-  animation: float1 20s infinite linear;
+   top: -10%;
+   left: -5%;
+   width: 600px;
+   height: 600px;
+   background: linear-gradient(45deg, #7c4dff, #b388ff);
+   animation: float1 20s infinite linear;
 }
 
 .wave2 {
-  bottom: -15%;
-  right: -10%;
-  width: 800px;
-  height: 800px;
-  background: linear-gradient(-45deg, #7c4dff, #9c7fff);
-  animation: float2 25s infinite linear;
+   bottom: -15%;
+   right: -10%;
+   width: 800px;
+   height: 800px;
+   background: linear-gradient(-45deg, #7c4dff, #9c7fff);
+   animation: float2 25s infinite linear;
 }
 
 .wave3 {
-  top: 40%;
-  right: 20%;
-  width: 300px;
-  height: 300px;
-  background: linear-gradient(90deg, #b388ff, #7c4dff);
-  animation: float3 18s infinite linear;
+   top: 40%;
+   right: 20%;
+   width: 300px;
+   height: 300px;
+   background: linear-gradient(90deg, #b388ff, #7c4dff);
+   animation: float3 18s infinite linear;
 }
 
 .blob {
-  position: absolute;
-  background: rgba(124, 77, 255, 0.05);
-  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  animation: blobAnimation 15s infinite;
+   position: absolute;
+   background: rgba(124, 77, 255, 0.05);
+   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+   animation: blobAnimation 15s infinite;
 }
 
 .blob1 {
-  top: 15%;
-  left: 15%;
-  width: 400px;
-  height: 400px;
-  animation-delay: -2s;
+   top: 15%;
+   left: 15%;
+   width: 400px;
+   height: 400px;
+   animation-delay: -2s;
 }
 
 .blob2 {
-  bottom: 10%;
-  right: 15%;
-  width: 350px;
-  height: 350px;
-  animation-delay: -5s;
+   bottom: 10%;
+   right: 15%;
+   width: 350px;
+   height: 350px;
+   animation-delay: -5s;
 }
 
 @keyframes float1 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(100px, 50px) rotate(180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(360deg);
-  }
+   0% {
+      transform: translate(0, 0) rotate(0deg);
+   }
+   50% {
+      transform: translate(100px, 50px) rotate(180deg);
+   }
+   100% {
+      transform: translate(0, 0) rotate(360deg);
+   }
 }
 
 @keyframes float2 {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-100px, -50px) rotate(-180deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(-360deg);
-  }
+   0% {
+      transform: translate(0, 0) rotate(0deg);
+   }
+   50% {
+      transform: translate(-100px, -50px) rotate(-180deg);
+   }
+   100% {
+      transform: translate(0, 0) rotate(-360deg);
+   }
 }
 
 @keyframes float3 {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  50% {
-    transform: translate(-50px, 25px) rotate(90deg) scale(1.1);
-  }
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
+   0% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+   }
+   50% {
+      transform: translate(-50px, 25px) rotate(90deg) scale(1.1);
+   }
+   100% {
+      transform: translate(0, 0) rotate(0deg) scale(1);
+   }
 }
 
 @keyframes blobAnimation {
-  0% {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  }
-  25% { 
-    border-radius: 50% 40% 30% 70% / 60% 40% 50% 40%;
-  }
-  50% {
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-  75% {
-    border-radius: 60% 40% 30% 70% / 40% 50% 60% 40%;
-  }
-  100% {
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  }
+   0% {
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+   }
+   25% {
+      border-radius: 50% 40% 30% 70% / 60% 40% 50% 40%;
+   }
+   50% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+   }
+   75% {
+      border-radius: 60% 40% 30% 70% / 40% 50% 60% 40%;
+   }
+   100% {
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+   }
+}
+
+.recoveryLinkContainer {
+   margin-top: 16px;
+   text-align: center;
+   padding: 16px;
+   border-top: 1px solid #eef0f7;
 }

@@ -11,7 +11,7 @@ import Sidebar from "./components/Sidebar";
 import Onboarding from "./components/Onboarding";
 // import SidebarSkeleton from "./components/Sidebar/SidebarSkeleton";
 import LoadingSpinner from "./components/LoadingSpinner";
-import PropTypes from "prop-types";
+
 import TwoFactorAuth from "./components/TwoFactorAuth/TwoFactorAuth";
 // import { fetchConnections } from "./redux/user/userHandle";
 
@@ -31,31 +31,23 @@ const UserProfile = React.lazy(() => import("./components/UserProfile"));
 const LearningJourney = React.lazy(() => import("./components/LearningJourney"));
 const Challenges = React.lazy(() => import("./components/Challenges"));
 const ChallengeDetails = React.lazy(() => import("./components/Challenges/ChallengeDetails"));
+const AccountDeletion = React.lazy(() => import("./components/AccountDeletion"));
+const LandingPage = React.lazy(() => import("./components/LandingPage"));
+const PrivacyPolicy = React.lazy(() => import("./components/PrivacyPolicy"));
+const TermsOfUse = React.lazy(() => import("./components/TermsOfUse"));
+const Guidelines = React.lazy(() => import("./components/Guidelines"));
+const AboutMe = React.lazy(() => import("./components/AboutMe"));
+const ScrollToTop = React.lazy(() => import("./components/common/ScrollToTop"));
+const ErrorFallback = React.lazy(() => import("./components/ErrorFallback"));
+
 import { CONFIG } from "./config";
 import withMobileRestriction from "./components/MobileRestriction/withMobileRestriction";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import LandingPage from "./components/LandingPage";
-import PrivacyPolicy from "./components/PrivacyPolicy";
-import TermsOfUse from "./components/TermsOfUse";
-import Guidelines from "./components/Guidelines";
-import AboutMe from "./components/AboutMe";
-import ScrollToTop from "./components/common/ScrollToTop";
 
-function ErrorFallback({ error }) {
-   return (
-      <div role='alert'>
-         <p>Something went wrong:</p>
-         <pre>{error.message}</pre>
-      </div>
-   );
-}
-
-ErrorFallback.propTypes = {
-   error: PropTypes.object.isRequired,
-};
+// Lazy load other components
 
 // Modify AppDesktop to use these new components
 function AppDesktop() {
@@ -134,6 +126,7 @@ function AppDesktop() {
                            <Route path='/guidelines' element={<Guidelines />} />
                            <Route path='/about-me' element={<AboutMe />} />
                            <Route path='/landing-page' element={<LandingPage />} />
+                           <Route path='/account-deletion' element={<AccountDeletion />} />
                            {/* Protected routes */}
                            {isAuthenticated && (
                               <Route element={<AuthenticatedLayout />}>

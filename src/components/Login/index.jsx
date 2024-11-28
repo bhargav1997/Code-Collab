@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "../../redux/user/userSlice";
+import { setUser, clearError } from "../../redux/user/userSlice";
+import LoginAlert from "./LoginAlert";
 import styles from "./Login.module.css";
 // import TwoFactorAuth from "../TwoFactorAuth/TwoFactorAuth";
-import { toast } from "react-toastify";
-import { CONFIG } from "../../config";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { loginUser } from "../../redux/user/userHandle";
+import RecoveryLink from "../common/RecoveryLink";
 
 function Login() {
-   const API_URL = CONFIG.API_URL;
    const [formData, setFormData] = useState({
       email: "",
       password: "",
       rememberMe: false,
    });
    const [showPassword, setShowPassword] = useState(false);
-   const { user } = useSelector((state) => state.user);
+   const { user, error: reduxError } = useSelector((state) => state.user);
+   const [alert, setAlert] = useState({
+      show: false,
+      type: "error",
+      message: "",
+   });
 
    const dispatch = useDispatch();
    const navigate = useNavigate();
@@ -28,36 +34,42 @@ function Login() {
       }
    }, [user, navigate]);
 
+   // Add effect to handle Redux errors
+   useEffect(() => {
+      if (reduxError) {
+         showAlert("error", reduxError);
+         dispatch(clearError()); // Clear the error after showing it
+      }
+   }, [reduxError, dispatch]);
+
+   // Helper function to show alerts
+   const showAlert = (type, message) => {
+      setAlert({
+         show: true,
+         type,
+         message,
+      });
+
+      // Auto hide after 3 seconds
+      setTimeout(() => {
+         setAlert((prev) => ({ ...prev, show: false }));
+      }, 3000);
+   };
+
    const handleSubmit = async (e) => {
       e.preventDefault();
-      dispatch(setLoading(true));
 
       try {
-         const response = await fetch(`${API_URL}/users/login`, {
-            method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-         });
+         const result = await dispatch(loginUser(formData)).unwrap();
 
-         const data = await response.json();
-
-         if (response.ok) {
-            if (data.requireTwoFactor) {
-               navigate("/two-factor-auth", { state: { email: formData.email } });
-            } else {
-               handleSuccessfulLogin(data);
-               navigate("/");
-            }
+         if (result.requireTwoFactor) {
+            navigate("/two-factor-auth", { state: { email: formData.email } });
          } else {
-            toast.error(data.message || "Login failed");
+            handleSuccessfulLogin(result);
          }
       } catch (error) {
-         console.error("Login error:", error);
-         toast.error("An error occurred during login");
-      } finally {
-         dispatch(setLoading(false));
+         // Don't navigate or refresh, just show the error
+         showAlert("error", error || "Login failed");
       }
    };
 
@@ -65,10 +77,14 @@ function Login() {
       try {
          localStorage.setItem("token", data.token);
          dispatch(setUser(data.user));
-         toast.success("Login successful!");
+         showAlert("success", "Login successful!");
+
+         // Navigate after a short delay to show the success message
+         setTimeout(() => {
+            navigate("/");
+         }, 1500);
       } catch (error) {
-         console.error("Error handling successful login:", error);
-         toast.error("An error occurred while processing your login");
+         showAlert("error", error || "An error occurred while processing your login");
       }
    };
 
@@ -85,6 +101,13 @@ function Login() {
 
    return (
       <div className={styles.loginContainer}>
+         <LoginAlert
+            type={alert.type}
+            message={alert.message}
+            isVisible={alert.show}
+            onClose={() => setAlert((prev) => ({ ...prev, show: false }))}
+         />
+
          <div className={styles.backgroundWaves}>
             <div className={`${styles.wave} ${styles.wave1}`}></div>
             <div className={`${styles.wave} ${styles.wave2}`}></div>
@@ -144,6 +167,9 @@ function Login() {
 
             <div className={styles.registerLink}>
                Don&apos;t have an account? <Link to='/register'>Register here</Link>
+            </div>
+            <div className={styles.recoveryLinkContainer}>
+               <RecoveryLink />
             </div>
          </div>
       </div>

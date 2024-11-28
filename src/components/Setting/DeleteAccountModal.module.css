@@ -1,0 +1,465 @@
+.modalOverlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 1000;
+}
+
+.modalContent {
+   background: white;
+   padding: 2rem;
+   border-radius: 12px;
+   width: 90%;
+   max-width: 550px;
+   position: relative;
+}
+
+.closeButton {
+   position: absolute;
+   top: 1rem;
+   right: 1rem;
+   background: none;
+   border: none;
+   cursor: pointer;
+   font-size: 1.2rem;
+   color: #666;
+}
+
+.warningIcon {
+   color: #ff4d4f;
+   font-size: 2rem;
+   text-align: center;
+   margin-bottom: 1rem;
+}
+
+.title {
+   font-size: 1.5rem;
+   margin-bottom: 0.5rem;
+   text-align: center;
+}
+
+.subtitle {
+   font-size: 1.2rem;
+   margin-bottom: 1rem;
+   text-align: center;
+}
+
+.reasonSelect {
+   margin: 1rem 0;
+}
+
+.reasonSelect select {
+   width: 100%;
+   padding: 0.5rem;
+   margin-top: 0.5rem;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+}
+
+.otherReasonInput {
+   margin: 1rem 0;
+}
+
+.otherReasonInput textarea {
+   width: 100%;
+   padding: 0.5rem;
+   margin-top: 0.5rem;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   min-height: 100px;
+}
+
+.buttonGroup {
+   display: flex;
+   justify-content: flex-end;
+   gap: 1rem;
+   margin-top: 1.5rem;
+}
+
+.buttonGroup button {
+   padding: 8px 16px;
+   border-radius: 6px;
+   font-size: 14px;
+   font-weight: 500;
+   cursor: pointer;
+   transition: all 0.3s ease;
+}
+
+/* Cancel button style */
+.buttonGroup button:first-child {
+   background-color: #f0f0f0;
+   border: 1px solid #d9d9d9;
+   color: #595959;
+}
+
+.buttonGroup button:first-child:hover {
+   background-color: #e0e0e0;
+   border-color: #c0c0c0;
+}
+
+/* Submit/Delete button style */
+.buttonGroup button:last-child {
+   background-color: #7c4dff;
+   border: none;
+   color: white;
+}
+
+.buttonGroup button:last-child:hover {
+   background-color: #6a3de8;
+}
+
+/* Feature request form specific styles */
+.featureRequestForm {
+   text-align: center;
+}
+
+.featureRequestForm h2 {
+   color: #2d3748;
+   font-size: 1.5rem;
+   margin-bottom: 0.5rem;
+   text-align: center;
+}
+
+.featureRequestForm p {
+   color: #718096;
+   text-align: center;
+   margin-bottom: 1.5rem;
+}
+
+.featureRequestForm textarea {
+   width: 100%;
+   min-height: 150px;
+   padding: 16px;
+   border: 1px solid rgba(124, 77, 255, 0.2);
+   border-radius: 12px;
+   font-size: 14px;
+   line-height: 1.5;
+   resize: vertical;
+   margin-bottom: 1.5rem;
+}
+
+.featureRequestForm textarea:focus {
+   outline: none;
+   border-color: #7c4dff;
+   box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.1);
+}
+
+/* Back button specific style */
+.featureRequestForm .buttonGroup button:first-child {
+   background-color: #f0f0f0;
+   border: 1px solid #d9d9d9;
+   color: #595959;
+}
+
+.featureRequestForm .buttonGroup button:first-child:hover {
+   background-color: #e0e0e0;
+   border-color: #c0c0c0;
+}
+
+/* Submit request button specific style */
+.featureRequestForm .buttonGroup button:last-child {
+   background-color: #7c4dff;
+   color: white;
+}
+
+.featureRequestForm .buttonGroup button:last-child:hover {
+   background-color: #6a3de8;
+}
+
+.featureRequestButton {
+   width: 100%;
+   padding: 12px 20px;
+   margin: 1.5rem 0;
+   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   color: white;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   font-size: 14px;
+   font-weight: 500;
+   transition: all 0.3s ease;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   box-shadow: 0 2px 8px rgba(124, 77, 255, 0.2);
+}
+
+.featureRequestButton:hover {
+   background: linear-gradient(135deg, #6a3de8 0%, #5932d1 100%);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
+}
+
+.featureRequestButton:active {
+   transform: translateY(0);
+   box-shadow: 0 2px 4px rgba(124, 77, 255, 0.2);
+}
+
+.featureRequestButton:disabled {
+   background: #a991ff;
+   cursor: not-allowed;
+   transform: none;
+   box-shadow: none;
+}
+
+.orDivider {
+   display: flex;
+   align-items: center;
+   text-align: center;
+   margin: 1.5rem 0;
+   color: #718096;
+}
+
+.orDivider::before,
+.orDivider::after {
+   content: "";
+   flex: 1;
+   border-bottom: 1px solid #e2e8f0;
+}
+
+.orDivider span {
+   padding: 0 1rem;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+/* Delete button specific style */
+.buttonGroup > .deleteButton {
+   background-color: #ff4d4f !important;
+}
+
+.buttonGroup > .deleteButton:hover {
+   background-color: #ff7875 !important;
+}
+
+.feedbackOptions {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 16px;
+   margin: 1.5rem 0;
+}
+
+.feedbackButton {
+   width: 100%;
+   height: 100%;
+   padding: 16px;
+   background: white;
+   border: 1px solid rgba(124, 77, 255, 0.2);
+   border-radius: 12px;
+   cursor: pointer;
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   gap: 8px;
+   transition: all 0.3s ease;
+}
+
+.feedbackButton:hover {
+   background: rgba(124, 77, 255, 0.05);
+   border-color: rgba(124, 77, 255, 0.4);
+   transform: translateY(-2px);
+   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.1);
+}
+
+.feedbackButton svg {
+   color: #7c4dff;
+   font-size: 24px;
+   margin-bottom: 8px;
+}
+
+.feedbackButton span {
+   color: #2d3748;
+   font-size: 14px;
+   font-weight: 600;
+   line-height: 1.2;
+   text-align: center;
+}
+
+.feedbackButton small {
+   color: #718096;
+   font-size: 12px;
+   line-height: 1.3;
+   display: block;
+   max-width: 150px;
+   text-align: center;
+   padding-top: 8px;
+}
+
+/* Update responsive design */
+@media (max-width: 768px) {
+   .feedbackOptions {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+   }
+
+   .feedbackButton {
+      padding: 16px 12px;
+   }
+
+   .feedbackButton svg {
+      font-size: 20px;
+      margin-bottom: 6px;
+   }
+
+   .feedbackButton span {
+      font-size: 13px;
+   }
+
+   .feedbackButton small {
+      font-size: 11px;
+      max-width: 120px;
+   }
+}
+
+@media (max-width: 480px) {
+   .feedbackOptions {
+      grid-template-columns: 1fr;
+      gap: 10px;
+   }
+
+   .feedbackButton {
+      padding: 12px;
+      flex-direction: row;
+      justify-content: flex-start;
+      text-align: left;
+      gap: 12px;
+   }
+
+   .feedbackButton svg {
+      margin-bottom: 0;
+   }
+
+   .feedbackButton small {
+      max-width: none;
+   }
+
+   .textContent {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+   }
+}
+
+.loadingText {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.spinner {
+   width: 16px;
+   height: 16px;
+   border: 2px solid rgba(255, 255, 255, 0.3);
+   border-radius: 50%;
+   border-top-color: #fff;
+   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+.buttonGroup button:disabled {
+   opacity: 0.7;
+   cursor: not-allowed;
+}
+
+/* Style for disabled state */
+.confirmButton:disabled {
+   background-color: #ff7875;
+}
+
+.cancelButton:disabled {
+   background-color: #f5f5f5;
+   color: #999;
+}
+
+.confirmationStep {
+  text-align: center;
+}
+
+.confirmationStep h2 {
+  color: #ff4d4f;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.warningText {
+  text-align: left;
+  margin: 1.5rem 0;
+}
+
+.warningText p {
+  font-weight: 500;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.warningText ul {
+  list-style: none;
+  padding: 0;
+}
+
+.warningText li {
+  color: #4a5568;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.warningText li:before {
+  content: "•";
+  color: #ff4d4f;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.reasonBox {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.reasonBox p {
+  color: #2d3748;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.reasonText {
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.confirmButton {
+  background-color: #ff4d4f !important;
+  color: white !important;
+}
+
+.confirmButton:hover {
+  background-color: #ff7875 !important;
+}
+
+.cancelButton {
+  background-color: #f0f0f0 !important;
+  color: #595959 !important;
+}
+
+.cancelButton:hover {
+  background-color: #d9d9d9 !important;
+}

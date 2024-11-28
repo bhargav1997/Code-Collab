@@ -7,8 +7,8 @@ function Profile() {
    const navigate = useNavigate();
 
    const getUserBio = (user) => {
-      let userbio = user.bio;
-      if (userbio.length > 100) {
+      let userbio = user?.bio || "";
+      if (userbio?.length > 100) {
          userbio = userbio.substring(0, 100) + "...";
       }
       return userbio || "No bio yet";

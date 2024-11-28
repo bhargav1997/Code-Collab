@@ -1,0 +1,160 @@
+.confirmOverlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   z-index: 1100;
+   backdrop-filter: blur(4px);
+}
+
+.confirmContent {
+   background: white;
+   padding: 2rem;
+   border-radius: 16px;
+   width: 90%;
+   max-width: 480px;
+   animation: slideIn 0.3s ease-out;
+   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+   from {
+      transform: translateY(20px);
+      opacity: 0;
+   }
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+
+.warningIcon {
+   color: #ff4d4f;
+   font-size: 3rem;
+   text-align: center;
+   margin-bottom: 1.5rem;
+   animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+   0% {
+      transform: scale(1);
+   }
+   50% {
+      transform: scale(1.05);
+   }
+   100% {
+      transform: scale(1);
+   }
+}
+
+.confirmContent h2 {
+   color: #2d3748;
+   text-align: center;
+   margin-bottom: 1.5rem;
+   font-size: 1.5rem;
+   font-weight: 600;
+}
+
+.warningText {
+   margin-bottom: 1.5rem;
+   color: #4a5568;
+}
+
+.warningText p {
+   margin-bottom: 0.5rem;
+   font-weight: 500;
+}
+
+.warningText ul {
+   list-style-type: none;
+   padding-left: 0;
+}
+
+.warningText li {
+   padding: 0.5rem 0;
+   padding-left: 1.5rem;
+   position: relative;
+}
+
+.warningText li:before {
+   content: "•";
+   color: #ff4d4f;
+   font-weight: bold;
+   position: absolute;
+   left: 0;
+}
+
+.reasonBox {
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   padding: 1rem;
+   margin-bottom: 1.5rem;
+}
+
+.reasonBox p {
+   color: #4a5568;
+   font-weight: 500;
+   margin-bottom: 0.5rem;
+}
+
+.reasonText {
+   color: #718096;
+   font-size: 0.9rem;
+   line-height: 1.4;
+}
+
+.buttonGroup {
+   display: flex;
+   gap: 1rem;
+   justify-content: flex-end;
+   margin-top: 2rem;
+}
+
+.buttonGroup button {
+   padding: 0.75rem 1.5rem;
+   border-radius: 8px;
+   font-weight: 500;
+   cursor: pointer;
+   transition: all 0.2s ease;
+}
+
+.cancelButton {
+   background-color: #f7fafc;
+   border: 1px solid #e2e8f0;
+   color: #4a5568;
+}
+
+.cancelButton:hover {
+   background-color: #edf2f7;
+}
+
+.confirmButton {
+   background-color: #ff4d4f;
+   border: none;
+   color: white;
+}
+
+.confirmButton:hover {
+   background-color: #ff7875;
+}
+
+@media (max-width: 480px) {
+   .confirmContent {
+      width: 95%;
+      padding: 1.5rem;
+   }
+
+   .buttonGroup {
+      flex-direction: column-reverse;
+   }
+
+   .buttonGroup button {
+      width: 100%;
+   }
+}

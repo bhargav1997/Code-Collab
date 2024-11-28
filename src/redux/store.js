@@ -4,8 +4,8 @@ import userReducer from "./user/userSlice";
 import learningJourneyReducer from "./learningJourney/learningJourneySlice";
 import calendarReducer from "./calendar/calendarSlice";
 import postsReducer from "./posts/postsSlice";
-import challengesReducer from './challenges/challengesSlice';
-import achievementsReducer from './achievements/achievementsSlice';
+import challengesReducer from "./challenges/challengesSlice";
+import achievementsReducer from "./achievements/achievementsSlice";
 
 const store = configureStore({
    reducer: {
@@ -17,6 +17,10 @@ const store = configureStore({
       challenges: challengesReducer,
       achievements: achievementsReducer,
    },
+   middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+         serializableCheck: false,
+      }),
 });
 
 export default store;

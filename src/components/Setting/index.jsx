@@ -3,10 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faGlobe, faChartBar, faCog, faExclamationTriangle, faShieldAlt } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Setting.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserSettings, updateSettings, deleteUser } from "../../redux/user/userHandle";
+import { getUserSettings, updateSettings, deleteAccount } from "../../redux/user/userHandle";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import DeleteAccountModal from "./DeleteAccountModal";
+import { CONFIG } from "../../config";
+import { setUser } from "../../redux/user/userSlice";
 
 function Setting() {
    const dispatch = useDispatch();
@@ -14,6 +17,7 @@ function Setting() {
    const isLoading = useSelector((state) => state.user.isLoading);
    const navigate = useNavigate();
    const [isMounted, setIsMounted] = useState(false);
+   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
    const [settings, setSettings] = useState({
       emailNotifications: true,
@@ -63,14 +67,50 @@ function Setting() {
       }));
    };
 
-   const handleDelete = async () => {
+   const handleLogoutAndRedirect = () => {
+      // Clear all auth-related data
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("user");
+
+      // Clear Redux state
+      dispatch(setUser(null));
+
+      // Show success message
+      toast.success("Account deletion process started. You will be logged out.");
+
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+         navigate("/login");
+      }, 1500);
+   };
+
+   const handleDeleteAccount = async (reason) => {
       try {
-         await dispatch(deleteUser());
-         toast.success("User deleted successfully");
-         navigate("/");
+         const result = await dispatch(deleteAccount({ reason })).unwrap();
+         if (result) {
+            setShowDeleteModal(false);
+            handleLogoutAndRedirect();
+         }
       } catch (error) {
-         console.error("Error deleting user:", error);
-         toast.error("Failed to delete user");
+         console.error("Delete account error:", error);
+         toast.error(error || "Failed to initiate account deletion");
+      }
+   };
+
+   const handleFeatureRequest = async (request) => {
+      try {
+         await fetch(`${CONFIG.API_URL}/feature-request`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ request }),
+         });
+         toast.success("Feature request sent successfully");
+      } catch (error) {
+         toast.error("Failed to send feature request");
       }
    };
 
@@ -234,8 +274,8 @@ function Setting() {
                   <FontAwesomeIcon icon={faShieldAlt} /> Your Settings are Secure
                </h2>
                <p>
-                  Your settings are securely stored and can be updated at any time. For more information about how we handle your data, please
-                  read our <a href='/privacy-policy'>Privacy Policy</a>.
+                  Your settings are securely stored and can be updated at any time. For more information about how we handle your data,
+                  please read our <a href='/privacy-policy'>Privacy Policy</a>.
                </p>
             </div>
 
@@ -244,11 +284,18 @@ function Setting() {
                   <FontAwesomeIcon icon={faExclamationTriangle} /> Danger Zone
                </h2>
                <p>Deleting your account is permanent and cannot be undone.</p>
-               <button className={styles.dangerButton} onClick={handleDelete}>
+               <button className={styles.dangerButton} onClick={() => setShowDeleteModal(true)}>
                   Delete Account
                </button>
             </div>
          </div>
+
+         <DeleteAccountModal
+            isOpen={showDeleteModal}
+            onClose={() => setShowDeleteModal(false)}
+            onDelete={handleDeleteAccount}
+            onFeatureRequest={handleFeatureRequest}
+         />
       </div>
    );
 }

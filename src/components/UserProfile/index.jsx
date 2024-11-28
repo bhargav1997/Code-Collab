@@ -419,11 +419,19 @@ function UserProfile() {
       if (text.length <= MAX_BIO_LENGTH) {
          handleInputChange({
             target: {
-               name: 'bio',
-               value: text
-            }
+               name: "bio",
+               value: text,
+            },
          });
       }
+   };
+
+   const getUserBioInfo = (user) => {
+      let userbio = user?.bio || "";
+      if (userbio?.length > 100) {
+         userbio = userbio.substring(0, 100) + "...";
+      }
+      return userbio || "No bio yet";
    };
 
    return (
@@ -450,13 +458,13 @@ function UserProfile() {
                   </div>
                   <p className={styles.title}>{user.title ? user.title : user.role}</p>
                   <p className={styles.location}>
-                     <FontAwesomeIcon icon={faMapMarkerAlt} /> {user.location}
+                     <FontAwesomeIcon icon={faMapMarkerAlt} /> {user.location || "No location yet"}
                   </p>
                </div>
             </div>
 
             <div className={styles.bio}>
-               <p>{user.bio}</p>
+               <p className={styles.bio}>{getUserBioInfo(user)}</p>
             </div>
             <div className={styles.stats}>
                <div className={styles.stat} onClick={() => handleConnectionsClick("followers")}>
@@ -655,16 +663,18 @@ function UserProfile() {
                         <div className={styles.inputGroup}>
                            <label>Bio</label>
                            <div className={styles.textareaWrapper}>
-                              <textarea 
-                                 name='bio' 
-                                 value={editedUser.bio} 
+                              <textarea
+                                 name='bio'
+                                 value={editedUser.bio}
                                  onChange={handleBioChange}
                                  placeholder='Tell us about yourself (max 500 characters)'
                                  maxLength={MAX_BIO_LENGTH}
                               />
-                              <div className={styles.characterCount} style={{ 
-                                 color: editedUser.bio?.length >= MAX_BIO_LENGTH * 0.9 ? '#ff5252' : '#64748b' 
-                              }}>
+                              <div
+                                 className={styles.characterCount}
+                                 style={{
+                                    color: editedUser.bio?.length >= MAX_BIO_LENGTH * 0.9 ? "#ff5252" : "#64748b",
+                                 }}>
                                  {editedUser.bio?.length || 0}/{MAX_BIO_LENGTH}
                               </div>
                            </div>
