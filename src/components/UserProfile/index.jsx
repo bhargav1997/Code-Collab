@@ -152,7 +152,6 @@ function UserProfile() {
          }
       } catch (error) {
          console.error("Error updating profile:", error);
-         // Handle error (e.g., show error message to user)
       }
    };
 
@@ -412,6 +411,21 @@ function UserProfile() {
       );
    };
 
+   const MAX_BIO_LENGTH = 500; // Define maximum characters allowed
+
+   // Add this function to handle bio input with limit
+   const handleBioChange = (e) => {
+      const text = e.target.value;
+      if (text.length <= MAX_BIO_LENGTH) {
+         handleInputChange({
+            target: {
+               name: 'bio',
+               value: text
+            }
+         });
+      }
+   };
+
    return (
       <div className={styles.userProfile}>
          <div className={styles.profileSection}>
@@ -640,7 +654,20 @@ function UserProfile() {
 
                         <div className={styles.inputGroup}>
                            <label>Bio</label>
-                           <textarea name='bio' value={editedUser.bio} onChange={handleInputChange} placeholder='Tell us about yourself' />
+                           <div className={styles.textareaWrapper}>
+                              <textarea 
+                                 name='bio' 
+                                 value={editedUser.bio} 
+                                 onChange={handleBioChange}
+                                 placeholder='Tell us about yourself (max 500 characters)'
+                                 maxLength={MAX_BIO_LENGTH}
+                              />
+                              <div className={styles.characterCount} style={{ 
+                                 color: editedUser.bio?.length >= MAX_BIO_LENGTH * 0.9 ? '#ff5252' : '#64748b' 
+                              }}>
+                                 {editedUser.bio?.length || 0}/{MAX_BIO_LENGTH}
+                              </div>
+                           </div>
                         </div>
 
                         <div className={styles.inputGroup}>
