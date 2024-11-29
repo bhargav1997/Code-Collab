@@ -126,7 +126,7 @@ function AppDesktop() {
                            <Route path='/guidelines' element={<Guidelines />} />
                            <Route path='/about-me' element={<AboutMe />} />
                            <Route path='/landing-page' element={<LandingPage />} />
-                           <Route path='/account-deletion' element={<AccountDeletion />} />
+                           <Route path='/account-recovery' element={<AccountDeletion />} />
                            {/* Protected routes */}
                            {isAuthenticated && (
                               <Route element={<AuthenticatedLayout />}>
