@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearError } from "../../redux/user/userSlice";
@@ -76,8 +76,12 @@ function Login() {
    const handleSuccessfulLogin = (data) => {
       try {
          localStorage.setItem("token", data.token);
-         dispatch(setUser(data.user));
-         showAlert("success", "Login successful!");
+
+         // Wrap state updates in startTransition
+         startTransition(() => {
+            dispatch(setUser(data.user));
+            showAlert("success", "Login successful!");
+         });
 
          // Navigate after a short delay to show the success message
          setTimeout(() => {

@@ -733,3 +733,32 @@
 .journeyItemContent {
    margin-top: 1rem; /* Add space between buttons and content */
 }
+
+.contentGrid {
+   display: grid;
+   grid-template-columns: 1fr 350px;
+   gap: 2rem;
+   max-width: 1400px;
+   margin: 0 auto;
+   padding: 2rem;
+}
+
+.journeySection {
+   flex: 1;
+}
+
+.strategySection {
+   position: sticky;
+   top: 2rem;
+   height: fit-content;
+}
+
+@media (max-width: 1024px) {
+   .contentGrid {
+      grid-template-columns: 1fr;
+   }
+   
+   .strategySection {
+      position: static;
+   }
+}

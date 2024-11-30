@@ -35,6 +35,7 @@ import { CONFIG } from "../../config";
 import ShareJourney from "./ShareJourney";
 import { debounce } from "lodash";
 import { SEO } from "../common/SEO";
+import LearningStrategy from '../LearningStrategy';
 
 // If you don't want to use lodash, you can implement a simple debounce function:
 // const debounce = (func, delay) => {
@@ -328,177 +329,185 @@ const LearningJourney = () => {
             canonicalUrl='/learning-journey'
             schema={schema}
          />
-         <h2 className={styles.journeyTitle}>Your Learning Journeys</h2>
-         {!selectedJourney ? (
-            <div className={styles.journeyList}>
-               <div className={styles.journeyGrid}>
-                  <div className={styles.newJourneyItem} onClick={() => setIsCreatingJourney(true)}>
-                     <FaPlus />
-                     <p>Create New Journey</p>
-                  </div>
-                  {journeys.map((journey) => (
-                     <div key={journey._id} className={styles.journeyItem}>
-                        <div className={styles.journeyActions}>
-                           <button className={styles.shareButton} onClick={(e) => handleShareJourney(e, journey._id)}>
-                              <FaShare />
-                           </button>
-                           <button className={styles.deleteButton} onClick={(e) => handleDeleteJourney(e, journey._id)}>
-                              <FaTrash />
-                           </button>
+         <div className={styles.contentGrid}>
+            <div className={styles.journeySection}>
+               <h2 className={styles.journeyTitle}>Your Learning Journeys</h2>
+               {!selectedJourney ? (
+                  <div className={styles.journeyList}>
+                     <div className={styles.journeyGrid}>
+                        <div className={styles.newJourneyItem} onClick={() => setIsCreatingJourney(true)}>
+                           <FaPlus />
+                           <p>Create New Journey</p>
                         </div>
-                        <div className={styles.journeyItemContent} onClick={() => dispatch(setSelectedJourneyToUser(journey._id))}>
-                           <h3 className={styles.sectionTitle}>{journey.name}</h3>
-                           <p>
-                              {journey.resources.length} resources • {journey.tasks.length} tasks
-                           </p>
-                        </div>
-                     </div>
-                  ))}
-               </div>
-               {isCreatingJourney && (
-                  <div className={styles.modalOverlay}>
-                     <div className={styles.modal}>
-                        <div className={styles.modalContent}>
-                           <div className={styles.modalHeader}>
-                              <h3 className={styles.modalTitle}>Embark on a New Learning Adventure</h3>
-                              <button className={styles.closeButton} onClick={() => setIsCreatingJourney(false)}>
-                                 <FaTimes />
-                              </button>
+                        {journeys.map((journey) => (
+                           <div key={journey._id} className={styles.journeyItem}>
+                              <div className={styles.journeyActions}>
+                                 <button className={styles.shareButton} onClick={(e) => handleShareJourney(e, journey._id)}>
+                                    <FaShare />
+                                 </button>
+                                 <button className={styles.deleteButton} onClick={(e) => handleDeleteJourney(e, journey._id)}>
+                                    <FaTrash />
+                                 </button>
+                              </div>
+                              <div className={styles.journeyItemContent} onClick={() => dispatch(setSelectedJourneyToUser(journey._id))}>
+                                 <h3 className={styles.sectionTitle}>{journey.name}</h3>
+                                 <p>
+                                    {journey.resources.length} resources • {journey.tasks.length} tasks
+                                 </p>
+                              </div>
                            </div>
-                           <div className={styles.modalBody}>
-                              <div className={styles.modalIllustration}>
-                                 <FaRocket className={styles.rocketIcon} />
-                                 <div className={styles.stars}>
-                                    {[...Array(5)].map((_, i) => (
-                                       <FaStar key={i} className={styles.starIcon} />
-                                    ))}
+                        ))}
+                     </div>
+                     {isCreatingJourney && (
+                        <div className={styles.modalOverlay}>
+                           <div className={styles.modal}>
+                              <div className={styles.modalContent}>
+                                 <div className={styles.modalHeader}>
+                                    <h3 className={styles.modalTitle}>Embark on a New Learning Adventure</h3>
+                                    <button className={styles.closeButton} onClick={() => setIsCreatingJourney(false)}>
+                                       <FaTimes />
+                                    </button>
+                                 </div>
+                                 <div className={styles.modalBody}>
+                                    <div className={styles.modalIllustration}>
+                                       <FaRocket className={styles.rocketIcon} />
+                                       <div className={styles.stars}>
+                                          {[...Array(5)].map((_, i) => (
+                                             <FaStar key={i} className={styles.starIcon} />
+                                          ))}
+                                       </div>
+                                    </div>
+                                    <p className={styles.modalDescription}>Give your new learning journey a name and prepare for takeoff!</p>
+                                    <form onSubmit={createNewJourney} className={styles.journeyForm}>
+                                       <input
+                                          type='text'
+                                          value={newJourneyName}
+                                          onChange={(e) => setNewJourneyName(e.target.value)}
+                                          placeholder='Enter your journey name'
+                                          required
+                                          className={styles.journeyInput}
+                                       />
+                                       <button type='submit' className={styles.createButton}>
+                                          <FaSpaceShuttle className={styles.shuttleIcon} />
+                                          Launch Journey
+                                       </button>
+                                    </form>
                                  </div>
                               </div>
-                              <p className={styles.modalDescription}>Give your new learning journey a name and prepare for takeoff!</p>
-                              <form onSubmit={createNewJourney} className={styles.journeyForm}>
-                                 <input
-                                    type='text'
-                                    value={newJourneyName}
-                                    onChange={(e) => setNewJourneyName(e.target.value)}
-                                    placeholder='Enter your journey name'
-                                    required
-                                    className={styles.journeyInput}
-                                 />
-                                 <button type='submit' className={styles.createButton}>
-                                    <FaSpaceShuttle className={styles.shuttleIcon} />
-                                    Launch Journey
+                           </div>
+                        </div>
+                     )}
+                  </div>
+               ) : (
+                  <div className={styles.journeyDetails}>
+                     <header className={styles.journeyHeader}>
+                        <h2>{selectedJourney.name}</h2>
+                        <button onClick={() => dispatch(setSelectedJourneyToUser(null))} className={styles.backButton}>
+                           <FaArrowLeft /> Back to Journey
+                        </button>
+                     </header>
+
+                     <div className={styles.progressSection}>
+                        <div className={styles.progressBarContainer}>
+                           <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+                        </div>
+                        <div className={styles.progressText}>{`${Math.round(progress)}% Complete`}</div>
+                     </div>
+
+                     <div className={styles.journeyContent}>
+                        <div className={styles.mainPanel}>
+                           <div className={styles.card}>
+                              <h3 className={styles.cardTitle}>
+                                 <FaBook /> Resources
+                              </h3>
+                              <form onSubmit={addResource} className={styles.addForm}>
+                                 <input type='url' name='resource' placeholder='Add a resource link' required />
+                                 <button type='submit'>
+                                    <FaPlus />
                                  </button>
                               </form>
+                              <ul className={styles.resourceList}>
+                                 {selectedJourney.resources.map((resource, index) => (
+                                    <ResourceItem
+                                       key={index}
+                                       resource={resource}
+                                       index={index}
+                                       toggleResourceCompletion={toggleResourceCompletion}
+                                       deleteResource={deleteResource}
+                                    />
+                                 ))}
+                              </ul>
+                           </div>
+
+                           <div className={styles.card}>
+                              <h3 className={styles.cardTitle}>
+                                 <FaTasks /> Tasks
+                              </h3>
+                              <form onSubmit={addTask} className={styles.addForm}>
+                                 <input type='text' name='task' placeholder='Add a new task' required />
+                                 <button type='submit'>
+                                    <FaPlus />
+                                 </button>
+                              </form>
+                              <ul className={styles.taskList}>
+                                 {selectedJourney.tasks.map((task, index) => (
+                                    <li key={index} className={`${styles.taskItem} ${task.completed ? styles.completed : ""}`}>
+                                       <input
+                                          type='checkbox'
+                                          checked={task.completed}
+                                          onChange={() => {
+                                             const updatedJourney = {
+                                                ...selectedJourney,
+                                                tasks: selectedJourney.tasks.map((t, i) => (i === index ? { ...t, completed: !t.completed } : t)),
+                                             };
+                                             dispatch(updateJourneyToUser(updatedJourney));
+                                          }}
+                                       />
+                                       <span>{task.text}</span>
+                                       <div className={styles.taskActions}>
+                                          <button onClick={() => deleteTask(task._id)} className={styles.trashButton}>
+                                             <FaTrash />
+                                          </button>
+                                       </div>
+                                    </li>
+                                 ))}
+                              </ul>
+                           </div>
+                        </div>
+
+                        <div className={styles.sidePanel}>
+                           <div className={styles.card}>
+                              <h3 className={styles.cardTitle}>
+                                 <FaMap /> Journey Map
+                              </h3>
+                              <div className={styles.journeyMap}>
+                                 {selectedJourney.steps.map((step, index) => (
+                                    <JourneyStep key={index} step={step} index={index} />
+                                 ))}
+                              </div>
+                           </div>
+
+                           <div className={styles.card}>
+                              <h3 className={styles.cardTitle}>
+                                 <FaStickyNote /> Notes
+                              </h3>
+                              <textarea
+                                 value={localNotes}
+                                 onChange={updateNotes}
+                                 placeholder='Add your notes here...'
+                                 className={styles.notesTextarea}
+                              />
                            </div>
                         </div>
                      </div>
                   </div>
                )}
             </div>
-         ) : (
-            <div className={styles.journeyDetails}>
-               <header className={styles.journeyHeader}>
-                  <h2>{selectedJourney.name}</h2>
-                  <button onClick={() => dispatch(setSelectedJourneyToUser(null))} className={styles.backButton}>
-                     <FaArrowLeft /> Back to Journey
-                  </button>
-               </header>
-
-               <div className={styles.progressSection}>
-                  <div className={styles.progressBarContainer}>
-                     <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
-                  </div>
-                  <div className={styles.progressText}>{`${Math.round(progress)}% Complete`}</div>
-               </div>
-
-               <div className={styles.journeyContent}>
-                  <div className={styles.mainPanel}>
-                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>
-                           <FaBook /> Resources
-                        </h3>
-                        <form onSubmit={addResource} className={styles.addForm}>
-                           <input type='url' name='resource' placeholder='Add a resource link' required />
-                           <button type='submit'>
-                              <FaPlus />
-                           </button>
-                        </form>
-                        <ul className={styles.resourceList}>
-                           {selectedJourney.resources.map((resource, index) => (
-                              <ResourceItem
-                                 key={index}
-                                 resource={resource}
-                                 index={index}
-                                 toggleResourceCompletion={toggleResourceCompletion}
-                                 deleteResource={deleteResource}
-                              />
-                           ))}
-                        </ul>
-                     </div>
-
-                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>
-                           <FaTasks /> Tasks
-                        </h3>
-                        <form onSubmit={addTask} className={styles.addForm}>
-                           <input type='text' name='task' placeholder='Add a new task' required />
-                           <button type='submit'>
-                              <FaPlus />
-                           </button>
-                        </form>
-                        <ul className={styles.taskList}>
-                           {selectedJourney.tasks.map((task, index) => (
-                              <li key={index} className={`${styles.taskItem} ${task.completed ? styles.completed : ""}`}>
-                                 <input
-                                    type='checkbox'
-                                    checked={task.completed}
-                                    onChange={() => {
-                                       const updatedJourney = {
-                                          ...selectedJourney,
-                                          tasks: selectedJourney.tasks.map((t, i) => (i === index ? { ...t, completed: !t.completed } : t)),
-                                       };
-                                       dispatch(updateJourneyToUser(updatedJourney));
-                                    }}
-                                 />
-                                 <span>{task.text}</span>
-                                 <div className={styles.taskActions}>
-                                    <button onClick={() => deleteTask(task._id)} className={styles.trashButton}>
-                                       <FaTrash />
-                                    </button>
-                                 </div>
-                              </li>
-                           ))}
-                        </ul>
-                     </div>
-                  </div>
-
-                  <div className={styles.sidePanel}>
-                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>
-                           <FaMap /> Journey Map
-                        </h3>
-                        <div className={styles.journeyMap}>
-                           {selectedJourney.steps.map((step, index) => (
-                              <JourneyStep key={index} step={step} index={index} />
-                           ))}
-                        </div>
-                     </div>
-
-                     <div className={styles.card}>
-                        <h3 className={styles.cardTitle}>
-                           <FaStickyNote /> Notes
-                        </h3>
-                        <textarea
-                           value={localNotes}
-                           onChange={updateNotes}
-                           placeholder='Add your notes here...'
-                           className={styles.notesTextarea}
-                        />
-                     </div>
-                  </div>
-               </div>
+            
+            <div className={styles.strategySection}>
+               <LearningStrategy />
             </div>
-         )}
+         </div>
          {sharingJourneyId && <ShareJourney journeyId={sharingJourneyId} onClose={() => setSharingJourneyId(null)} />}
       </div>
    );

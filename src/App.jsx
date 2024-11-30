@@ -59,36 +59,43 @@ function AppDesktop() {
 
    useEffect(() => {
       const checkAuthStatus = async () => {
-         dispatch(setLoading(true));
-         const token = localStorage.getItem("token");
-         if (token) {
-            try {
-               const response = await fetch(`${API_URL}/users/profile`, {
-                  headers: {
-                     Authorization: `Bearer ${token}`,
-                  },
-               });
-               if (response.ok) {
-                  const userData = await response.json();
+         try {
+            dispatch(setLoading(true));
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+               dispatch(setUser(null));
+               return;
+            }
+
+            const response = await fetch(`${API_URL}/users/profile`, {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            });
+
+            if (response.ok) {
+               const userData = await response.json();
+               React.startTransition(() => {
                   dispatch(setUser(userData));
-                  const hasCompletedOnboarding = localStorage.getItem("hasCompletedOnboarding");
-                  if (!hasCompletedOnboarding || hasCompletedOnboarding !== "true") {
-                     setShowOnboarding(true);
-                  }
-               } else {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("user");
-                  dispatch(setUser(null));
+               });
+
+               const hasCompletedOnboarding = localStorage.getItem("hasCompletedOnboarding");
+               if (!hasCompletedOnboarding || hasCompletedOnboarding !== "true") {
+                  setShowOnboarding(true);
                }
-            } catch (error) {
-               console.error("Error verifying token:", error);
+            } else {
+               localStorage.removeItem("token");
+               localStorage.removeItem("user");
                dispatch(setUser(null));
             }
-         } else {
+         } catch (error) {
+            console.error("Error verifying token:", error);
             dispatch(setUser(null));
+         } finally {
+            dispatch(setLoading(false));
+            setIsInitialized(true);
          }
-         dispatch(setLoading(false));
-         setIsInitialized(true);
       };
 
       checkAuthStatus();

@@ -7,11 +7,12 @@ import PostList from "./PostList";
 import "../../styles/Home.css";
 import Progress from "./Progress";
 import CourseRecommendations from "./CourseRecommendations";
+import LearningStrategy from "../LearningStrategy";
 // import LearningGoals from "./LearningGoals";
 import { SEO } from "../common/SEO";
-import { useSelector, useDispatch } from 'react-redux';
-import { getUserSettings } from '../../redux/user/userHandle';
-import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { getUserSettings } from "../../redux/user/userHandle";
+import { useState, useEffect } from "react";
 
 function Home() {
    const userSettings = useSelector((state) => state.user.user?.settings);
@@ -35,14 +36,14 @@ function Home() {
    const schema = {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "LearnHUB - Personal Learning Journey Platform",
-      "description": "Transform your learning experience with LearnHUB's comprehensive learning management platform.",
-      "url": "https://www.trackmyskills.tech",
-      "mainEntity": {
+      name: "LearnHUB - Personal Learning Journey Platform",
+      description: "Transform your learning experience with LearnHUB's comprehensive learning management platform.",
+      url: "https://www.trackmyskills.tech",
+      mainEntity: {
          "@type": "EducationalOrganization",
-         "name": "LearnHUB",
-         "description": "Personal learning journey and skill tracking platform"
-      }
+         name: "LearnHUB",
+         description: "Personal learning journey and skill tracking platform",
+      },
    };
 
    return (
@@ -61,6 +62,7 @@ function Home() {
                <PostList />
                <Progress />
                {userSettings?.enableCourseRecommendations && <CourseRecommendations />}
+               <LearningStrategy />
             </div>
             <aside className={styles.sidebar}>
                <Profile />

@@ -1,0 +1,581 @@
+.strategyContainer {
+   background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+   border-radius: 24px;
+   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+   overflow: hidden;
+   transition: all 0.3s ease;
+}
+
+.strategyHeader {
+   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   padding: 2rem;
+   color: white;
+   position: relative;
+   overflow: hidden;
+}
+
+.strategyHeader::after {
+   content: "";
+   position: absolute;
+   top: 0;
+   right: 0;
+   width: 300px;
+   height: 100%;
+   background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+   transform: skewX(-45deg);
+}
+
+.headerContent {
+   position: relative;
+   z-index: 1;
+}
+
+.headerContent h2 {
+   font-size: 2rem;
+   font-weight: 700;
+   margin: 0;
+   letter-spacing: -0.5px;
+}
+
+.currentGoal {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.75rem;
+   background: rgba(255, 255, 255, 0.15);
+   padding: 0.75rem 1.25rem;
+   border-radius: 12px;
+   margin-top: 1rem;
+   backdrop-filter: blur(8px);
+}
+
+.currentGoal svg {
+   color: #ffd700;
+}
+
+.strategyGrid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+   gap: 1.5rem;
+   padding: 1.5rem;
+   animation: fadeIn 0.5s ease;
+}
+
+.strategyCard {
+   background: white;
+   border-radius: 16px;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+   transition: all 0.3s ease;
+   overflow: hidden;
+   border: 1px solid #754aed85;
+}
+
+.strategyCard:hover {
+   transform: translateY(-4px);
+   box-shadow: 0 8px 30px rgba(124, 77, 255, 0.12);
+}
+
+.cardHeader {
+   background: linear-gradient(135deg, #f8faff 0%, #f3f6ff 100%);
+   padding: 1.25rem;
+   border-bottom: 2px solid #f0f3ff;
+   display: flex;
+   align-items: center;
+   gap: 1rem;
+}
+
+.cardHeader svg {
+   color: #7c4dff;
+   font-size: 1.5rem;
+}
+
+.cardHeader h3 {
+   margin: 0;
+   font-size: 1.25rem;
+   color: #2d3748;
+   font-weight: 600;
+}
+
+/* Core Concepts Section */
+.conceptsList {
+   padding: 1.25rem;
+}
+
+.conceptItem {
+   display: flex;
+   align-items: center;
+   gap: 0.75rem;
+   padding: 0.75rem;
+   background: #f8faff;
+   border-radius: 12px;
+   margin-bottom: 0.75rem;
+   transition: all 0.2s ease;
+}
+
+.conceptItem:hover {
+   background: #f3f6ff;
+   transform: translateX(4px);
+}
+
+.conceptItem svg {
+   color: #4caf50;
+}
+
+/* Career Paths Section */
+.careersList {
+   padding: 1.25rem;
+}
+
+.careerItem {
+   background: white;
+   border: 1px solid #f0f3ff;
+   border-radius: 12px;
+   padding: 1.25rem;
+   margin-bottom: 1rem;
+   transition: all 0.2s ease;
+}
+
+.careerItem:hover {
+   border-color: #7c4dff;
+   background: #fafbff;
+}
+
+.careerInfo h4 {
+   color: #2d3748;
+   margin: 0 0 0.5rem 0;
+   font-size: 1.1rem;
+}
+
+.careerInfo p {
+   color: #718096;
+   margin: 0;
+   line-height: 1.5;
+}
+
+/* Books Section */
+.booksList {
+   padding: 1.25rem;
+   display: grid;
+   gap: 1rem;
+}
+
+.bookItem {
+   background: #f8faff;
+   border-radius: 12px;
+   padding: 1.25rem;
+   position: relative;
+   overflow: hidden;
+}
+
+.bookItem::after {
+   content: "";
+   position: absolute;
+   right: 1rem;
+   top: 1rem;
+   opacity: 0.2;
+   font-size: 1.5rem;
+}
+
+.bookItem h4 {
+   margin: 0 0 0.5rem 0;
+   color: #2d3748;
+}
+
+.bookLevel {
+   display: inline-block;
+   padding: 0.25rem 0.75rem;
+   background: #7c4dff;
+   color: white;
+   border-radius: 20px;
+   font-size: 0.85rem;
+   margin-top: 0.75rem;
+}
+
+/* Projects Section */
+.projectsGrid {
+   padding: 1.25rem;
+   display: grid;
+   gap: 1rem;
+}
+
+.projectCard {
+   background: white;
+   border: 1px solid #f0f3ff;
+   border-radius: 12px;
+   padding: 1.25rem;
+   transition: all 0.2s ease;
+}
+
+.projectCard:hover {
+   border-color: #7c4dff;
+   background: #fafbff;
+}
+
+.projectSkills {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.5rem;
+   margin-top: 1rem;
+}
+
+.skillTag {
+   padding: 0.35rem 0.75rem;
+   background: #f0f3ff;
+   color: #7c4dff;
+   border-radius: 20px;
+   font-size: 0.85rem;
+   transition: all 0.2s ease;
+}
+
+.skillTag:hover {
+   background: #7c4dff;
+   color: white;
+}
+
+/* Loading State */
+.loading {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 1rem;
+   padding: 3rem;
+   color: #7c4dff;
+}
+
+.loading svg {
+   font-size: 2rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+   from {
+      opacity: 0;
+      transform: translateY(10px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .strategyGrid {
+      grid-template-columns: 1fr;
+   }
+
+   .strategyHeader {
+      padding: 1.5rem;
+   }
+
+   .headerContent h2 {
+      font-size: 1.5rem;
+   }
+}
+
+/* Incomplete Profile State */
+.incompleteProfile {
+   text-align: center;
+   padding: 3.5rem 2rem;
+   background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+   border-radius: 24px;
+   box-shadow: 0 12px 40px rgba(124, 77, 255, 0.08);
+   position: relative;
+   overflow: hidden;
+}
+
+.incompleteProfile::before {
+   content: "";
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 6px;
+   background: linear-gradient(90deg, #7c4dff, #6a3de8);
+}
+
+.iconWrapper {
+   width: 88px;
+   height: 88px;
+   margin: 0 auto 2rem;
+   background: linear-gradient(135deg, #7c4dff10 0%, #6a3de810 100%);
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   position: relative;
+   animation: pulseGlow 2s infinite;
+}
+
+.iconWrapper::after {
+   content: "";
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   border-radius: 50%;
+   border: 2px dashed #7c4dff40;
+   animation: spin 15s linear infinite;
+}
+
+.iconWrapper svg {
+   font-size: 2.5rem;
+   color: #7c4dff;
+   animation: bounce 2s infinite;
+}
+
+.incompleteProfile h3 {
+   font-size: 1.75rem;
+   color: #2d3748;
+   margin: 0 0 1rem;
+   font-weight: 600;
+}
+
+.incompleteProfile p {
+   color: #718096;
+   font-size: 1.1rem;
+   line-height: 1.6;
+   max-width: 480px;
+   margin: 0 auto 2rem;
+}
+
+.actionButton {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.75rem;
+   padding: 1rem 2rem;
+   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   color: white;
+   border-radius: 99px;
+   text-decoration: none;
+   font-weight: 500;
+   font-size: 1.1rem;
+   transition: all 0.3s ease;
+   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.2);
+}
+
+.actionButton:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 8px 20px rgba(124, 77, 255, 0.3);
+}
+
+.actionButton:active {
+   transform: translateY(0);
+}
+
+@keyframes pulseGlow {
+   0% {
+      box-shadow: 0 0 0 0 rgba(124, 77, 255, 0.4);
+   }
+   70% {
+      box-shadow: 0 0 0 15px rgba(124, 77, 255, 0);
+   }
+   100% {
+      box-shadow: 0 0 0 0 rgba(124, 77, 255, 0);
+   }
+}
+
+@keyframes spin {
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes bounce {
+   0%,
+   100% {
+      transform: translateY(0);
+   }
+   50% {
+      transform: translateY(-5px);
+   }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+   .incompleteProfile {
+      padding: 2.5rem 1.5rem;
+   }
+
+   .iconWrapper {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 1.5rem;
+   }
+
+   .iconWrapper svg {
+      font-size: 2rem;
+   }
+
+   .incompleteProfile h3 {
+      font-size: 1.5rem;
+   }
+
+   .incompleteProfile p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+   }
+
+   .actionButton {
+      padding: 0.875rem 1.75rem;
+      font-size: 1rem;
+   }
+}
+
+/* Advanced Topics Section */
+.topicsList {
+   padding: 1.25rem;
+}
+
+.topicItem {
+   display: flex;
+   align-items: center;
+   gap: 1rem;
+   padding: 1rem;
+   background: linear-gradient(135deg, #f8faff 0%, #f3f6ff 100%);
+   border-radius: 12px;
+   margin-bottom: 1rem;
+   transition: all 0.3s ease;
+   border: 1px solid transparent;
+   position: relative;
+   overflow: hidden;
+}
+
+.topicItem::before {
+   content: "";
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: 4px;
+   background: #7c4dff;
+   border-radius: 4px;
+   opacity: 0;
+   transition: opacity 0.3s ease;
+}
+
+.topicItem:hover {
+   transform: translateX(4px);
+   border-color: #7c4dff20;
+   box-shadow: 0 4px 12px rgba(124, 77, 255, 0.08);
+}
+
+.topicItem:hover::before {
+   opacity: 1;
+}
+
+.topicItem svg {
+   color: #7c4dff;
+   font-size: 1.25rem;
+   flex-shrink: 0;
+   transition: transform 0.3s ease;
+}
+
+.topicItem:hover svg {
+   transform: translateX(4px);
+}
+
+.topicItem span {
+   color: #2d3748;
+   font-weight: 500;
+   font-size: 1rem;
+   line-height: 1.5;
+}
+
+/* Add this to your existing animations */
+@keyframes slideIn {
+   from {
+      opacity: 0;
+      transform: translateX(-10px);
+   }
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+.topicItem {
+   animation: slideIn 0.3s ease forwards;
+}
+
+.topicItem:nth-child(2) {
+   animation-delay: 0.1s;
+}
+
+.topicItem:nth-child(3) {
+   animation-delay: 0.2s;
+}
+
+.topicItem:nth-child(4) {
+   animation-delay: 0.3s;
+}
+
+.topicItem:nth-child(5) {
+   animation-delay: 0.4s;
+}
+
+/* Error State Styles */
+.errorState {
+   text-align: center;
+   padding: 3.5rem 2rem;
+   background: linear-gradient(145deg, #ffffff 0%, #fff5f5 100%);
+   border-radius: 24px;
+   box-shadow: 0 12px 40px rgba(255, 77, 77, 0.08);
+   position: relative;
+   overflow: hidden;
+}
+
+.errorState::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 6px;
+   background: linear-gradient(90deg, #ff4d4d, #ff6b6b);
+}
+
+.errorState .iconWrapper {
+   background: linear-gradient(135deg, #ff4d4d10 0%, #ff6b6b10 100%);
+}
+
+.errorState .iconWrapper svg {
+   color: #ff4d4d;
+}
+
+.retryButton {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.75rem;
+   padding: 1rem 2rem;
+   background: linear-gradient(135deg, #ff4d4d 0%, #ff6b6b 100%);
+   color: white;
+   border: none;
+   border-radius: 99px;
+   font-weight: 500;
+   font-size: 1.1rem;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+}
+
+.retryButton:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 8px 20px rgba(255, 77, 77, 0.3);
+}
+
+.retryButton:active {
+   transform: translateY(0);
+}
+
+/* Add to existing animations */
+@keyframes shake {
+   0%, 100% { transform: translateX(0); }
+   25% { transform: translateX(-5px); }
+   75% { transform: translateX(5px); }
+}
+
+.errorState .iconWrapper {
+   animation: shake 0.5s ease-in-out;
+}

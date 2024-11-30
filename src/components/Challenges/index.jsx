@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +13,7 @@ import { markAchievementSeen } from "../../redux/slices/achievementsSlice";
 import PropTypes from "prop-types";
 import { deleteChallenge, fetchChallenges } from "../../redux/challenges/challengesSlice";
 import { fetchAchievements } from "../../redux/achievements/achievementsSlice";
-import { SEO } from '../common/SEO';
+import { SEO } from "../common/SEO";
 
 const Challenges = () => {
    const [showCreateModal, setShowCreateModal] = useState(false);
@@ -59,18 +59,18 @@ const Challenges = () => {
    const schema = {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      "name": "Coding Challenges - LearnHUB",
-      "description": "Interactive coding challenges and quizzes to test and improve your programming skills."
+      name: "Coding Challenges - LearnHUB",
+      description: "Interactive coding challenges and quizzes to test and improve your programming skills.",
    };
 
    return (
       <>
-         <SEO 
-            title="Coding Challenges - Test Your Skills"
+         <SEO
+            title='Coding Challenges - Test Your Skills'
             description="Push yourself with interactive coding challenges and quizzes. Improve your programming skills with LearnHUB's comprehensive challenge system."
-            image="https://www.trackmyskills.tech/challenges-banner.jpg"
-            keywords="coding challenges, programming quizzes, skill testing, interactive learning"
-            canonicalUrl="/challenges"
+            image='https://www.trackmyskills.tech/challenges-banner.jpg'
+            keywords='coding challenges, programming quizzes, skill testing, interactive learning'
+            canonicalUrl='/challenges'
             schema={schema}
          />
          <div className={styles.pageContainer}>
@@ -158,7 +158,11 @@ const Challenges = () => {
                   </h2>
                </div>
 
-               <motion.div className={styles.achievementsGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+               <motion.div
+                  className={styles.achievementsGrid}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}>
                   {achievements.length > 0 ? (
                      achievements.slice(0, 3).map((achievement, index) => (
                         <motion.div
@@ -187,7 +191,7 @@ const Challenges = () => {
 };
 
 Challenges.propTypes = {
-   challenges: PropTypes.array.isRequired,
+   challenges: PropTypes.array,
 };
 
-export default Challenges;
+export default memo(Challenges);
