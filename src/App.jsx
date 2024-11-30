@@ -76,11 +76,9 @@ function AppDesktop() {
                   Authorization: `Bearer ${token}`,
                },
             });
-            console.log("response-(checkAuthStatus)", response);
 
             if (response.ok) {
                const userData = await response.json();
-               console.log("userData-(checkAuthStatus)", userData);
                startAppTransition(() => {
                   dispatch(setUser(userData));
                });

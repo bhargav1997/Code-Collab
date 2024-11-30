@@ -25,8 +25,6 @@ function PopularTags() {
                },
             });
 
-            console.log("response.data", response);
-
             if (response.data.success) {
                setPopularTags(response.data.data.tags);
             }
@@ -41,7 +39,6 @@ function PopularTags() {
       fetchPopularTags();
    }, [API_URL, tagsTimeframe]);
 
-   console.log("popularTags", popularTags);
    return (
       <>
          <ToastContainer />

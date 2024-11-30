@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { CONFIG } from "../../config";
+// import { CONFIG } from "../../config";
 
 // Mock data for testing
 // const mockRecommendations = [

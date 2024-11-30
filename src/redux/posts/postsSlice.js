@@ -24,7 +24,7 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async ({ page, li
       const authAxios = createAuthAxios();
 
       const response = await authAxios.get(`/posts?page=${page}&limit=${limit}`);
-      console.log("fetchPosts response", response);
+
       if (response.data.error) {
          return rejectWithValue(response.data);
       }
@@ -44,10 +44,8 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async ({ page, li
 export const createPost = createAsyncThunk("posts/createPost", async (postData, { rejectWithValue }) => {
    try {
       const authAxios = createAuthAxios();
-      console.log("postData", postData);
 
       const response = await authAxios.post(`/posts`, postData);
-      console.log("createPost response", response);
 
       if (response.data.error) {
          return rejectWithValue(response.data);
@@ -60,11 +58,8 @@ export const createPost = createAsyncThunk("posts/createPost", async (postData, 
 
 export const updatePost = createAsyncThunk("posts/updatePost", async ({ postId, postData }, { rejectWithValue }) => {
    try {
-      console.log(postId, "postData", postData);
-
       const authAxios = createAuthAxios();
       const response = await authAxios.put(`/posts/${postId}`, postData);
-      console.log("response", response);
 
       if (response.data.error) {
          return rejectWithValue(response.data);
@@ -77,11 +72,8 @@ export const updatePost = createAsyncThunk("posts/updatePost", async ({ postId, 
 
 export const deletePost = createAsyncThunk("posts/deletePost", async (postId, { rejectWithValue }) => {
    try {
-      console.log("postId", postId);
-
       const authAxios = createAuthAxios();
       const response = await authAxios.delete(`/posts/${postId}`);
-      console.log("response", response);
 
       if (response.data.error) {
          return rejectWithValue(response.data);
@@ -108,7 +100,6 @@ const postsSlice = createSlice({
             state.status = "loading";
          })
          .addCase(fetchPosts.fulfilled, (state, action) => {
-            console.log("fetchPosts fulfilled", action);
             state.status = "succeeded";
             state.items = [...state.items, ...action.payload.posts];
             state.page += 1;

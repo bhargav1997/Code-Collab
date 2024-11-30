@@ -103,8 +103,6 @@ function Login() {
       setFormData({ ...formData, [e.target.name]: value });
    };
 
-   // console.log("showTwoFactor", showTwoFactor);
-
    // if (showTwoFactor) {
    //    return <TwoFactorAuth email={formData.email} />;
    // }

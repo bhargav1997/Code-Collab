@@ -57,7 +57,6 @@ function Register() {
       });
 
       try {
-         console.log("Sending request to:", `${API_URL}/users/initiate-registration`);
          const response = await fetch(`${API_URL}/users/initiate-registration`, {
             method: "POST",
             headers: {
@@ -71,10 +70,8 @@ function Register() {
          });
 
          const data = await response.json();
-         console.log("Server response:", data);
 
          if (response.ok) {
-            console.log("Validation successful, proceeding to two-factor auth");
             navigate("/two-factor-auth", {
                state: { email: formData.email, isRegistration: true, username: formData.username, password: formData.password },
             });

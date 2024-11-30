@@ -155,8 +155,6 @@ export const checkAccountStatus = createAsyncThunk(
 
          const data = await response.json();
 
-         console.log(response.ok);
-
          if (!response.ok) {
             return rejectWithValue(data.message || `Error: ${response.status}`);
          }
