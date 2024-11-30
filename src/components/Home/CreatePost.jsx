@@ -61,17 +61,6 @@ function CreatePost() {
       setPostTags(postTags.filter((tag) => tag !== tagToRemove));
    };
 
-   const handleImageUpload = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-         const reader = new FileReader();
-         reader.onloadend = () => {
-            setPostImage(reader.result);
-         };
-         reader.readAsDataURL(file);
-      }
-   };
-
    const handleSubmitPost = async () => {
       if (!postTitle || !postContent) {
          setError("Please fill in all required fields.");
@@ -181,7 +170,7 @@ function CreatePost() {
                         <input
                            type='text'
                            placeholder='Enter image URL'
-                           value={postImage || ''}
+                           value={postImage || ""}
                            onChange={(e) => setPostImage(e.target.value)}
                            className={styles.imageUrlInput}
                         />
@@ -189,10 +178,7 @@ function CreatePost() {
                      {postImage && (
                         <div className={styles.imagePreview}>
                            <img src={postImage} alt='Post preview' />
-                           <button 
-                              onClick={() => setPostImage(null)}
-                              className={styles.removeImageBtn}
-                           >
+                           <button onClick={() => setPostImage(null)} className={styles.removeImageBtn}>
                               <FontAwesomeIcon icon={faTimes} /> Remove
                            </button>
                         </div>
@@ -203,11 +189,7 @@ function CreatePost() {
                      <button className={styles.cancelBtn} onClick={handleCloseModal}>
                         Cancel
                      </button>
-                     <button 
-                        className={styles.submitBtn} 
-                        onClick={handleSubmitPost} 
-                        disabled={isSubmitting}
-                     >
+                     <button className={styles.submitBtn} onClick={handleSubmitPost} disabled={isSubmitting}>
                         <FontAwesomeIcon icon={faPaperPlane} />
                         {isSubmitting ? "Posting..." : "Post"}
                      </button>

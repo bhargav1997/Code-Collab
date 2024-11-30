@@ -8,7 +8,6 @@ import {
    faClock,
    faSave,
    faTimes,
-   faImage,
    faCode,
    faGraduationCap,
    faLightbulb,

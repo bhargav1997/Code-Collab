@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useTransition } from "react";
 import { HashRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import { useSelector, useDispatch } from "react-redux";
@@ -52,6 +52,7 @@ import { HelmetProvider } from "react-helmet-async";
 function AppDesktop() {
    const [showOnboarding, setShowOnboarding] = useState(false);
    const [isInitialized, setIsInitialized] = useState(false);
+   const [isPending, startAppTransition] = useTransition();
    const dispatch = useDispatch();
    const { user, isLoading } = useSelector((state) => state.user);
    const API_URL = CONFIG.API_URL;
@@ -64,7 +65,9 @@ function AppDesktop() {
             const token = localStorage.getItem("token");
 
             if (!token) {
-               dispatch(setUser(null));
+               startAppTransition(() => {
+                  dispatch(setUser(null));
+               });
                return;
             }
 
@@ -73,10 +76,12 @@ function AppDesktop() {
                   Authorization: `Bearer ${token}`,
                },
             });
+            console.log("response-(checkAuthStatus)", response);
 
             if (response.ok) {
                const userData = await response.json();
-               React.startTransition(() => {
+               console.log("userData-(checkAuthStatus)", userData);
+               startAppTransition(() => {
                   dispatch(setUser(userData));
                });
 
@@ -87,11 +92,15 @@ function AppDesktop() {
             } else {
                localStorage.removeItem("token");
                localStorage.removeItem("user");
-               dispatch(setUser(null));
+               startAppTransition(() => {
+                  dispatch(setUser(null));
+               });
             }
          } catch (error) {
             console.error("Error verifying token:", error);
-            dispatch(setUser(null));
+            startAppTransition(() => {
+               dispatch(setUser(null));
+            });
          } finally {
             dispatch(setLoading(false));
             setIsInitialized(true);
@@ -101,31 +110,51 @@ function AppDesktop() {
       checkAuthStatus();
    }, [dispatch]);
 
-   const handleOnboardingComplete = () => {
-      setShowOnboarding(false);
-      localStorage.setItem("hasCompletedOnboarding", "true");
-   };
-
-   if (isLoading || !isInitialized) {
+   if (isLoading || !isInitialized || isPending) {
       return <LoadingSpinner />;
    }
 
    return (
       <Router>
-         <ScrollToTop />
-         <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <ToastContainer />
-            <div className={styles.appContainer}>
-               {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
-               <div className={`${styles.appContent} ${showOnboarding ? styles.blurred : ""}`}>
-                  {isAuthenticated && <aside className={styles.sidebar}>{<Sidebar />}</aside>}
-                  <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
+         <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => {
+               // Reset the state here
+               window.location.reload();
+            }}
+         >
+            <Suspense fallback={<LoadingSpinner />}>
+               <ScrollToTop />
+               <ToastContainer />
+               <div className={styles.appContainer}>
+                  {showOnboarding && (
                      <Suspense fallback={<LoadingSpinner />}>
+                        <Onboarding onComplete={() => {
+                           setShowOnboarding(false);
+                           localStorage.setItem("hasCompletedOnboarding", "true");
+                        }} />
+                     </Suspense>
+                  )}
+                  <div className={`${styles.appContent} ${showOnboarding ? styles.blurred : ""}`}>
+                     {isAuthenticated && (
+                        <aside className={styles.sidebar}>
+                           <Suspense fallback={<LoadingSpinner />}>
+                              <Sidebar />
+                           </Suspense>
+                        </aside>
+                     )}
+                     <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
                         <Routes>
-                           {/* Landing page */}
-                           {/* {!isAuthenticated && <Route path='/' element={<LandingPage />} />} */}
-                           <Route path='/register' element={isAuthenticated ? <Navigate to='/' /> : <Register />} />
-                           <Route path='/login' element={isAuthenticated ? <Navigate to='/' /> : <Login />} />
+                           <Route path='/register' element={
+                              <Suspense fallback={<LoadingSpinner />}>
+                                 {isAuthenticated ? <Navigate to='/' /> : <Register />}
+                              </Suspense>
+                           } />
+                           <Route path='/login' element={
+                              <Suspense fallback={<LoadingSpinner />}>
+                                 {isAuthenticated ? <Navigate to='/' /> : <Login />}
+                              </Suspense>
+                           } />
                            <Route path='/two-factor-auth' element={isAuthenticated ? <Navigate to='/' /> : <TwoFactorAuth />} />
                            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
                            <Route path='/terms-of-use' element={<TermsOfUse />} />
@@ -157,10 +186,10 @@ function AppDesktop() {
                            {/* Catch-all route */}
                            <Route path='*' element={<Navigate to='/login' replace />} />
                         </Routes>
-                     </Suspense>
+                     </div>
                   </div>
                </div>
-            </div>
+            </Suspense>
          </ErrorBoundary>
       </Router>
    );
@@ -168,20 +197,20 @@ function AppDesktop() {
 
 function AuthenticatedLayout() {
    return (
-      <>
-         <HelmetProvider>
-            <header className={styles.header}>
-               <Suspense fallback={<LoadingSpinner />}>
-                  <Header />
-               </Suspense>
-            </header>
-            <main className={styles.content}>
+      <HelmetProvider>
+         <header className={styles.header}>
+            <Suspense fallback={<LoadingSpinner />}>
+               <Header />
+            </Suspense>
+         </header>
+         <main className={styles.content}>
+            <Suspense fallback={<LoadingSpinner />}>
                <Outlet />
-               <Analytics />
-               <SpeedInsights />
-            </main>
-         </HelmetProvider>
-      </>
+            </Suspense>
+            <Analytics />
+            <SpeedInsights />
+         </main>
+      </HelmetProvider>
    );
 }
 

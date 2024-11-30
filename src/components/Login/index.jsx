@@ -1,4 +1,4 @@
-import { useEffect, useState, startTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearError } from "../../redux/user/userSlice";
@@ -24,35 +24,39 @@ function Login() {
       type: "error",
       message: "",
    });
+   const [isPending, startLoginTransition] = useTransition();
 
    const dispatch = useDispatch();
    const navigate = useNavigate();
 
    useEffect(() => {
       if (user) {
-         navigate("/");
+         startLoginTransition(() => {
+            navigate("/");
+         });
       }
    }, [user, navigate]);
 
-   // Add effect to handle Redux errors
    useEffect(() => {
       if (reduxError) {
          showAlert("error", reduxError);
-         dispatch(clearError()); // Clear the error after showing it
+         dispatch(clearError());
       }
    }, [reduxError, dispatch]);
 
-   // Helper function to show alerts
    const showAlert = (type, message) => {
-      setAlert({
-         show: true,
-         type,
-         message,
+      startLoginTransition(() => {
+         setAlert({
+            show: true,
+            type,
+            message,
+         });
       });
 
-      // Auto hide after 3 seconds
       setTimeout(() => {
-         setAlert((prev) => ({ ...prev, show: false }));
+         startLoginTransition(() => {
+            setAlert((prev) => ({ ...prev, show: false }));
+         });
       }, 3000);
    };
 
@@ -61,15 +65,16 @@ function Login() {
 
       try {
          const result = await dispatch(loginUser(formData)).unwrap();
-
          if (result.requireTwoFactor) {
-            navigate("/two-factor-auth", { state: { email: formData.email } });
+            startLoginTransition(() => {
+               navigate("/two-factor-auth", { state: { email: formData.email } });
+            });
          } else {
             handleSuccessfulLogin(result);
          }
       } catch (error) {
-         // Don't navigate or refresh, just show the error
-         showAlert("error", error || "Login failed");
+         console.error("Login error:", error);
+         showAlert("error", error?.message || "Login failed");
       }
    };
 
@@ -77,18 +82,19 @@ function Login() {
       try {
          localStorage.setItem("token", data.token);
 
-         // Wrap state updates in startTransition
-         startTransition(() => {
+         startLoginTransition(() => {
             dispatch(setUser(data.user));
             showAlert("success", "Login successful!");
          });
 
-         // Navigate after a short delay to show the success message
          setTimeout(() => {
-            navigate("/");
+            startLoginTransition(() => {
+               navigate("/");
+            });
          }, 1500);
       } catch (error) {
-         showAlert("error", error || "An error occurred while processing your login");
+         console.error("Login processing error:", error);
+         showAlert("error", "An error occurred while processing your login");
       }
    };
 
@@ -176,6 +182,11 @@ function Login() {
                <RecoveryLink />
             </div>
          </div>
+         {isPending && (
+            <div className={styles.loadingOverlay}>
+               <div className={styles.loadingSpinner}></div>
+            </div>
+         )}
       </div>
    );
 }
