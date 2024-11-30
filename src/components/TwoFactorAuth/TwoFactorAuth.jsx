@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/user/userSlice";
@@ -154,4 +154,4 @@ function TwoFactorAuth() {
    );
 }
 
-export default TwoFactorAuth;
+export default memo(TwoFactorAuth);

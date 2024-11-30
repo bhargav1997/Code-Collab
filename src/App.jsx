@@ -7,13 +7,11 @@ import { setUser, setLoading } from "./redux/user/userSlice";
 import styles from "./styles/App.module.css";
 
 // Import components
-import Sidebar from "./components/Sidebar";
-import Onboarding from "./components/Onboarding";
+const Sidebar = React.lazy(() => import("./components/Sidebar"));
+const Onboarding = React.lazy(() => import("./components/Onboarding"));
 // import SidebarSkeleton from "./components/Sidebar/SidebarSkeleton";
-import LoadingSpinner from "./components/LoadingSpinner";
-
-import TwoFactorAuth from "./components/TwoFactorAuth/TwoFactorAuth";
-// import { fetchConnections } from "./redux/user/userHandle";
+const LoadingSpinner = React.lazy(() => import("./components/LoadingSpinner"));
+const TwoFactorAuth = React.lazy(() => import("./components/TwoFactorAuth/TwoFactorAuth"));
 
 // Lazy load other components
 const Header = React.lazy(() => import("./components/Header"));

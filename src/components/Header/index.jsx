@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faBell,
@@ -14,6 +14,7 @@ import {
    faCheck,
    faTimes,
    faTrash,
+   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Header.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,10 +78,6 @@ function Header() {
    const user = useSelector((state) => state.user.user);
    const notificationRef = useRef(null);
    const [deletingNotifications, setDeletingNotifications] = useState({});
-   const [successMessage, setSuccessMessage] = useState({
-      message: null,
-      error: false,
-   });
    const userMenuRef = useRef(null);
    const [showMessageNotifications, setShowMessageNotifications] = useState(false);
    const [messageNotificationsBeingRead, setMessageNotificationsBeingRead] = useState({});
@@ -168,46 +165,31 @@ function Header() {
    };
 
    const handleDeleteNotification = async (notificationId) => {
-      setDeletingNotifications((prev) => ({ ...prev, [notificationId]: true }));
+      setDeletingNotifications(prev => ({ ...prev, [notificationId]: true }));
 
       try {
-         const response = await axios.delete(`${CONFIG.API_URL}/notifications/${notificationId}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-         });
+         const response = await axios.delete(
+            `${CONFIG.API_URL}/notifications/${notificationId}`,
+            { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+         );
 
          if (response?.status === 200) {
             // Wait for the swipe animation to complete
             setTimeout(() => {
-               setNotifications((prevNotifications) => prevNotifications.filter((n) => n._id !== notificationId));
-               setDeletingNotifications((prev) => {
+               setNotifications(prevNotifications => 
+                  prevNotifications.filter(n => n._id !== notificationId)
+               );
+               
+               setDeletingNotifications(prev => {
                   const newState = { ...prev };
                   delete newState[notificationId];
                   return newState;
                });
-
-               // Show success message
-               setSuccessMessage({
-                  message: "Notification deleted",
-                  error: false,
-               });
-
-               // Hide success message after 3 seconds
-               setTimeout(() => {
-                  setSuccessMessage({
-                     message: null,
-                     error: false,
-                  });
-               }, 3000);
-            }, 300);
-         } else {
-            setSuccessMessage({
-               message: "Failed to delete notification",
-               error: true,
-            });
+            }, 300); // Match this with your CSS animation duration
          }
       } catch (error) {
          console.error("Failed to delete notification:", error);
-         setDeletingNotifications((prev) => {
+         setDeletingNotifications(prev => {
             const newState = { ...prev };
             delete newState[notificationId];
             return newState;
@@ -225,11 +207,11 @@ function Header() {
 
          if (response?.status === 200) {
             setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
-            toast.success("All notifications marked as read");
+            // toast.success("All notifications marked as read");
          }
       } catch (error) {
          console.error("Failed to mark all notifications as read:", error);
-         toast.error("Failed to mark notifications as read");
+         toast.error("Failed to mark notifications as read, please try again later");
       }
    };
 
@@ -373,21 +355,30 @@ function Header() {
                   <div className={styles.notificationsOverlay}>
                      <div className={styles.notificationHeader}>
                         <h3>Notifications</h3>
-                        {notifications?.length > 0 && (
+                        {otherNotifications.length > 0 && (
                            <button className={styles.markAllReadBtn} onClick={handleMarkAllAsRead}>
                               Mark all as read
                            </button>
                         )}
                      </div>
-                     {!Array.isArray(notifications) || notifications.length === 0 ? (
-                        <p className={styles.noNotifications}>No new notifications</p>
+                     {otherNotifications.length === 0 ? (
+                        <div className={styles.emptyNotificationState}>
+                           <div className={styles.emptyStateIcon}>
+                              <FontAwesomeIcon icon={faBell} />
+                           </div>
+                           <h4>No notifications yet</h4>
+                           <p>When you get notifications, they&apos;ll show up here</p>
+                        </div>
                      ) : (
                         <ul className={styles.notificationsList}>
                            {otherNotifications.map((notification) => (
                               <li
                                  key={notification._id}
-                                 className={`${styles.notificationItem} ${notification.read ? styles.read : ""}`}
-                                 onClick={() => !notification.read && handleMarkAsRead(notification._id)}>
+                                 className={`${styles.notificationItem} 
+                                    ${notification.read ? styles.read : ""} 
+                                    ${deletingNotifications[notification._id] ? styles.notificationItemDeleting : ""}`}
+                                 onClick={() => !notification.read && handleMarkAsRead(notification._id)}
+                              >
                                  <FontAwesomeIcon icon={getNotificationIcon(notification.type)} className={styles.notificationIcon} />
                                  <div className={styles.notificationContent}>
                                     {notification.type === "new_follower" && (
@@ -423,26 +414,22 @@ function Header() {
                                        </>
                                     )}
                                     <button
-                                       onClick={() => handleDeleteNotification(notification._id)}
+                                       onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDeleteNotification(notification._id);
+                                       }}
                                        className={styles.deleteButton}
-                                       title='Delete'>
-                                       <FontAwesomeIcon icon={faTrash} />
+                                       disabled={deletingNotifications[notification._id]}
+                                    >
+                                       <FontAwesomeIcon 
+                                          icon={deletingNotifications[notification._id] ? faSpinner : faTrash} 
+                                          className={deletingNotifications[notification._id] ? styles.spin : ''} 
+                                       />
                                     </button>
                                  </div>
                               </li>
                            ))}
                         </ul>
-                     )}
-                     {successMessage.message && (
-                        <div
-                           className={`
-                           ${styles.statusMessage} 
-                           ${styles.statusMessageVisible} 
-                           ${successMessage.error ? styles.errorMessage : styles.successMessage}
-                         `}>
-                           <FontAwesomeIcon icon={successMessage.error ? faTimes : faCheck} className={styles.icon} />
-                           {successMessage.message}
-                        </div>
                      )}
                   </div>
                )}
@@ -520,4 +507,4 @@ EmptyNotificationState.propTypes = {
    type: PropTypes.string,
 };
 
-export default Header;
+export default memo(Header);

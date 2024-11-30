@@ -772,3 +772,40 @@
    transform: scale(1.05);
    transition: transform 0.3s ease;
 }
+
+.spin {
+   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+   0% { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
+}
+
+.notificationItemDeleting {
+   transform: translateX(100%);
+   opacity: 0;
+   transition: all 0.3s ease-out;
+}
+
+.statusMessage {
+   display: flex;
+   align-items: center;
+   padding: 8px;
+   margin-top: 8px;
+   border-radius: 4px;
+   font-size: 0.9em;
+}
+
+.statusMessageVisible {
+   opacity: 1;
+   transform: translateY(0);
+}
+
+.successMessage {
+   color: #4caf50;
+}
+
+.errorMessage {
+   color: #f44336;
+}

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -46,11 +47,10 @@ function Sidebar() {
             <ul>
                {navItems.map((item) => (
                   <li key={item.path}>
-                     <Link 
-                        to={item.path} 
+                     <Link
+                        to={item.path}
                         className={`${styles.navLink} ${location.pathname === item.path ? styles.active : ""}`}
-                        title={item.label}
-                     >
+                        title={item.label}>
                         <FontAwesomeIcon icon={item.icon} />
                         <span>{item.label}</span>
                      </Link>
@@ -58,7 +58,7 @@ function Sidebar() {
                ))}
             </ul>
          </nav>
-         <button className={styles.logoutBtn} onClick={handleLogout} title="Logout">
+         <button className={styles.logoutBtn} onClick={handleLogout} title='Logout'>
             <FontAwesomeIcon icon={faSignOutAlt} />
             <span>Logout</span>
          </button>
@@ -66,4 +66,4 @@ function Sidebar() {
    );
 }
 
-export default Sidebar;
+export default memo(Sidebar);

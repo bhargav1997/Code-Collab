@@ -1,3 +1,4 @@
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,16 +24,9 @@ import {
    faClockRotateLeft,
    faShieldHeart,
    faPaperPlane,
-   faImage,
-   faFileImage,
-   faFileVideo,
-   faFilePdf,
-   faFileZipper,
-   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import styles from "./LandingPage.module.css";
-import { useState } from "react";
 
 function LandingPage() {
    const [touchedFields, setTouchedFields] = useState({});
@@ -465,7 +459,7 @@ function LandingPage() {
                         <details className={styles.faqItem}>
                            <summary>Is LearnHUB free to use?</summary>
                            <p>
-                              Yes, LearnHUB's core features are completely free for students. We believe in making quality education
+                              Yes, LearnHUB&apos;s core features are completely free for students. We believe in making quality education
                               accessible to everyone.
                            </p>
                         </details>
@@ -570,7 +564,7 @@ function LandingPage() {
                         </div>
                         <h2>Help Us Improve LearnHUB</h2>
                      </div>
-                     <p>Found a bug? Have a suggestion? We're here to listen and make LearnHUB better for everyone.</p>
+                     <p>Found a bug? Have a suggestion? We&apos;re here to listen and make LearnHUB better for everyone.</p>
 
                      <div className={styles.reportFeatures}>
                         <div className={styles.featureItem}>
@@ -609,7 +603,7 @@ function LandingPage() {
                               const subject = `${formData.get("type")}: ${formData.get("subject")}`;
                               const body = `Type: ${formData.get("type")}%0D%0A
                                            Description: ${formData.get("description")}%0D%0A
-                                           File Sharing Link: ${formData.get("attachmentLink") || 'N/A'}`;
+                                           File Sharing Link: ${formData.get("attachmentLink") || "N/A"}`;
 
                               window.location.href = `mailto:hello.learnhub@gmail.com?subject=${subject}&body=${body}`;
                            }
@@ -767,4 +761,4 @@ function LandingPage() {
    );
 }
 
-export default LandingPage;
+export default memo(LandingPage);
