@@ -243,12 +243,6 @@ function Setting() {
                   <p>Configure advanced features.</p>
                   <div className={styles.settingControl}>
                      <label>
-                        <input type='checkbox' name='enableOfflineMode' checked={settings.enableOfflineMode} onChange={handleChange} />
-                        Enable offline mode
-                     </label>
-                  </div>
-                  <div className={styles.settingControl}>
-                     <label>
                         <input
                            type='checkbox'
                            name='useAIRecommendations'

@@ -608,14 +608,8 @@ function LandingPage() {
                               const formData = new FormData(e.target);
                               const subject = `${formData.get("type")}: ${formData.get("subject")}`;
                               const body = `Type: ${formData.get("type")}%0D%0A
-                                           Priority: ${formData.get("priority")}%0D%0A
                                            Description: ${formData.get("description")}%0D%0A
-                                           Steps to Reproduce: ${formData.get("steps")}%0D%0A
-                                           Expected Result: ${formData.get("expected")}%0D%0A
-                                           Actual Result: ${formData.get("actual")}%0D%0A
-                                           Additional Info: ${formData.get("additional")}%0D%0A
-                                           File Sharing Link: ${formData.get("attachmentLink")}%0D%0A%0D%0A
-                                           Note: Please attach any relevant screenshots or files to this email.`;
+                                           File Sharing Link: ${formData.get("attachmentLink") || 'N/A'}`;
 
                               window.location.href = `mailto:hello.learnhub@gmail.com?subject=${subject}&body=${body}`;
                            }
@@ -625,10 +619,6 @@ function LandingPage() {
                               <label>
                                  Report Type
                                  <span className={styles.required}>*</span>
-                                 <span className={styles.tooltip}>
-                                    <FontAwesomeIcon icon={faCircleInfo} />
-                                    <span className={styles.tooltipText}>Please select the type of report you're submitting</span>
-                                 </span>
                               </label>
                               <select
                                  name='type'
@@ -638,27 +628,8 @@ function LandingPage() {
                                  <option value=''>Select type</option>
                                  <option value='Bug Report'>Bug Report</option>
                                  <option value='Feature Request'>Feature Request</option>
-                                 <option value='Improvement'>Improvement Suggestion</option>
+                                 <option value='Improvement'>Improvement</option>
                               </select>
-                              {touchedFields.type && <span className={styles.validationMessage}>Please select a report type</span>}
-                           </div>
-
-                           <div className={styles.formGroup}>
-                              <label>
-                                 Priority Level
-                                 <span className={styles.required}>*</span>
-                              </label>
-                              <select
-                                 name='priority'
-                                 required
-                                 className={`${styles.requiredField} ${touchedFields.priority ? styles.touched : ""}`}
-                                 onBlur={() => handleBlur("priority")}>
-                                 <option value=''>Select priority</option>
-                                 <option value='Low'>Low</option>
-                                 <option value='Medium'>Medium</option>
-                                 <option value='High'>High</option>
-                              </select>
-                              <span className={styles.validationMessage}>Please select a priority level</span>
                            </div>
 
                            <div className={styles.formGroup + " " + styles.fullWidth}>
@@ -675,7 +646,6 @@ function LandingPage() {
                                  minLength='10'
                                  onBlur={() => handleBlur("subject")}
                               />
-                              <span className={styles.validationMessage}>Please provide a subject (minimum 10 characters)</span>
                            </div>
 
                            <div className={styles.formGroup + " " + styles.fullWidth}>
@@ -685,88 +655,23 @@ function LandingPage() {
                               </label>
                               <textarea
                                  name='description'
-                                 placeholder='Detailed description of what you encountered'
+                                 placeholder='Please describe what happened or what you would like to see'
                                  rows='3'
                                  required
                                  className={styles.requiredField}
-                                 minLength='30'></textarea>
-                              <span className={styles.validationMessage}>
-                                 Please provide a detailed description (minimum 30 characters)
-                              </span>
-                           </div>
-
-                           <div className={styles.formGroup + " " + styles.fullWidth}>
-                              <label>
-                                 Steps to Reproduce
-                                 <span className={styles.optional}>(Optional)</span>
-                              </label>
-                              <textarea
-                                 name='steps'
-                                 placeholder='1. First step&#10;2. Second step&#10;3. ...'
-                                 rows='3'></textarea>
-                           </div>
-
-                           <div className={styles.formGroup}>
-                              <label>
-                                 Expected Result <span className={styles.optional}>(Optional)</span>
-                              </label>
-                              <input type='text' name='expected' placeholder='What should happen' />
-                           </div>
-
-                           <div className={styles.formGroup}>
-                              <label>
-                                 Actual Result <span className={styles.optional}>(Optional)</span>
-                              </label>
-                              <input type='text' name='actual' placeholder='What actually happened' />
-                           </div>
-
-                           <div className={styles.formGroup + " " + styles.fullWidth}>
-                              <label>
-                                 Additional Information <span className={styles.optional}>(Optional)</span>
-                              </label>
-                              <textarea name='additional' placeholder='Any other details that might be helpful' rows='2'></textarea>
+                                 minLength='30'
+                              />
                            </div>
 
                            <div className={styles.formGroup + " " + styles.fullWidth}>
                               <label>
                                  Screenshots/Files <span className={styles.optional}>(Optional)</span>
                               </label>
-                              <div className={styles.attachmentInfo}>
-                                 <div className={styles.attachmentMessage}>
-                                    <FontAwesomeIcon icon={faImage} className={styles.attachIcon} />
-                                    <p>
-                                       Please attach any relevant screenshots or files in your email response. You can also upload them to a
-                                       service like Google Drive or Dropbox and share the link below.
-                                    </p>
-                                 </div>
-                                 <div className={styles.formGroup}>
-                                    <input
-                                       type='text'
-                                       name='attachmentLink'
-                                       placeholder='Paste your file sharing link here (Google Drive, Dropbox, etc.)'
-                                    />
-                                 </div>
-                              </div>
-                           </div>
-
-                           <div className={styles.formGroup + " " + styles.fullWidth}>
-                              <div className={styles.supportedFormats}>
-                                 <h4>Supported Formats:</h4>
-                                 <div className={styles.formatList}>
-                                    <span className={styles.formatBadge}>
-                                       <FontAwesomeIcon icon={faFileImage} /> Images (PNG, JPG)
-                                    </span>
-                                    <span className={styles.formatBadge}>
-                                       <FontAwesomeIcon icon={faFileVideo} /> Videos (MP4)
-                                    </span>
-                                    <span className={styles.formatBadge}>
-                                       <FontAwesomeIcon icon={faFilePdf} /> Documents (PDF)
-                                    </span>
-                                    <span className={styles.formatBadge}>
-                                       <FontAwesomeIcon icon={faFileZipper} /> Archives (ZIP)
-                                    </span>
-                                 </div>
-                              </div>
+                              <input
+                                 type='text'
+                                 name='attachmentLink'
+                                 placeholder='Paste your file sharing link here (Google Drive, Dropbox, etc.)'
+                              />
                            </div>
                         </div>
 

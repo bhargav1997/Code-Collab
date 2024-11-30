@@ -46,6 +46,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { HelmetProvider } from "react-helmet-async";
 
 // Lazy load other components
 
@@ -163,16 +164,18 @@ function AppDesktop() {
 function AuthenticatedLayout() {
    return (
       <>
-         <header className={styles.header}>
-            <Suspense fallback={<LoadingSpinner />}>
-               <Header />
-            </Suspense>
-         </header>
-         <main className={styles.content}>
-            <Outlet />
-            <Analytics />
-            <SpeedInsights />
-         </main>
+         <HelmetProvider>
+            <header className={styles.header}>
+               <Suspense fallback={<LoadingSpinner />}>
+                  <Header />
+               </Suspense>
+            </header>
+            <main className={styles.content}>
+               <Outlet />
+               <Analytics />
+               <SpeedInsights />
+            </main>
+         </HelmetProvider>
       </>
    );
 }

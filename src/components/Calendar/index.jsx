@@ -31,6 +31,49 @@ import { CONFIG } from "../../config";
 
 const API_URL = CONFIG.API_URL;
 
+const validateEvent = (event) => {
+   const errors = [];
+   const now = new Date();
+   // Set time to start of current day for date comparison
+   now.setHours(0, 0, 0, 0);
+
+   // Required fields validation
+   if (!event.title?.trim()) errors.push("Title is required");
+   if (!event.start) errors.push("Start time is required");
+   if (!event.end) errors.push("End time is required");
+   if (!event.resourceType) errors.push("Resource type is required");
+   if (!event.resourceLink?.trim()) errors.push("Resource link is required");
+
+   // Validate dates
+   const startDate = new Date(event.start);
+   startDate.setHours(0, 0, 0, 0);
+
+   if (startDate < now) {
+      errors.push("Start date cannot be in the past");
+   }
+
+   if (event.start && event.end && new Date(event.start) >= new Date(event.end)) {
+      errors.push("End time must be after start time");
+   }
+
+   // Update these resource types to match your backend enum
+   const validResourceTypes = ["LINK", "VIDEO", "BOOK", "ARTICLE"];
+   if (!validResourceTypes.includes(event.resourceType.toUpperCase())) {
+      errors.push("Invalid resource type");
+   }
+
+   // Validate resource link
+   if (event.resourceLink && event.resourceType === "LINK") {
+      try {
+         new URL(event.resourceLink);
+      } catch {
+         errors.push("Please enter a valid URL for the resource link");
+      }
+   }
+
+   return errors;
+};
+
 function Calendar() {
    const dispatch = useDispatch();
    const navigate = useNavigate();
@@ -42,7 +85,7 @@ function Calendar() {
       start: new Date(),
       end: new Date(),
       description: "",
-      resourceType: "link",
+      resourceType: "LINK",
       resourceLink: "",
    });
    const [tooltipEvent, setTooltipEvent] = useState(null);
@@ -105,31 +148,47 @@ function Calendar() {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+
+      // Validate the event
+      const validationErrors = validateEvent(newEvent);
+      if (validationErrors.length > 0) {
+         validationErrors.forEach((error) => toast.error(error));
+         return;
+      }
+
       setIsSubmitting(true);
 
-      // Close the modal after 1 second
-      setTimeout(() => {
-         setShowModal(false);
-         resetForm();
-      }, 1000);
+      // Prepare the event data
+      const eventData = {
+         title: newEvent.title.trim(),
+         start: new Date(newEvent.start).toISOString(),
+         end: new Date(newEvent.end).toISOString(),
+         description: newEvent.description.trim(),
+         resourceType: newEvent.resourceType,
+         resourceLink: newEvent.resourceLink.trim(),
+      };
 
-      // Perform the API request in the background
       try {
          if (editingEvent) {
-            const response = await axios.put(`${API_URL}/events/${editingEvent._id}`, newEvent, getAuthHeaders());
+            const response = await axios.put(`${API_URL}/events/${editingEvent._id}`, eventData, getAuthHeaders());
             dispatch(updateEvent(response.data));
             toast.success("Event updated successfully!");
          } else {
-            const response = await axios.post(`${API_URL}/events`, newEvent, getAuthHeaders());
+            const response = await axios.post(`${API_URL}/events`, eventData, getAuthHeaders());
             dispatch(addEvent(response.data));
             toast.success("Event created successfully!");
          }
+
+         setShowModal(false);
+         resetForm();
          fetchEvents();
       } catch (error) {
          console.error("Error saving event:", error);
          if (error.response) {
             if (error.response.status === 401) {
                handleUnauthorized();
+            } else if (error.response.status === 400) {
+               toast.error(`Error: ${error.response.data.message || "Failed to save event"}`);
             } else {
                toast.error(`Error: "Failed to save event"`);
             }
@@ -184,7 +243,7 @@ function Calendar() {
          start: new Date(),
          end: new Date(),
          description: "",
-         resourceType: "link",
+         resourceType: "LINK",
          resourceLink: "",
       });
       setEditingEvent(null);
@@ -272,7 +331,7 @@ function Calendar() {
                   </h2>
                   <form onSubmit={handleSubmit}>
                      <div className={styles.formGroup}>
-                        <label htmlFor='title'>Session Title</label>
+                        <label htmlFor='title'>Session Title *</label>
                         <input
                            type='text'
                            id='title'
@@ -281,7 +340,9 @@ function Calendar() {
                            onChange={handleInputChange}
                            required
                            placeholder='Enter session title'
+                           className={newEvent.title.trim() ? "" : styles.invalid}
                         />
+                        {!newEvent.title.trim() && <span className={styles.errorText}>Title is required</span>}
                      </div>
                      <div className={styles.formGroup}>
                         <label htmlFor='description'>Session Description</label>
@@ -295,19 +356,25 @@ function Calendar() {
                      </div>
                      <div className={styles.formGroup}>
                         <label htmlFor='resourceType'>Resource Type</label>
-                        <select id='resourceType' name='resourceType' value={newEvent.resourceType} onChange={handleInputChange} required>
-                           <option value='link'>Link</option>
-                           <option value='video'>Video</option>
-                           <option value='book'>Book</option>
-                           <option value='article'>Article</option>
+                        <select 
+                           id='resourceType' 
+                           name='resourceType' 
+                           value={newEvent.resourceType} 
+                           onChange={handleInputChange} 
+                           required
+                        >
+                           <option value='LINK'>Link</option>
+                           <option value='VIDEO'>Video</option>
+                           <option value='BOOK'>Book</option>
+                           <option value='ARTICLE'>Article</option>
                         </select>
                      </div>
                      <div className={styles.formGroup}>
                         <label htmlFor='resourceLink'>
-                           {newEvent.resourceType === "link" && <FontAwesomeIcon icon={faLink} />}
-                           {newEvent.resourceType === "video" && <FontAwesomeIcon icon={faVideo} />}
-                           {newEvent.resourceType === "book" && <FontAwesomeIcon icon={faBook} />}
-                           {newEvent.resourceType === "article" && <FontAwesomeIcon icon={faNewspaper} />}
+                           {newEvent.resourceType === "LINK" && <FontAwesomeIcon icon={faLink} />}
+                           {newEvent.resourceType === "VIDEO" && <FontAwesomeIcon icon={faVideo} />}
+                           {newEvent.resourceType === "BOOK" && <FontAwesomeIcon icon={faBook} />}
+                           {newEvent.resourceType === "ARTICLE" && <FontAwesomeIcon icon={faNewspaper} />}
                            {" Resource Link"}
                         </label>
                         <input
@@ -328,6 +395,7 @@ function Calendar() {
                            name='start'
                            value={moment(newEvent.start).format("YYYY-MM-DDTHH:mm")}
                            onChange={handleInputChange}
+                           min={moment().format("YYYY-MM-DDTHH:mm")}
                            required
                         />
                      </div>
@@ -339,6 +407,7 @@ function Calendar() {
                            name='end'
                            value={moment(newEvent.end).format("YYYY-MM-DDTHH:mm")}
                            onChange={handleInputChange}
+                           min={moment(newEvent.start).format("YYYY-MM-DDTHH:mm")}
                            required
                         />
                      </div>

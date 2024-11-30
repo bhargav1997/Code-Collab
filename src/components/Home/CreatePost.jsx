@@ -1,15 +1,25 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTimes, faImage, faTags, faPen, faPaperPlane, faCode, faGraduationCap, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import {
+   faUser,
+   faTimes,
+   faImage,
+   faTags,
+   faPen,
+   faPaperPlane,
+   faCode,
+   faGraduationCap,
+   faLightbulb,
+} from "@fortawesome/free-solid-svg-icons";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import styles from "./CreatePost.module.css";
-import { createPost } from '../../redux/posts/postsSlice';
+import { createPost } from "../../redux/posts/postsSlice";
 
 function CreatePost() {
    const dispatch = useDispatch();
-   const user = useSelector(state => state.user);
+   const user = useSelector((state) => state.user);
 
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [postTitle, setPostTitle] = useState("");
@@ -85,7 +95,7 @@ function CreatePost() {
          await dispatch(createPost(postData)).unwrap();
          handleCloseModal();
       } catch (error) {
-         setError('Failed to create post. Please try again.');
+         setError("Failed to create post. Please try again.");
          console.log(error);
       } finally {
          setIsSubmitting(false);
@@ -96,7 +106,13 @@ function CreatePost() {
       <>
          <div className={styles.createPost}>
             <FontAwesomeIcon icon={faUser} className={styles.userIcon} />
-            <input type='text' placeholder="Share your tech insights or learning experiences..." readOnly onClick={handleCreatePost} className={styles.createPostInput} />
+            <input
+               type='text'
+               placeholder='Share your tech insights or learning experiences...'
+               readOnly
+               onClick={handleCreatePost}
+               className={styles.createPostInput}
+            />
             <button className={styles.createPostBtn} onClick={handleCreatePost}>
                <FontAwesomeIcon icon={faPen} /> Create Post
             </button>
@@ -114,21 +130,18 @@ function CreatePost() {
                   <div className={styles.modalBody}>
                      <div className={styles.categorySelector}>
                         <button
-                           className={`${styles.categoryBtn} ${postCategory === 'tech' ? styles.active : ''}`}
-                           onClick={() => setPostCategory('tech')}
-                        >
+                           className={`${styles.categoryBtn} ${postCategory === "tech" ? styles.active : ""}`}
+                           onClick={() => setPostCategory("tech")}>
                            <FontAwesomeIcon icon={faCode} /> Tech
                         </button>
                         <button
-                           className={`${styles.categoryBtn} ${postCategory === 'education' ? styles.active : ''}`}
-                           onClick={() => setPostCategory('education')}
-                        >
+                           className={`${styles.categoryBtn} ${postCategory === "education" ? styles.active : ""}`}
+                           onClick={() => setPostCategory("education")}>
                            <FontAwesomeIcon icon={faGraduationCap} /> Education
                         </button>
                         <button
-                           className={`${styles.categoryBtn} ${postCategory === 'innovation' ? styles.active : ''}`}
-                           onClick={() => setPostCategory('innovation')}
-                        >
+                           className={`${styles.categoryBtn} ${postCategory === "innovation" ? styles.active : ""}`}
+                           onClick={() => setPostCategory("innovation")}>
                            <FontAwesomeIcon icon={faLightbulb} /> Innovation
                         </button>
                      </div>
@@ -142,11 +155,10 @@ function CreatePost() {
                      <ReactQuill
                         value={postContent}
                         onChange={setPostContent}
-                        placeholder="Share your knowledge, insights, or questions..."
+                        placeholder='Share your knowledge, insights, or questions...'
                         className={styles.contentEditor}
                      />
                      <div className={styles.postTags}>
-                        <FontAwesomeIcon icon={faTags} />
                         <input
                            type='text'
                            placeholder='Add relevant tags (e.g., JavaScript, MachineLearning)'
@@ -154,7 +166,9 @@ function CreatePost() {
                            onChange={(e) => setCurrentTag(e.target.value)}
                            onKeyPress={(e) => e.key === "Enter" && handleAddTag(e)}
                         />
-                        <button onClick={handleAddTag}>Add</button>
+                        <button onClick={handleAddTag}>
+                           Add <FontAwesomeIcon icon={faTags} color='white' size='sm' style={{ marginLeft: "5px" }} />
+                        </button>
                      </div>
                      <div className={styles.tagsContainer}>
                         {postTags.map((tag, index) => (
@@ -182,7 +196,7 @@ function CreatePost() {
                         Cancel
                      </button>
                      <button className={styles.submitBtn} onClick={handleSubmitPost} disabled={isSubmitting}>
-                        <FontAwesomeIcon icon={faPaperPlane} /> {isSubmitting ? 'Posting...' : 'Post'}
+                        <FontAwesomeIcon icon={faPaperPlane} /> {isSubmitting ? "Posting..." : "Post"}
                      </button>
                   </div>
                </div>
