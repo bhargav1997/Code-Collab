@@ -12,7 +12,6 @@ import {
    faGraduationCap,
    faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import styles from "./CreatePost.module.css";
 import { createPost } from "../../redux/posts/postsSlice";
@@ -152,13 +151,14 @@ function CreatePost() {
                         onChange={(e) => setPostTitle(e.target.value)}
                         className={styles.postTitleInput}
                      />
-                     <ReactQuill
+                     <textarea
                         value={postContent}
-                        onChange={setPostContent}
+                        onChange={(e) => setPostContent(e.target.value)}
                         placeholder='Share your knowledge, insights, or questions...'
                         className={styles.contentEditor}
                      />
                      <div className={styles.postTags}>
+                        <FontAwesomeIcon icon={faTags} className={styles.tagIcon} />
                         <input
                            type='text'
                            placeholder='Add relevant tags (e.g., JavaScript, MachineLearning)'
@@ -166,27 +166,35 @@ function CreatePost() {
                            onChange={(e) => setCurrentTag(e.target.value)}
                            onKeyPress={(e) => e.key === "Enter" && handleAddTag(e)}
                         />
-                        <button onClick={handleAddTag}>
-                           Add <FontAwesomeIcon icon={faTags} color='white' size='sm' style={{ marginLeft: "5px" }} />
-                        </button>
+                        <button onClick={handleAddTag}>Add Tag</button>
                      </div>
                      <div className={styles.tagsContainer}>
-                        {postTags.map((tag, index) => (
-                           <span key={index} className={styles.tag}>
-                              {tag}
+                        {postTags.map((tag) => (
+                           <span key={tag} className={styles.tag}>
+                              #{tag}
                               <button onClick={() => handleRemoveTag(tag)}>×</button>
                            </span>
                         ))}
                      </div>
                      <div className={styles.imageUpload}>
-                        <label htmlFor='file-input'>
-                           <FontAwesomeIcon icon={faImage} /> Add Image
-                        </label>
-                        <input id='file-input' type='file' accept='image/*' onChange={handleImageUpload} style={{ display: "none" }} />
+                        <FontAwesomeIcon icon={faImage} className={styles.imageIcon} />
+                        <input
+                           type='text'
+                           placeholder='Enter image URL'
+                           value={postImage || ''}
+                           onChange={(e) => setPostImage(e.target.value)}
+                           className={styles.imageUrlInput}
+                        />
                      </div>
                      {postImage && (
                         <div className={styles.imagePreview}>
                            <img src={postImage} alt='Post preview' />
+                           <button 
+                              onClick={() => setPostImage(null)}
+                              className={styles.removeImageBtn}
+                           >
+                              <FontAwesomeIcon icon={faTimes} /> Remove
+                           </button>
                         </div>
                      )}
                      {error && <div className={styles.error}>{error}</div>}
@@ -195,8 +203,13 @@ function CreatePost() {
                      <button className={styles.cancelBtn} onClick={handleCloseModal}>
                         Cancel
                      </button>
-                     <button className={styles.submitBtn} onClick={handleSubmitPost} disabled={isSubmitting}>
-                        <FontAwesomeIcon icon={faPaperPlane} /> {isSubmitting ? "Posting..." : "Post"}
+                     <button 
+                        className={styles.submitBtn} 
+                        onClick={handleSubmitPost} 
+                        disabled={isSubmitting}
+                     >
+                        <FontAwesomeIcon icon={faPaperPlane} />
+                        {isSubmitting ? "Posting..." : "Post"}
                      </button>
                   </div>
                </div>

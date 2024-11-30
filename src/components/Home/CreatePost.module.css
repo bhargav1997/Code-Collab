@@ -182,43 +182,70 @@
 }
 
 .contentEditor {
-   margin-bottom: 20px;
-}
-
-.contentEditor :global(.ql-container) {
+   width: 100%;
    min-height: 200px;
+   padding: 16px;
+   margin-bottom: 20px;
+   border: 1px solid #e0e0e0;
+   border-radius: 8px;
    font-size: 16px;
-   border-radius: 0 0 8px 8px;
+   line-height: 1.6;
+   resize: vertical;
+   font-family: inherit;
+   background-color: #fff;
+   color: #333;
+   transition: all 0.3s ease;
 }
 
-.contentEditor :global(.ql-toolbar) {
-   border-radius: 8px 8px 0 0;
+.contentEditor:focus {
+   outline: none;
+   border-color: #7c4dff;
+   box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.2);
+}
+
+.contentEditor::placeholder {
+   color: #999;
 }
 
 .postTags {
    display: flex;
    align-items: center;
+   gap: 12px;
    margin-bottom: 16px;
+   padding: 12px;
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   border: 1px solid #e0e0e0;
+}
+
+.tagIcon {
+   color: #7c4dff;
+   font-size: 16px;
 }
 
 .postTags input {
-   flex-grow: 1;
-   padding: 10px 12px;
+   flex: 1;
+   padding: 8px 12px;
    border: 1px solid #e0e0e0;
-   border-radius: 8px;
+   border-radius: 6px;
    font-size: 14px;
-   margin-right: 8px;
+   transition: all 0.3s ease;
+}
+
+.postTags input:focus {
+   outline: none;
+   border-color: #7c4dff;
+   box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.2);
 }
 
 .postTags button {
-   padding: 10px 16px;
    background-color: #7c4dff;
    color: white;
    border: none;
-   border-radius: 8px;
-   cursor: pointer;
+   padding: 8px 16px;
+   border-radius: 6px;
    font-size: 14px;
-   font-weight: 600;
+   cursor: pointer;
    transition: all 0.3s ease;
 }
 
@@ -264,33 +291,70 @@
 }
 
 .imageUpload {
+   display: flex;
+   align-items: center;
+   gap: 12px;
    margin-bottom: 20px;
+   padding: 12px;
+   background-color: #f8f9fa;
+   border-radius: 8px;
+   border: 1px dashed #e0e0e0;
 }
 
-.imageUpload label {
-   display: inline-block;
-   padding: 10px 16px;
-   background-color: #f0e6ff;
+.imageIcon {
    color: #7c4dff;
-   border-radius: 8px;
-   cursor: pointer;
+   font-size: 20px;
+}
+
+.imageUrlInput {
+   flex: 1;
+   padding: 10px;
+   border: 1px solid #e0e0e0;
+   border-radius: 6px;
    font-size: 14px;
-   font-weight: 600;
    transition: all 0.3s ease;
 }
 
-.imageUpload label:hover {
-   background-color: #e0d0ff;
+.imageUrlInput:focus {
+   outline: none;
+   border-color: #7c4dff;
+   box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.2);
 }
 
 .imagePreview {
-   margin-top: 16px;
+   position: relative;
+   margin-bottom: 20px;
 }
 
 .imagePreview img {
-   max-width: 100%;
+   width: 100%;
+   max-height: 300px;
+   object-fit: cover;
    border-radius: 8px;
    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.removeImageBtn {
+   position: absolute;
+   top: 8px;
+   right: 8px;
+   background-color: rgba(255, 255, 255, 0.9);
+   color: #ff4444;
+   border: none;
+   border-radius: 6px;
+   padding: 8px 12px;
+   font-size: 14px;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   transition: all 0.3s ease;
+}
+
+.removeImageBtn:hover {
+   background-color: #fff;
+   color: #ff0000;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .modalFooter {
@@ -379,6 +443,23 @@
 
    .categoryBtn:last-child {
       margin-bottom: 0;
+   }
+
+   .contentEditor {
+      min-height: 150px;
+   }
+
+   .imagePreview img {
+      max-height: 200px;
+   }
+
+   .postTags {
+      flex-direction: column;
+      align-items: stretch;
+   }
+
+   .postTags input {
+      margin-bottom: 8px;
    }
 }
 

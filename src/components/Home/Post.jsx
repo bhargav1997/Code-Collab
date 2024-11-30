@@ -15,8 +15,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import { updatePost, deletePost } from "../../redux/posts/postsSlice";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import styles from "./Post.module.css";
 
 function Post({ post }) {
@@ -79,32 +77,14 @@ function Post({ post }) {
    };
 
    const handleImageUpload = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-         const reader = new FileReader();
-         reader.onloadend = () => {
-            setEditedImage(reader.result);
-         };
-         reader.readAsDataURL(file);
-      }
+      const imageUrl = e.target.value;
+      setEditedImage(imageUrl);
    };
 
    const formatDate = (dateString) => {
       const options = { year: "numeric", month: "long", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
    };
-
-   const modules = {
-      toolbar: [
-         [{ header: [1, 2, false] }],
-         ["bold", "italic", "underline", "strike", "blockquote"],
-         [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
-         ["link", "image"],
-         ["clean"],
-      ],
-   };
-
-   const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image"];
 
    return (
       <>
@@ -187,13 +167,11 @@ function Post({ post }) {
                         className={styles.editTitleInput}
                         placeholder='Enter post title'
                      />
-                     <ReactQuill
-                        theme='snow'
+                     <textarea
                         value={editedContent}
-                        onChange={setEditedContent}
-                        modules={modules}
-                        formats={formats}
+                        onChange={(e) => setEditedContent(e.target.value)}
                         className={styles.editContentInput}
+                        placeholder='Share your knowledge, insights, or questions...'
                      />
                      <div className={styles.postTags}>
                         <FontAwesomeIcon icon={faTag} className={styles.icon} />
@@ -215,14 +193,23 @@ function Post({ post }) {
                         ))}
                      </div>
                      <div className={styles.imageUpload}>
-                        <label htmlFor='file-input'>
-                           <FontAwesomeIcon icon={faImage} /> Change Image
-                        </label>
-                        <input id='file-input' type='file' accept='image/*' onChange={handleImageUpload} style={{ display: "none" }} />
+                        <input
+                           type='text'
+                           placeholder='Enter image URL'
+                           value={editedImage || ''}
+                           onChange={handleImageUpload}
+                           className={styles.imageUrlInput}
+                        />
                      </div>
                      {editedImage && (
                         <div className={styles.imagePreview}>
                            <img src={editedImage} alt='Post preview' />
+                           <button 
+                              onClick={() => setEditedImage(null)}
+                              className={styles.removeImageBtn}
+                           >
+                              <FontAwesomeIcon icon={faTimes} /> Remove Image
+                           </button>
                         </div>
                      )}
                   </div>
