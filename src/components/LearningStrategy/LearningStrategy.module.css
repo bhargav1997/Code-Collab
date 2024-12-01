@@ -4,6 +4,7 @@
    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
    overflow: hidden;
    transition: all 0.3s ease;
+   margin: 18px;
 }
 
 .strategyHeader {
@@ -37,6 +38,13 @@
    letter-spacing: -0.5px;
 }
 
+.headerContent h2 svg {
+    font-size: 24px;
+    color: #ffffff;
+    opacity: 0.9;
+    padding-right: 12px;
+}
+
 .currentGoal {
    display: inline-flex;
    align-items: center;
@@ -50,6 +58,11 @@
 
 .currentGoal svg {
    color: #ffd700;
+}
+
+.careerIcon {
+   font-size: 16px;
+   margin-right: 8px;
 }
 
 .strategyGrid {
@@ -578,4 +591,46 @@
 
 .errorState .iconWrapper {
    animation: shake 0.5s ease-in-out;
+}
+
+.skillsSection, .learningGoalsSection {
+   padding: 1.25rem;
+   background: #f8faff;
+   border-radius: 12px;
+   margin-bottom: 1.5rem;
+}
+
+.skillsSection h3, .learningGoalsSection h3 {
+   font-size: 1.25rem;
+   color: #2d3748;
+   margin-bottom: 1rem;
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+}
+
+.skillsSection h3 svg, .learningGoalsSection h3 svg {
+   color: #7c4dff;
+}
+
+.tagContainer {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.5rem;
+}
+
+.tag {
+   padding: 0.5rem 1rem;
+   background: linear-gradient(135deg, #7c4dff 0%, #6a3de8 100%);
+   color: white;
+   border-radius: 20px;
+   font-size: 0.9rem;
+   transition: all 0.2s ease;
+   cursor: default;
+   box-shadow: 0 2px 4px rgba(124, 77, 255, 0.2);
+}
+
+.tag:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 4px 8px rgba(124, 77, 255, 0.3);
 }

@@ -12,6 +12,7 @@ import {
    faChartBar,
    faSignOutAlt,
    faMap,
+   faRocket,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Sidebar.module.css";
 import { useDispatch } from "react-redux";
@@ -33,6 +34,7 @@ function Sidebar() {
       { path: "/", icon: faHome, label: "Home" },
       { path: "/dashboard", icon: faTachometerAlt, label: "Dashboard" },
       { path: "/learning-journey", icon: faMap, label: "Learning Journey" },
+      { path: "/learning-strategy", icon: faRocket, label: "Learning Strategy" },
       { path: "/leaderboard", icon: faTrophy, label: "Leaderboard" },
       { path: "/message", icon: faEnvelope, label: "Message" },
       { path: "/calendar", icon: faCalendar, label: "Calendar" },

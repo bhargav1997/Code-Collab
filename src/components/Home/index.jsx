@@ -7,7 +7,7 @@ import PostList from "./PostList";
 import "../../styles/Home.css";
 import Progress from "./Progress";
 import CourseRecommendations from "./CourseRecommendations";
-import LearningStrategy from "../LearningStrategy";
+// import LearningStrategy from "../LearningStrategy";
 // import LearningGoals from "./LearningGoals";
 import { SEO } from "../common/SEO";
 import { useSelector, useDispatch } from "react-redux";
@@ -60,13 +60,13 @@ function Home() {
             <div className={styles.mainContent}>
                <CreatePost />
                <PostList />
-               <Progress />
                {userSettings?.enableCourseRecommendations && <CourseRecommendations />}
-               <LearningStrategy />
+               {/* <LearningStrategy /> */}
             </div>
             <aside className={styles.sidebar}>
                <Profile />
                <PopularTags />
+               <Progress />
             </aside>
          </div>
       </>

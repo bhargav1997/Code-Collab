@@ -159,6 +159,7 @@
    font-size: 16px;
    color: #333;
    margin-bottom: 5px;
+   margin-top: -3px;
 }
 
 .detailItem p {
@@ -1296,14 +1297,6 @@
    mask-composite: exclude;
 }
 
-/* Section Header */
-.sectionHeader {
-   display: flex;
-   align-items: center;
-   gap: 20px;
-   margin-bottom: 25px;
-}
-
 /* Icon Container */
 .iconWrapper {
    width: 56px;
@@ -1447,15 +1440,15 @@
 
 /* Detail Item */
 .detailItem {
-   margin-bottom: 40px;
+   margin-bottom: 20px;
 }
 
 /* Section Header */
 .sectionHeader {
    display: flex;
-   align-items: center;
+   align-items: flex-start;
    gap: 12px;
-   margin-bottom: 16px;
+   margin-bottom: 0px;
 }
 
 /* Icon */

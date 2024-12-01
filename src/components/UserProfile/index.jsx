@@ -95,23 +95,6 @@ function UserProfile() {
          connection.title.toLowerCase().includes(searchTerm.toLowerCase()),
    );
 
-   // useEffect(() => {
-   //    dispatch(fetchConnections()).catch((error) => {
-   //       console.error("Error fetching connections:", error);
-   //    });
-   // }, [dispatch]);
-
-   // const fetchSuggestedFriends = async () => {
-   //    // Implement fetching suggested friends
-   //    // For now, we'll use mock data
-   //    const mockFriends = [
-   //       { id: 1, name: "John Doe", interests: ["JavaScript", "React"], mutualFriends: 5, isFollowing: false },
-   //       { id: 2, name: "Jane Smith", interests: ["Python", "Machine Learning"], mutualFriends: 3, isFollowing: true },
-   //       // Add more mock friends as needed
-   //    ];
-   //    setSuggestedFriends(mockFriends);
-   // };
-
    const handleEditClick = () => {
       setIsEditing(true);
    };
@@ -428,10 +411,60 @@ function UserProfile() {
 
    const getUserBioInfo = (user) => {
       let userbio = user?.bio || "";
-      if (userbio?.length > 100) {
-         userbio = userbio.substring(0, 100) + "...";
-      }
+      // if (userbio?.length > 100) {
+      //    userbio = userbio.substring(0, 100) + "...";
+      // }
       return userbio || "No bio yet";
+   };
+
+   const renderWorkHistory = () => {
+      if (!user.work) {
+         return (
+            <div className={styles.emptyState}>
+               <FontAwesomeIcon icon={faBriefcase} className={styles.emptyIcon} />
+               <p>No work experience added yet</p>
+            </div>
+         );
+      }
+
+      // Since work is an object, not an array
+      return (
+         <div className={styles.mainContent}>
+            <div className={styles.position}>{user.work.title || 'Position not specified'}</div>
+            <div className={styles.company}>{user.work.company || 'Company not specified'}</div>
+            <div className={styles.timeline}>
+               {user.work.startDate || ''} 
+               {user.work.endDate ? ` - ${user.work.endDate}` : ' - Present'}
+            </div>
+            {user.work.description && (
+               <div className={styles.description}>{user.work.description}</div>
+            )}
+         </div>
+      );
+   };
+
+   console.log("user", user);
+
+   const renderEducation = () => {
+      if (!user.education) {
+         return (
+            <div className={styles.emptyState}>
+               <FontAwesomeIcon icon={faGraduationCap} className={styles.emptyIcon} />
+               <p>No education details added yet</p>
+            </div>
+         );
+      }
+
+      // Since education is an object, not an array
+      return (
+         <div className={styles.mainContent}>
+            <div className={styles.position}>{user.education.degree || 'Degree not specified'}</div>
+            <div className={styles.company}>{user.education.school || 'Institution not specified'}</div>
+            <div className={styles.timeline}>
+               {user.education.graduationYear || 'Year not specified'}
+            </div>
+         </div>
+      );
    };
 
    return (
@@ -482,11 +515,7 @@ function UserProfile() {
                      <FontAwesomeIcon icon={faBriefcase} className={styles.detailIcon} />
                      <h4 className={styles.sectionTitle}>Work</h4>
                   </div>
-                  <div className={styles.mainContent}>
-                     <div className={styles.position}>Software Engineer</div>
-                     <div className={styles.company}>Surekha Tech</div>
-                     <div className={styles.timeline}>2015 - 2019</div>
-                  </div>
+                  {renderWorkHistory()}
                </div>
 
                <div className={styles.detailItem}>
@@ -494,11 +523,7 @@ function UserProfile() {
                      <FontAwesomeIcon icon={faGraduationCap} className={styles.detailIcon} />
                      <h4 className={styles.sectionTitle}>Education</h4>
                   </div>
-                  <div className={styles.mainContent}>
-                     <div className={styles.position}>Bachelors degree</div>
-                     <div className={styles.company}>GTU</div>
-                     <div className={styles.timeline}>2019</div>
-                  </div>
+                  {renderEducation()}
                </div>
 
                <div className={styles.detailItem}>

@@ -45,6 +45,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { HelmetProvider } from "react-helmet-async";
+import LearningStrategy from "./components/LearningStrategy";
 
 // Lazy load other components
 
@@ -176,6 +177,7 @@ function AppDesktop() {
                                  <Route path='/two-factor-auth' element={<TwoFactorAuth />} />
                                  <Route path='/challenges' element={<Challenges />} />
                                  <Route path='/challenges/:id' element={<ChallengeDetails />} />
+                                 <Route path='/learning-strategy' element={<LearningStrategy />} />
                               </Route>
                            )}
 

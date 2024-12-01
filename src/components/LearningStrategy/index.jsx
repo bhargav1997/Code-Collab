@@ -38,7 +38,7 @@ ErrorFallback.propTypes = {
    resetError: PropTypes.func.isRequired,
 };
 
-const CACHE_KEY = 'learning_strategy_cache';
+const CACHE_KEY = "learning_strategy_cache";
 const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 const LearningStrategy = () => {
@@ -48,13 +48,15 @@ const LearningStrategy = () => {
    const user = useSelector((state) => state.user.user);
    const [lastFetchedGoal, setLastFetchedGoal] = useState(null);
 
+   console.log(user);
+
    const getCachedStrategy = () => {
       try {
          const cached = localStorage.getItem(CACHE_KEY);
          if (!cached) return null;
 
          const { data, timestamp, userId, goal } = JSON.parse(cached);
-         
+
          // Check if cache is expired or belongs to different user/goal
          const isExpired = Date.now() - timestamp > CACHE_EXPIRY;
          const isValidUser = userId === user?.id;
@@ -67,7 +69,7 @@ const LearningStrategy = () => {
 
          return data;
       } catch (error) {
-         console.error('Cache retrieval error:', error);
+         console.error("Cache retrieval error:", error);
          return null;
       }
    };
@@ -78,11 +80,11 @@ const LearningStrategy = () => {
             data,
             timestamp: Date.now(),
             userId: user?.id,
-            goal: user?.learningGoals?.[0]
+            goal: user?.learningGoals?.[0],
          };
          localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
       } catch (error) {
-         console.error('Cache storage error:', error);
+         console.error("Cache storage error:", error);
       }
    };
 
@@ -113,19 +115,19 @@ const LearningStrategy = () => {
             3. Career paths and opportunities (2-3 roles with descriptions)
             4. Recommended books (2-3 books with author and level)
             5. Practical project ideas (2-3 projects with skills required)
-            Consider the user's current skills: ${user.skills?.join(', ') || 'beginner'}
+            Consider the user's current skills: ${user.skills?.join(", ") || "beginner"}
          `;
 
          const result = await geminiService.getRecommendation(prompt);
          const parsedStrategy = JSON.parse(result);
-         
+
          if (!validateStrategy(parsedStrategy)) {
             throw new Error("Invalid strategy data received");
          }
 
          // Cache the valid strategy
          setCachedStrategy(parsedStrategy);
-         
+
          setStrategy(parsedStrategy);
          setLastFetchedGoal(user.learningGoals[0]);
       } catch (err) {
@@ -137,7 +139,7 @@ const LearningStrategy = () => {
             advancedTopics: ["Advanced Learning"],
             careerPaths: [{ role: "Entry Level", description: "Start your journey" }],
             books: [{ title: "Getting Started", author: "Tech Expert", level: "Beginner" }],
-            projects: [{ title: "Basic Project", description: "Learn fundamentals", skills: ["Core Skills"] }]
+            projects: [{ title: "Basic Project", description: "Learn fundamentals", skills: ["Core Skills"] }],
          };
          setStrategy(fallbackStrategy);
          setCachedStrategy(fallbackStrategy);
@@ -153,9 +155,7 @@ const LearningStrategy = () => {
 
    // Only fetch when component mounts or user profile is updated
    useEffect(() => {
-      const shouldFetch = 
-         user?.learningGoals?.[0] && 
-         (!lastFetchedGoal || lastFetchedGoal !== user.learningGoals[0]);
+      const shouldFetch = user?.learningGoals?.[0] && (!lastFetchedGoal || lastFetchedGoal !== user.learningGoals[0]);
 
       if (shouldFetch) {
          fetchStrategy();
@@ -203,15 +203,45 @@ const LearningStrategy = () => {
    return (
       <div className={styles.strategyContainer}>
          <div className={styles.strategyHeader}>
-            <div className={styles.headerIcon}>
-               <FontAwesomeIcon icon={faRocket} />
-            </div>
             <div className={styles.headerContent}>
-               <h2>Learning Strategy</h2>
+               <h2>
+                  <FontAwesomeIcon icon={faRocket} />
+                  Learning Strategy
+               </h2>
                <div className={styles.currentGoal}>
                   <FontAwesomeIcon icon={faLightbulb} />
                   <span>{user.learningGoals[0]}</span>
                </div>
+            </div>
+         </div>
+
+         {/* Add Skills Section */}
+         <div className={styles.skillsSection}>
+            <h3>
+               <FontAwesomeIcon icon={faCode} />
+               Skills
+            </h3>
+            <div className={styles.tagContainer}>
+               {user.skills.map((skill, index) => (
+                  <span key={index} className={styles.tag}>
+                     {skill}
+                  </span>
+               ))}
+            </div>
+         </div>
+
+         {/* Add Learning Goals Section */}
+         <div className={styles.learningGoalsSection}>
+            <h3>
+               <FontAwesomeIcon icon={faLightbulb} />
+               Learning Goals
+            </h3>
+            <div className={styles.tagContainer}>
+               {user.learningGoals.map((goal, index) => (
+                  <span key={index} className={styles.tag}>
+                     {goal}
+                  </span>
+               ))}
             </div>
          </div>
 
@@ -263,11 +293,11 @@ const LearningStrategy = () => {
                   <div className={styles.careersList}>
                      {(strategy.careerPaths || []).map((path, index) => (
                         <div key={index} className={styles.careerItem}>
-                           <div className={styles.careerIcon}>
-                              <FontAwesomeIcon icon={faGlobe} />
-                           </div>
                            <div className={styles.careerInfo}>
-                              <h4>{path.role}</h4>
+                              <h4>
+                                 <FontAwesomeIcon icon={faGlobe} className={styles.careerIcon}/>
+                                 {path.role}
+                              </h4>
                               <p>{path.description}</p>
                            </div>
                         </div>
