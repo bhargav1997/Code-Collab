@@ -31,6 +31,9 @@ import { CONFIG } from "../../config";
 
 const API_URL = CONFIG.API_URL;
 
+import { checkUpcomingEvents } from "../../redux/calendar/calendarHandler";
+import { setNotificationsShown } from "../../redux/calendar/calendarSlice";
+
 const validateEvent = (event) => {
    const errors = [];
    const now = new Date();
@@ -91,10 +94,19 @@ function Calendar() {
    const [tooltipEvent, setTooltipEvent] = useState(null);
    const [showConfirmModal, setShowConfirmModal] = useState(false);
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const notificationsShown = useSelector((state) => state.calendar.notificationsShown);
 
    useEffect(() => {
       fetchEvents();
    }, []);
+
+   useEffect(() => {
+      // Check for upcoming events only if notifications haven't been shown
+      if (events.length > 0 && !notificationsShown) {
+         checkUpcomingEvents(events);
+         dispatch(setNotificationsShown(true));
+      }
+   }, [events, notificationsShown]);
 
    const getAuthHeaders = () => {
       const token = localStorage.getItem("token");

@@ -443,8 +443,6 @@ function UserProfile() {
       );
    };
 
-   console.log("user", user);
-
    const renderEducation = () => {
       if (!user.education) {
          return (
