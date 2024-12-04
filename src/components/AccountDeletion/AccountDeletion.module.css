@@ -48,11 +48,30 @@
    color: #ff4d4f;
 }
 
-h1 {
-   color: #1a1a1a;
+.card h1 {
+   color: #7c4dff;
    font-size: 28px;
    font-weight: 700;
    margin-bottom: 16px;
+   position: relative;
+   overflow: hidden;
+   display: inline-block;
+   background: linear-gradient(90deg, #7c4dff, #b388ff, #7c4dff);
+   background-size: 200% 100%;
+   margin-bottom: 0px;
+   background-clip: text;
+   -webkit-background-clip: text;
+   color: transparent;
+   animation: textGradient 3s linear infinite;
+}
+
+@keyframes textGradient {
+   0% {
+      background-position: 200% 0;
+   }
+   100% {
+      background-position: -200% 0;
+   }
 }
 
 .subtitle {
