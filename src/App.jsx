@@ -144,7 +144,7 @@ function AppDesktop() {
                      )}
                      <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
                         <Routes>
-                           <Route path='/' element={<LandingPage />} />
+
                            <Route path='/register' element={
                               <Suspense fallback={<LoadingSpinner />}>
                                  {isAuthenticated ? <Navigate to='/' /> : <Register />}
@@ -183,7 +183,7 @@ function AppDesktop() {
                               </Route>
                            )}
 
-                           {/* {!isLoading && !isAuthenticated && <Route path='*' element={<Login />} />} */}
+                           {!isAuthenticated && <Route path='/' element={<LandingPage />} />}
 
                            {/* Catch-all route */}
                            <Route path='*' element={<Navigate to='/login' replace />} />
