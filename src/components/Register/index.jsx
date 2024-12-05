@@ -15,6 +15,7 @@ import {
    faTrophy,
    faUsers,
    faRocket,
+   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
@@ -99,6 +100,11 @@ function Register() {
 
    return (
       <div className={styles.registerContainer}>
+         <Link to='/' className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+            Back
+         </Link>
+
          <div className={styles.backgroundWaves}>
             <div className={`${styles.wave} ${styles.wave1}`}></div>
             <div className={`${styles.wave} ${styles.wave2}`}></div>

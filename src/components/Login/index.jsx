@@ -7,7 +7,7 @@ import styles from "./Login.module.css";
 // import TwoFactorAuth from "../TwoFactorAuth/TwoFactorAuth";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEnvelope, faLock, faEye, faEyeSlash, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { loginUser } from "../../redux/user/userHandle";
 import RecoveryLink from "../common/RecoveryLink";
 
@@ -109,6 +109,11 @@ function Login() {
 
    return (
       <div className={styles.loginContainer}>
+         <Link to='/' className={styles.backButton}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+            Back
+         </Link>
+
          <LoginAlert
             type={alert.type}
             message={alert.message}

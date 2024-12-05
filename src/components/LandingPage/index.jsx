@@ -27,6 +27,60 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
 import styles from "./LandingPage.module.css";
+import HomeImage from "../../assets/images/Home.png";
+import LearningJourneyImage from "../../assets/images/learning-journey.png";
+
+import LeaderBoardImage from "../../assets/demo/Leaderboard.png";
+import JourneyMapImage from "../../assets/demo/JourneyMap.png";
+import RegisterImage from "../../assets/demo/Register.png";
+import CalendarSessionImage from "../../assets/demo/CalendarSession.png";
+import CreateLearningImage from "../../assets/demo/CreateLearning.png";
+import PrivacyImage from "../../assets/demo/Privacy.png";
+import FriendsImage from "../../assets/demo/Friends.png";
+import CalendarImage from "../../assets/demo/Calendar.png";
+import ProfileImage from "../../assets/demo/Profile.png";
+import ChallengeImage from "../../assets/demo/Challenge.png";
+import CreateChallengeImage from "../../assets/demo/CreateChallenge.png";
+import MessageImage from "../../assets/demo/Message.png";
+import ReportImage from "../../assets/demo/Report.png";
+import SettingImage from "../../assets/demo/Setting.png";
+import { Helmet } from "react-helmet";
+
+const LandingPageHeaders = () => {
+   return (
+      <Helmet>
+         <title>LearnHUB - Your Gateway to Professional Growth</title>
+         <meta
+            name='description'
+            content='Join LearnHUB, the ultimate platform for professional growth. Connect, learn, and achieve your career goals with personalized learning paths and skill tracking.'
+         />
+         <meta
+            name='keywords'
+            content='LearnHUB, professional growth, skill development, personalized learning, online education, track skills, learning community'
+         />
+         <meta name='robots' content='index, follow' />
+
+         {/* Open Graph Meta Tags */}
+         <meta property='og:title' content='LearnHUB - Your Gateway to Professional Growth' />
+         <meta
+            property='og:description'
+            content='Discover LearnHUB, the all-in-one platform for skill development and career growth. Start your learning journey today!'
+         />
+         <meta property='og:image' content={HomeImage} />
+         <meta property='og:url' content='https://www.trackmyskills.tech/' />
+         <meta property='og:type' content='website' />
+
+         {/* Twitter Meta Tags */}
+         <meta name='twitter:card' content='summary_large_image' />
+         <meta name='twitter:title' content='LearnHUB - Your Gateway to Professional Growth' />
+         <meta
+            name='twitter:description'
+            content='Join the LearnHUB community to grow professionally and develop essential skills. Your success starts here!'
+         />
+         <meta name='twitter:image' content={HomeImage} />
+      </Helmet>
+   );
+};
 
 function LandingPage() {
    const [touchedFields, setTouchedFields] = useState({});
@@ -129,6 +183,7 @@ function LandingPage() {
 
    return (
       <div className={styles.landingWrapper}>
+         <LandingPageHeaders />
          {/* Hero Section */}
          <section className={styles.heroSection}>
             <div className={styles.floating3DElements}>
@@ -198,7 +253,7 @@ function LandingPage() {
                initial={{ opacity: 0, scale: 0.9 }}
                animate={{ opacity: 1, scale: 1 }}
                transition={{ delay: 0.2 }}>
-               <img src='/modern-dashboard.png' alt='LearnHUB Platform' />
+               <img src={HomeImage} alt='LearnHUB Platform' />
             </motion.div>
          </section>
 
@@ -353,9 +408,165 @@ function LandingPage() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}>
-                  <img src='/learning-community.png' alt='LearnHUB Community Learning' className={styles.visualImage} />
+                  <img src={LearningJourneyImage} alt='LearnHUB Community Learning' className={styles.visualImage} />
                   <div className={styles.gradientOverlay}></div>
                </motion.div>
+            </div>
+         </section>
+
+         {/* App Showcase Section */}
+         <section className={styles.appShowcase}>
+            <div className={styles.showcaseBackground}>
+               <div className={styles.bgGlow1}></div>
+               <div className={styles.bgGlow2}></div>
+               <div className={styles.floatingShape1}></div>
+               <div className={styles.floatingShape2}></div>
+               <div className={styles.floatingShape3}></div>
+            </div>
+
+            <div className={styles.showcaseHeader}>
+               <h2>Explore Our Platform</h2>
+               <p>Take a tour through LearnHub's powerful features</p>
+            </div>
+
+            <div className={styles.showcaseContainer}>
+               <div className={styles.showcaseCarousel}>
+                  <div className={styles.showcaseItem}>
+                     <img src={HomeImage} alt='Explore Home Page Features | LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Explore Trending Topics</h3>
+                        <p>Discover popular posts, trending tags, and stay updated on the latest topics.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img
+                        src={LearningJourneyImage}
+                        alt='Learning Journey Customization | TrackMySkills'
+                        className={styles.showcaseImage}
+                     />
+                     <div className={styles.showcaseContent}>
+                        <h3>Personalized Learning Journey</h3>
+                        <p>Create a customized learning path and monitor your skill development progress.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={CalendarImage} alt='Schedule Learning Activities | LearnHub Calendar' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Interactive Calendar</h3>
+                        <p>Plan and manage your learning schedule effortlessly with email reminders.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={CalendarSessionImage} alt='Coding Challenges | Improve Skills' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Coding Challenges</h3>
+                        <p>Participate in engaging challenges to sharpen your coding abilities and track improvements.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={ChallengeImage} alt='Challenges Dashboard Overview | TrackMySkills' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Challenges Dashboard</h3>
+                        <p>Review your progress, achievements, and badges on a comprehensive dashboard.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={CreateChallengeImage} alt='Create a Coding Challenge | Track Progress' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Create Challenges</h3>
+                        <p>Design custom challenges and track detailed insights into your performance.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={FriendsImage} alt='Manage Connections | LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Connect with Friends</h3>
+                        <p>Build meaningful connections and collaborate with like-minded learners.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={JourneyMapImage} alt='Visualize Your Journey Map | TrackMySkills' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Journey Mapping</h3>
+                        <p>Create a visual roadmap of your learning journey and share resources with peers.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={ProfileImage} alt='Update Profile and Preferences | LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Profile Management</h3>
+                        <p>Update your personal information and preferences with ease.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img
+                        src={LeaderBoardImage}
+                        alt='Track Your Rank on the Leaderboard | TrackMySkills'
+                        className={styles.showcaseImage}
+                     />
+                     <div className={styles.showcaseContent}>
+                        <h3>Leaderboard Insights</h3>
+                        <p>Compete with peers and monitor your progress through leaderboard rankings.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={RegisterImage} alt='Create an Account | Join LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Easy Registration</h3>
+                        <p>Sign up to start your personalized learning experience with us.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={PrivacyImage} alt='Privacy Settings and Data Control | TrackMySkills' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Privacy Control</h3>
+                        <p>Manage your data-sharing preferences and maintain full control of your account.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={CreateLearningImage} alt='Design Learning Resources | LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Create Learning Resources</h3>
+                        <p>Organize and share your learning resources with others in the community.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={MessageImage} alt='Send Real-Time Messages | Connect on LearnHub' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Real-Time Messaging</h3>
+                        <p>Communicate with friends and mentors using our seamless messaging feature.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={ReportImage} alt='Progress Reports | Analyze Your Learning' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Learning Reports</h3>
+                        <p>Analyze your overall progress and achievements through detailed reports.</p>
+                     </div>
+                  </div>
+
+                  <div className={styles.showcaseItem}>
+                     <img src={SettingImage} alt='Update Account Settings | TrackMySkills' className={styles.showcaseImage} />
+                     <div className={styles.showcaseContent}>
+                        <h3>Account Settings</h3>
+                        <p>Configure your account settings to match your learning goals and preferences.</p>
+                     </div>
+                  </div>
+               </div>
             </div>
          </section>
 
@@ -559,9 +770,9 @@ function LandingPage() {
                   viewport={{ once: true }}>
                   <div className={styles.reportInfo}>
                      <div className={styles.reportHeader}>
-                        <div className={styles.bugReportIcon}>
+                        <span className={styles.bugReportIcon}>
                            <FontAwesomeIcon icon={faBug} />
-                        </div>
+                        </span>
                         <h2>Help Us Improve LearnHUB</h2>
                      </div>
                      <p>Found a bug? Have a suggestion? We&apos;re here to listen and make LearnHUB better for everyone.</p>
@@ -609,7 +820,7 @@ function LandingPage() {
                            }
                         }}>
                         <div className={styles.formGrid}>
-                           <div className={styles.formGroup}>
+                           <div className={styles.formGroup + " " + styles.fullWidth}>
                               <label>
                                  Report Type
                                  <span className={styles.required}>*</span>

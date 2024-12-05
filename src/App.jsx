@@ -144,6 +144,7 @@ function AppDesktop() {
                      )}
                      <div className={`${styles.mainArea} ${isAuthenticated ? styles.withSidebar : ""}`}>
                         <Routes>
+                           <Route path='/' element={<LandingPage />} />
                            <Route path='/register' element={
                               <Suspense fallback={<LoadingSpinner />}>
                                  {isAuthenticated ? <Navigate to='/' /> : <Register />}
@@ -154,12 +155,13 @@ function AppDesktop() {
                                  {isAuthenticated ? <Navigate to='/' /> : <Login />}
                               </Suspense>
                            } />
+
                            <Route path='/two-factor-auth' element={isAuthenticated ? <Navigate to='/' /> : <TwoFactorAuth />} />
                            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
                            <Route path='/terms-of-use' element={<TermsOfUse />} />
                            <Route path='/guidelines' element={<Guidelines />} />
                            <Route path='/about-me' element={<AboutMe />} />
-                           <Route path='/landing-page' element={<LandingPage />} />
+                           {/* <Route path='/landing-page' element={<LandingPage />} /> */}
                            <Route path='/account-recovery' element={<AccountDeletion />} />
                            {/* Protected routes */}
                            {isAuthenticated && (
