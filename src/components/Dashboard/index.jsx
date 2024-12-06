@@ -91,14 +91,15 @@ function Dashboard() {
    };
 
    const handleSubmit = async (newTaskData) => {
+      const progress = parseFloat(newTaskData?.initialProgress) || 0;
       const newTask = {
          id: Date.now(),
          taskType: newTaskData?.taskType,
          taskTitle: newTaskData?.taskTitle,
          name: newTaskData?.taskTitle,
-         level: "Beginner", // You might want to add a field for this in CreateLearningTask
-         progress: newTaskData?.initialProgress || 0,
-         status: newTaskData?.initialProgress > 0 ? "In Progress" : "Not Started",
+         level: "Beginner",
+         progress: progress,
+         status: getTaskStatus(progress),
          timeRemain: `${newTaskData?.completionDays} days`,
          lastUpdated: new Date().toISOString(),
          progressHistory: [],
@@ -125,6 +126,12 @@ function Dashboard() {
          console.error("Failed to create task:", error);
          toast.error("Failed to create task: Please try again later.");
       }
+   };
+
+   const getTaskStatus = (progress) => {
+      if (progress >= 100) return "Completed";
+      if (progress > 0) return "In Progress";
+      return "Not Started";
    };
 
    const handleEditClick = (task) => {
@@ -163,7 +170,7 @@ function Dashboard() {
             const updatedTask = {
                ...task,
                progress: newProgress,
-               status: newProgress === 100 ? "Completed" : task.status === "Paused" ? "In Progress" : task.status,
+               status: getTaskStatus(newProgress),
                lastUpdated: currentDate.toISOString(),
                progressHistory: [...task.progressHistory, { date: currentDate.toISOString(), progress: newProgress, notes }],
                timeSpent: task.timeSpent + timeSpent,
