@@ -25,7 +25,7 @@ import {
    faShieldHeart,
    faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin, faTwitter, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin, faTwitter, faGithub, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import styles from "./LandingPage.module.css";
 import HomeImage from "../../assets/images/Home.png";
 import LearningJourneyImage from "../../assets/images/learning-journey.png";
@@ -918,8 +918,11 @@ function LandingPage() {
                      <a href='https://twitter.com/bsuthar_712' target='_blank' rel='noopener noreferrer' title='Follow on Twitter'>
                         <FontAwesomeIcon icon={faTwitter} />
                      </a>
-                     <a href='https://github.com/bhargav1997' target='_blank' rel='noopener noreferrer' title='View on GitHub'>
+                     <a href='https://github.com/bhargav1997' target='_blank' rel='noopener noreferrer' title='View on GitHub | Owner Of LearnHub'>
                         <FontAwesomeIcon icon={faGithub} />
+                     </a>
+                     <a href='https://www.facebook.com/people/LearnHub-Track-My-Skills/61570034825290/' target='_blank' rel='noopener noreferrer' title='View on Facebook | LearnHub'>
+                        <FontAwesomeIcon icon={faFacebook} />
                      </a>
                   </div>
                </div>
