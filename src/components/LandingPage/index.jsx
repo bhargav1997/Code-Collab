@@ -403,14 +403,14 @@ function LandingPage() {
                   </div>
                </motion.div>
 
-               <motion.div
+               {/* <motion.div
                   className={styles.solutionVisual}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}>
                   <img src={LearningJourneyImage} alt='LearnHUB Community Learning' className={styles.visualImage} />
                   <div className={styles.gradientOverlay}></div>
-               </motion.div>
+               </motion.div> */}
             </div>
          </section>
 

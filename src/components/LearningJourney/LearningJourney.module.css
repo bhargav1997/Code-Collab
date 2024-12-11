@@ -350,6 +350,10 @@
    margin-bottom: 1rem;
 }
 
+.cardTitle svg {
+   color: #6c52c8;
+}
+
 .addForm {
    display: flex;
    gap: 0.5rem;
