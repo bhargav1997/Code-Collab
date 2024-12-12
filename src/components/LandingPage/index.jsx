@@ -45,6 +45,7 @@ import MessageImage from "../../assets/demo/Message.png";
 import ReportImage from "../../assets/demo/Report.png";
 import SettingImage from "../../assets/demo/Setting.png";
 import { Helmet } from "react-helmet";
+import { CONFIG } from "../../config";
 
 const LandingPageHeaders = () => {
    return (
@@ -796,8 +797,9 @@ function LandingPage() {
                   <div className={styles.reportFormContainer}>
                      <form
                         className={styles.reportForm}
-                        onSubmit={(e) => {
+                        onSubmit={async (e) => {
                            e.preventDefault();
+
                            // Mark all fields as touched on submit attempt
                            const formElements = e.target.elements;
                            const newTouchedFields = {};
@@ -811,12 +813,39 @@ function LandingPage() {
                            // Continue with form submission if valid
                            if (e.target.checkValidity()) {
                               const formData = new FormData(e.target);
-                              const subject = `${formData.get("type")}: ${formData.get("subject")}`;
-                              const body = `Type: ${formData.get("type")}%0D%0A
-                                           Description: ${formData.get("description")}%0D%0A
-                                           File Sharing Link: ${formData.get("attachmentLink") || "N/A"}`;
 
-                              window.location.href = `mailto:hello.learnhub@gmail.com?subject=${subject}&body=${body}`;
+                              try {
+                                 const API_URL = CONFIG.API_URL;
+
+                                 const response = await fetch(`${API_URL}/email/send-email`, {
+                                    method: "POST",
+                                    headers: {
+                                       "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                       type: formData.get("type"),
+                                       subject: formData.get("subject"),
+                                       description: formData.get("description"),
+                                       attachmentLink: formData.get("attachmentLink") || null,
+                                    }),
+                                 });
+
+                                 if (response.ok) {
+                                    // Show success message
+                                    alert("Email sent successfully!");
+                                    // Optionally reset the form
+                                    e.target.reset();
+                                    setTouchedFields({});
+                                 } else {
+                                    // Improved error handling
+                                    const errorData = await response.text(); // or .json() if your backend sends JSON
+                                    console.error("Server error:", errorData);
+                                    alert(`Error: ${errorData || "Failed to send email"}`);
+                                 }
+                              } catch (error) {
+                                 console.error("Full error details:", error);
+                                 alert(`Network Error: ${error.message}. Please check your connection.`);
+                              }
                            }
                         }}>
                         <div className={styles.formGrid}>
@@ -918,10 +947,18 @@ function LandingPage() {
                      <a href='https://twitter.com/bsuthar_712' target='_blank' rel='noopener noreferrer' title='Follow on Twitter'>
                         <FontAwesomeIcon icon={faTwitter} />
                      </a>
-                     <a href='https://github.com/bhargav1997' target='_blank' rel='noopener noreferrer' title='View on GitHub | Owner Of LearnHub'>
+                     <a
+                        href='https://github.com/bhargav1997'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        title='View on GitHub | Owner Of LearnHub'>
                         <FontAwesomeIcon icon={faGithub} />
                      </a>
-                     <a href='https://www.facebook.com/people/LearnHub-Track-My-Skills/61570034825290/' target='_blank' rel='noopener noreferrer' title='View on Facebook | LearnHub'>
+                     <a
+                        href='https://www.facebook.com/people/LearnHub-Track-My-Skills/61570034825290/'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        title='View on Facebook | LearnHub'>
                         <FontAwesomeIcon icon={faFacebook} />
                      </a>
                   </div>
