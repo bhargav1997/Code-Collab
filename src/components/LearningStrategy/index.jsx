@@ -48,8 +48,6 @@ const LearningStrategy = () => {
    const user = useSelector((state) => state.user.user);
    const [lastFetchedGoal, setLastFetchedGoal] = useState(null);
 
-   console.log(user);
-
    const getCachedStrategy = () => {
       try {
          const cached = localStorage.getItem(CACHE_KEY);

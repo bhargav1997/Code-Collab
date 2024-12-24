@@ -72,7 +72,6 @@ function CreateLearningTask({ onClose, handleSubmit }) {
          await handleSubmit(newTask);
          onClose();
       } catch (error) {
-         console.log("error", error);
          toast.error("Failed to create task: Please try again later.");
       } finally {
          setIsSubmitting(false);

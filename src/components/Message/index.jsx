@@ -86,7 +86,6 @@ function Message() {
    const initializeSocket = useCallback(() => {
       const token = localStorage.getItem("token");
       if (!token) {
-         console.log("No token found, navigating to login");
          navigate("/login");
          return null;
       }

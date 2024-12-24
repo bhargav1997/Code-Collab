@@ -16,10 +16,7 @@ const calendarSlice = createSlice({
          state.events = action.payload;
       },
       updateEvent: (state, action) => {
-         console.log("state.events", state.events);
-         console.log("action.payload", action.payload);
          const index = state.events.findIndex((event) => event._id === action.payload._id);
-         console.log("index", index);
          if (index !== -1) {
             state.events[index] = action.payload;
          }
