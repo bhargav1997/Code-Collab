@@ -27,6 +27,7 @@ import {
    FaChevronDown,
    FaChevronUp,
    FaShare,
+   FaUsers,
 } from "react-icons/fa";
 import PropTypes from "prop-types";
 import axios from "axios";
@@ -350,6 +351,10 @@ const LearningJourney = () => {
                            <h3 className={styles.sectionTitle}>{journey.name}</h3>
                            <p>
                               {journey.resources.length} resources • {journey.tasks.length} tasks
+                           </p>
+                           <p className={styles.sharedCount}>
+                              <FaUsers /> {journey.sharedWith.length} {journey.sharedWith.length === 1 ? "connection" : "connections"} have
+                              access
                            </p>
                         </div>
                      </div>

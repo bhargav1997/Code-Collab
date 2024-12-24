@@ -737,3 +737,12 @@
 .journeyItemContent {
    margin-top: 1rem; /* Add space between buttons and content */
 }
+
+.sharedCount {
+   margin-top: 0.5rem !important;
+   color: #7f8c8d; /* Adjust color as needed */
+   font-size: 0.9rem; /* Adjust font size as needed */
+   display: flex;
+   align-items: center;
+   gap: 0.25rem; /* Space between icon and text */
+}
